@@ -1,0 +1,93 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <parent>
+    <groupId>de.cismet.cids</groupId>
+    <artifactId>cids-parent</artifactId>
+    <version>2.0-SNAPSHOT</version>
+  </parent>
+    
+  <groupId>de.cismet.watergis</groupId>
+  <artifactId>watergis-server</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>WaterGis Server</name>
+  <url>http://maven.apache.org</url>
+
+    <properties>
+        <de.cismet.libDir>lib/localWatergis</de.cismet.libDir>
+    </properties>
+  
+    <repositories>
+        <repository>
+            <id>cismet-repo</id>
+            <url>https://repo.cismet.de/repo</url>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>warn</checksumPolicy>
+                <updatePolicy>daily</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <checksumPolicy>warn</checksumPolicy>
+                <updatePolicy>interval:60</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+    
+  <dependencies>
+    <dependency>
+        <groupId>de.cismet.cids</groupId>
+        <artifactId>cids-server</artifactId>
+        <version>2.0-SNAPSHOT</version>
+    </dependency>      
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  
+    <build>
+        <finalName>WaterGISServer</finalName>
+    </build>
+  
+  
+<!--    <build>
+        <plugins>
+             overwritten because the artifact has to be renamed du to
+                 compatibility reasons to the cidsDistribution 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-installed</id>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <destFileName>cidsCustomServerStuff.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.12</version>
+                <configuration>
+                     
+                        all those tests have to be excluded because they require a connection to a postgres db or the
+                        remote test helper service, respectively. as this service is only internally available we have
+                        to think of another method to test these things
+                     
+                </configuration>
+           </plugin>
+        </plugins>
+    </build>  -->
+</project>
