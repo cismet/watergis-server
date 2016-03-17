@@ -19,7 +19,7 @@ import Sirius.server.middleware.types.MetaClass;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class FgLakAeCidsLayer extends FgBakAeCidsLayer {
+public class FgLakAeCidsLayer extends WatergisDefaultCidsLayer {
 
     //~ Constructors -----------------------------------------------------------
 
