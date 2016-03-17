@@ -19,16 +19,16 @@ import Sirius.server.middleware.types.MetaClass;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class GemeindeCidsLayer extends FgBakAeCidsLayer {
+public class SgSuCidsLayer extends WatergisDefaultCidsLayer {
 
     //~ Constructors -----------------------------------------------------------
 
     /**
-     * Creates a new FgBakCidsLayer object.
+     * Creates a new VwDvgStaluCidsLayer object.
      *
      * @param  mc  DOCUMENT ME!
      */
-    public GemeindeCidsLayer(final MetaClass mc) {
+    public SgSuCidsLayer(final MetaClass mc) {
         super(mc);
     }
 }
