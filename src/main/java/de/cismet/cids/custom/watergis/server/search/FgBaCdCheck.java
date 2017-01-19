@@ -25,7 +25,7 @@ import java.util.Map;
 import de.cismet.cids.server.search.AbstractCidsServerSearch;
 
 /**
- * DOCUMENT ME!
+ * Checks, if the given ba_cd codes are unique.
  *
  * @author   therter
  * @version  $Revision$, $Date$

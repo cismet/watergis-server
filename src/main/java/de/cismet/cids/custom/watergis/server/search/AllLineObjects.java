@@ -43,7 +43,7 @@ public class AllLineObjects extends AbstractCidsServerSearch {
                 + "from dlm25w.%1$s m \n"
                 + "join dlm25w.fg_ba_linie l on (m.ba_st = l.id)\n"
                 + "join dlm25w.fg_ba_punkt von on (l.von = von.id)\n"
-                + "join dlm25w.fg_ba_punkt bis on (l.bis = l.id)\n"
+                + "join dlm25w.fg_ba_punkt bis on (l.bis = bis.id)\n"
                 + "join dlm25w.fg_ba ba on (von.route = ba.id)\n"
                 + "join geom g on (g.id = l.geom)\n"
                 + "where (%2$s is null or von.route = any(%2$s))\n"

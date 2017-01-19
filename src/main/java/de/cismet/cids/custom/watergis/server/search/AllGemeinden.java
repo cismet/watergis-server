@@ -44,7 +44,7 @@ public class AllGemeinden extends AbstractCidsServerSearch {
                 + "id\n"
                 + "from dlm25w.vw_alk_gmd";
     private static final String QUERY_WITH_ID =
-        "Select g.id from dlm25w.vw_alk_gmd g join geom gg on (g.geom = gg.id) \n"
+        "Select g.gmd_nr from dlm25w.vw_alk_gmd g join geom gg on (g.geom = gg.id) \n"
                 + "where exists(select 1 from dlm25w.fg_ba ba join geom ge on (geom = ge.id) where ba.id = any (%1$s)\n"
                 + " and st_intersects(gg.geo_field, ge.geo_field))";
 
