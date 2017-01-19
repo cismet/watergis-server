@@ -14,6 +14,8 @@ package de.cismet.cids.custom.watergis.server.search;
 
 import Sirius.server.middleware.interfaces.domainserver.MetaService;
 
+import com.vividsolutions.jts.geom.Geometry;
+
 import org.apache.log4j.Logger;
 
 import java.rmi.RemoteException;
@@ -31,21 +33,22 @@ import de.cismet.cids.server.search.AbstractCidsServerSearch;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class AllGewBySb extends AbstractCidsServerSearch {
+public class AllGewOffenByGeom extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
-    private static final transient Logger LOG = Logger.getLogger(AllGewBySb.class);
+    private static final transient Logger LOG = Logger.getLogger(AllGewOffenByGeom.class);
 
     public static final String DOMAIN_NAME = "DLM25W";
     private static final String QUERY =
-        "select id, art, ba_cd, ba_st_von, ba_st_bis, sb, sb_name, owner, gew_name, gu, wdm, ba_len from dlm25w.select_sb(%1$s, %2$s)";
+        "select id,owner,gu,wdm,gew_name,ba_cd,ba_st_von,ba_st_bis,nr_re,nr_li,profil,wk_fg_length, bv_re,bl_n_li,fl_b_re,bl_n_re,fl_b,fl_bt_re,fl_n,fl_ger,br_gew_re,fl_bn_re,bh_re,wbbl,fl_qs_ger,fl_bn,typ,bl_li,fl_bn_li,bh_li,bl_t_li,bemerkung,br_gew,ausbaujahr,fl_so,br_gew_li,ho_a,fl_gew,fl_qs_gew,br_so,ho_e,fl_bt,mw,fl_bt_li,gefaelle,bl_t_re,bv_li,fl_b_li,bl_re,obj_nr from dlm25w.select_geom_offen(%1$s, %2$s, '%3$s')";
 
     //~ Instance fields --------------------------------------------------------
 
     private final int[] routeIds;
     private final int[] wdmArray;
+    private final Geometry geom;
 
     //~ Constructors -----------------------------------------------------------
 
@@ -54,8 +57,10 @@ public class AllGewBySb extends AbstractCidsServerSearch {
      *
      * @param  routeIds  DOCUMENT ME!
      * @param  wdmArray  DOCUMENT ME!
+     * @param  geom      DOCUMENT ME!
      */
-    public AllGewBySb(final int[] routeIds, final int[] wdmArray) {
+    public AllGewOffenByGeom(final int[] routeIds, final int[] wdmArray, final Geometry geom) {
+        this.geom = geom;
         this.routeIds = routeIds;
         this.wdmArray = wdmArray;
     }
@@ -68,10 +73,12 @@ public class AllGewBySb extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final ArrayList<ArrayList> lists = ms.performCustomSearch(String.format(
-                            QUERY,
-                            SQLFormatter.createSqlArrayString(routeIds),
-                            SQLFormatter.createSqlArrayString(wdmArray)));
+                final String query = String.format(
+                        QUERY,
+                        SQLFormatter.createSqlArrayString(routeIds),
+                        SQLFormatter.createSqlArrayString(wdmArray),
+                        geom);
+                final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
                 return lists;
             } catch (RemoteException ex) {
                 LOG.error(ex.getMessage(), ex);

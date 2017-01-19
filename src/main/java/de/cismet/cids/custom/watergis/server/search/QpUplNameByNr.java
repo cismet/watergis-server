@@ -21,8 +21,6 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import de.cismet.cids.custom.helper.SQLFormatter;
-
 import de.cismet.cids.server.search.AbstractCidsServerSearch;
 
 /**
@@ -31,33 +29,29 @@ import de.cismet.cids.server.search.AbstractCidsServerSearch;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class AllGewBySb extends AbstractCidsServerSearch {
+public class QpUplNameByNr extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
-    private static final transient Logger LOG = Logger.getLogger(AllGewBySb.class);
+    private static final transient Logger LOG = Logger.getLogger(QpUplNameByNr.class);
 
     public static final String DOMAIN_NAME = "DLM25W";
-    private static final String QUERY =
-        "select id, art, ba_cd, ba_st_von, ba_st_bis, sb, sb_name, owner, gew_name, gu, wdm, ba_len from dlm25w.select_sb(%1$s, %2$s)";
+    private static final String QUERY = "Select upl_name from dlm25w.qp where qp_nr = %s";
 
     //~ Instance fields --------------------------------------------------------
 
-    private final int[] routeIds;
-    private final int[] wdmArray;
+    private final String qpNr;
 
     //~ Constructors -----------------------------------------------------------
 
     /**
      * Creates a new WkkSearch object.
      *
-     * @param  routeIds  DOCUMENT ME!
-     * @param  wdmArray  DOCUMENT ME!
+     * @param  qpNr  DOCUMENT ME!
      */
-    public AllGewBySb(final int[] routeIds, final int[] wdmArray) {
-        this.routeIds = routeIds;
-        this.wdmArray = wdmArray;
+    public QpUplNameByNr(final String qpNr) {
+        this.qpNr = qpNr;
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -68,10 +62,8 @@ public class AllGewBySb extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final ArrayList<ArrayList> lists = ms.performCustomSearch(String.format(
-                            QUERY,
-                            SQLFormatter.createSqlArrayString(routeIds),
-                            SQLFormatter.createSqlArrayString(wdmArray)));
+                final ArrayList<ArrayList> lists = ms.performCustomSearch(String.format(QUERY, qpNr));
+
                 return lists;
             } catch (RemoteException ex) {
                 LOG.error(ex.getMessage(), ex);

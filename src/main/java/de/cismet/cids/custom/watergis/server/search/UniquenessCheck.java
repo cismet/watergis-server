@@ -20,44 +20,46 @@ import java.rmi.RemoteException;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-import de.cismet.cids.custom.helper.SQLFormatter;
+import java.util.Map;
 
 import de.cismet.cids.server.search.AbstractCidsServerSearch;
 
 /**
- * DOCUMENT ME!
+ * Checks, if the given ba_cd codes are unique.
  *
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class AllGewBySb extends AbstractCidsServerSearch {
+public class UniquenessCheck extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
-    private static final transient Logger LOG = Logger.getLogger(AllGewBySb.class);
+    private static final transient Logger LOG = Logger.getLogger(UniquenessCheck.class);
 
     public static final String DOMAIN_NAME = "DLM25W";
-    private static final String QUERY =
-        "select id, art, ba_cd, ba_st_von, ba_st_bis, sb, sb_name, owner, gew_name, gu, wdm, ba_len from dlm25w.select_sb(%1$s, %2$s)";
+    private static final String QUERY_CONDITION = "(id <> %s and %s = '%s')";
+    private static final String QUERY = "select %s from dlm25w.%s ";
 
     //~ Instance fields --------------------------------------------------------
 
-    private final int[] routeIds;
-    private final int[] wdmArray;
+    private final Map<Integer, String> valueMap;
+    private final String field;
+    private final String table;
 
     //~ Constructors -----------------------------------------------------------
 
     /**
      * Creates a new WkkSearch object.
      *
-     * @param  routeIds  DOCUMENT ME!
-     * @param  wdmArray  DOCUMENT ME!
+     * @param  valueMap  baCdMap DOCUMENT ME!
+     * @param  field     DOCUMENT ME!
+     * @param  table     DOCUMENT ME!
      */
-    public AllGewBySb(final int[] routeIds, final int[] wdmArray) {
-        this.routeIds = routeIds;
-        this.wdmArray = wdmArray;
+    public UniquenessCheck(final Map<Integer, String> valueMap, final String field, final String table) {
+        this.valueMap = valueMap;
+        this.field = field;
+        this.table = table;
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -68,10 +70,23 @@ public class AllGewBySb extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final ArrayList<ArrayList> lists = ms.performCustomSearch(String.format(
-                            QUERY,
-                            SQLFormatter.createSqlArrayString(routeIds),
-                            SQLFormatter.createSqlArrayString(wdmArray)));
+                boolean first = true;
+                String query = String.format(QUERY, field, table);
+
+                for (final Integer id : valueMap.keySet()) {
+                    final String value = valueMap.get(id);
+
+                    if (first) {
+                        query += " WHERE ";
+                        first = false;
+                    } else {
+                        query += " OR ";
+                    }
+
+                    query += String.format(QUERY_CONDITION, id, field, value);
+                }
+
+                final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
                 return lists;
             } catch (RemoteException ex) {
                 LOG.error(ex.getMessage(), ex);

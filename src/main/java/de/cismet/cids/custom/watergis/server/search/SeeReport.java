@@ -40,12 +40,14 @@ public class SeeReport extends AbstractCidsServerSearch {
     private static final transient Logger LOG = Logger.getLogger(SeeReport.class);
 
     public static final String DOMAIN_NAME = "DLM25W";
+    // the limit inside the sub select in the from clause prevents that the db use the geom index and improve the
+    // performance
     private static final String QUERY =
         "select ST_line_locate_point(bg.geo_field, st_startPoint(unnest(dlm25w.multi_geometry_to_array(st_intersection(g.geo_field, bg.geo_field)))))  * st_length(bg.geo_field) von,\n"
                 + "ST_line_locate_point(bg.geo_field, st_endPoint(unnest(dlm25w.multi_geometry_to_array(st_intersection(g.geo_field, bg.geo_field))))) * st_length(bg.geo_field) bis,\n"
                 + "uesg_name, wbbl, info\n"
                 + "from dlm25w.sg_detail s\n"
-                + "join geom g on (s.geom = g.id),\n"
+                + "join (select g.* from dlm25w.sg_detail s join geom g on (s.geom = g.id) limit 5000000) g on (s.geom = g.id),\n"
                 + "dlm25w.fg_ba b\n"
                 + "join geom bg on (bg.id = b.geom)\n"
                 + "where b.ba_cd = '%s' and st_intersects(g.geo_field, bg.geo_field)\n"
@@ -56,7 +58,7 @@ public class SeeReport extends AbstractCidsServerSearch {
                 + "ST_line_locate_point(bg.geo_field, st_endPoint(unnest(dlm25w.multi_geometry_to_array(st_intersection(g.geo_field, bg.geo_field))))) * st_length(bg.geo_field) bis,\n"
                 + "b.ba_cd, b.id\n"
                 + "from dlm25w.sg_detail s\n"
-                + "join geom g on (s.geom = g.id),\n"
+                + "join (select g.* from dlm25w.sg_detail s join geom g on (s.geom = g.id) limit 5000000) g on (s.geom = g.id),\n"
                 + "dlm25w.fg_ba b\n"
                 + "join geom bg on (bg.id = b.geom)\n"
                 + "where b.id = any(%s) and st_intersects(g.geo_field, bg.geo_field)\n"

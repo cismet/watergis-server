@@ -14,14 +14,14 @@ package de.cismet.cids.custom.watergis.server.search;
 
 import Sirius.server.middleware.interfaces.domainserver.MetaService;
 
-import org.apache.log4j.Logger;
+import com.vividsolutions.jts.geom.Geometry;
 
-import java.rmi.RemoteException;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-import de.cismet.cids.custom.helper.SQLFormatter;
+import de.cismet.cids.custom.helper.CompressedGeometry;
 
 import de.cismet.cids.server.search.AbstractCidsServerSearch;
 
@@ -31,33 +31,32 @@ import de.cismet.cids.server.search.AbstractCidsServerSearch;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class AllGewBySb extends AbstractCidsServerSearch {
+public class Buffer extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
-    private static final transient Logger LOG = Logger.getLogger(AllGewBySb.class);
+    private static final transient Logger LOG = Logger.getLogger(Buffer.class);
 
     public static final String DOMAIN_NAME = "DLM25W";
-    private static final String QUERY =
-        "select id, art, ba_cd, ba_st_von, ba_st_bis, sb, sb_name, owner, gew_name, gu, wdm, ba_len from dlm25w.select_sb(%1$s, %2$s)";
+    private static final String QUERY = "Select st_asBinary(st_buffer('%1s', %2s))";
 
     //~ Instance fields --------------------------------------------------------
 
-    private final int[] routeIds;
-    private final int[] wdmArray;
+    private final CompressedGeometry geo;
+    private final double dist;
 
     //~ Constructors -----------------------------------------------------------
 
     /**
      * Creates a new WkkSearch object.
      *
-     * @param  routeIds  DOCUMENT ME!
-     * @param  wdmArray  DOCUMENT ME!
+     * @param  geo   DOCUMENT ME!
+     * @param  dist  DOCUMENT ME!
      */
-    public AllGewBySb(final int[] routeIds, final int[] wdmArray) {
-        this.routeIds = routeIds;
-        this.wdmArray = wdmArray;
+    public Buffer(final Geometry geo, final double dist) {
+        this.geo = new CompressedGeometry(geo);
+        this.dist = dist;
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -70,10 +69,10 @@ public class AllGewBySb extends AbstractCidsServerSearch {
             try {
                 final ArrayList<ArrayList> lists = ms.performCustomSearch(String.format(
                             QUERY,
-                            SQLFormatter.createSqlArrayString(routeIds),
-                            SQLFormatter.createSqlArrayString(wdmArray)));
+                            geo.getGeometry(),
+                            dist));
                 return lists;
-            } catch (RemoteException ex) {
+            } catch (Exception ex) {
                 LOG.error(ex.getMessage(), ex);
             }
         } else {

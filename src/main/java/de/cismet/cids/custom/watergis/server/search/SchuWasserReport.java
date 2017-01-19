@@ -40,12 +40,14 @@ public class SchuWasserReport extends AbstractCidsServerSearch {
     private static final transient Logger LOG = Logger.getLogger(SchuWasserReport.class);
 
     public static final String DOMAIN_NAME = "DLM25W";
+    // the limit inside the sub select in the from clause prevents that the db use the geom index and improve the
+    // performance
     private static final String QUERY =
         "select ST_line_locate_point(bg.geo_field, st_startPoint(unnest(dlm25w.multi_geometry_to_array(st_intersection(g.geo_field, bg.geo_field)))))  * st_length(bg.geo_field) von,\n"
                 + "ST_line_locate_point(bg.geo_field, st_endPoint(unnest(dlm25w.multi_geometry_to_array(st_intersection(g.geo_field, bg.geo_field))))) * st_length(bg.geo_field) bis,\n"
-                + "wsg_name, wsg_zone, wbbl, info\n"
+                + "wsg_name, wsg_zone, wbbl, recht\n"
                 + "from dlm25w.wr_sg_wsg s\n"
-                + "join geom g on (s.geom = g.id),\n"
+                + "join (select g.* from dlm25w.wr_sg_wsg s join geom g on (s.geom = g.id) limit 5000000) g on (s.geom = g.id),\n"
                 + "dlm25w.fg_ba b\n"
                 + "join geom bg on (bg.id = b.geom)\n"
                 + "where b.ba_cd = '%s' and ST_IsValid(g.geo_field) and st_intersects(g.geo_field, bg.geo_field)\n"
@@ -56,9 +58,9 @@ public class SchuWasserReport extends AbstractCidsServerSearch {
                 + "ST_line_locate_point(bg.geo_field, st_endPoint(unnest(dlm25w.multi_geometry_to_array(st_intersection(g.geo_field, bg.geo_field))))) * st_length(bg.geo_field) bis,\n"
                 + "b.ba_cd, b.id\n"
                 + "from dlm25w.wr_sg_wsg s\n"
-                + "join geom g on (s.geom = g.id),\n"
+                + "join (select g.* from dlm25w.wr_sg_wsg s join geom g on (s.geom = g.id) limit 5000000) g on (s.geom = g.id),\n"
                 + "dlm25w.fg_ba b\n"
-                + "join geom bg on (bg.id = b.geom)\n"
+                + "join (select g.* from dlm25w.fg_ba s join geom g on (s.geom = g.id) limit 5000000) bg on (b.geom = bg.id) \n"
                 + "where b.id = any(%s) and ST_IsValid(g.geo_field) and st_intersects(g.geo_field, bg.geo_field)\n"
                 + "order by least(ST_line_locate_point(bg.geo_field, st_startPoint(st_intersection(g.geo_field, bg.geo_field)))  * st_length(bg.geo_field),\n"
                 + "ST_line_locate_point(bg.geo_field, st_endPoint(st_intersection(g.geo_field, bg.geo_field))) * st_length(bg.geo_field))";
