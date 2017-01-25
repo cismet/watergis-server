@@ -12,6 +12,7 @@
 package de.cismet.watergisserver.cidslayer;
 
 import Sirius.server.middleware.types.MetaClass;
+import Sirius.server.newuser.User;
 
 import java.util.HashMap;
 
@@ -21,7 +22,7 @@ import java.util.HashMap;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class FgBaGerogCidsLayer extends WatergisDefaultCidsLayer {
+public class FgBaGerogCidsLayer extends Default1505ConsideredCidsLayer {
 
     //~ Static fields/initializers ---------------------------------------------
 
@@ -36,9 +37,10 @@ public class FgBaGerogCidsLayer extends WatergisDefaultCidsLayer {
     /**
      * Creates a new FgBaCidsLayer object.
      *
-     * @param  mc  DOCUMENT ME!
+     * @param  mc    DOCUMENT ME!
+     * @param  user  DOCUMENT ME!
      */
-    public FgBaGerogCidsLayer(final MetaClass mc) {
-        super(mc, CATALOGUE_NAME_MAP);
+    public FgBaGerogCidsLayer(final MetaClass mc, final User user) {
+        super(mc, user, CATALOGUE_NAME_MAP);
     }
 }

@@ -60,8 +60,8 @@ public class FgBaFotoPrPfCidsLayer extends WatergisDefaultCidsLayer {
             // the admin has no restrictions
             return null;
         } else {
-            String rest = "((dlm25wPk_freigabe1.freigabe = 'uploader' and upl_name = '" + user.getName()
-                        + "') or dlm25wPk_freigabe1.freigabe is null or dlm25wPk_freigabe1.freigabe = 'frei')";
+            String rest = "((freigabe = 'uploader' and upl_name = '" + user.getName()
+                        + "') or freigabe is null or freigabe = 'frei')";
 
             if ((user != null)
                         && (user.getUserGroup().getName().contains("lu")
@@ -69,7 +69,7 @@ public class FgBaFotoPrPfCidsLayer extends WatergisDefaultCidsLayer {
                             || user.getUserGroup().getName().contains("uwb")
                             || user.getUserGroup().getName().contains("wsa")
                             || user.getUserGroup().getName().contains("stalu"))) {
-                rest = "(" + rest + " or (dlm25wPk_freigabe1.freigabe = 'wawi'))";
+                rest = "(" + rest + " or (freigabe = 'wawi'))";
             }
 
             return rest;

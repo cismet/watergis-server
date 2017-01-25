@@ -8,9 +8,15 @@
 package de.cismet.watergisserver.trigger;
 
 import Sirius.server.newuser.User;
+import Sirius.server.sql.DialectProvider;
+import Sirius.server.sql.SQLTools;
 
+import com.vividsolutions.jts.geom.Geometry;
+
+import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import de.cismet.cids.dynamics.CidsBean;
@@ -33,7 +39,7 @@ public class FgBakAeTrigger extends AbstractDBAwareCidsTrigger {
     private static final transient org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(
             FgBakAeTrigger.class);
     private static final String FG_BAK_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.fg_bak_ae";
-    private static final String FG_BAK_TABLE_NAME = "dlm25w.fg_bak_ae";
+    private static final String FG_BAK_AE_TABLE_NAME = "dlm25w.fg_bak_ae";
 
     //~ Methods ----------------------------------------------------------------
 
@@ -63,7 +69,7 @@ public class FgBakAeTrigger extends AbstractDBAwareCidsTrigger {
 
     @Override
     public CidsTriggerKey getTriggerKey() {
-        return new CidsTriggerKey(CidsTriggerKey.ALL, FG_BAK_TABLE_NAME);
+        return new CidsTriggerKey(CidsTriggerKey.ALL, FG_BAK_AE_TABLE_NAME);
     }
 
     /**
@@ -91,6 +97,7 @@ public class FgBakAeTrigger extends AbstractDBAwareCidsTrigger {
 
     @Override
     public void afterCommittedInsert(final CidsBean cidsBean, final User user) {
+        restat(cidsBean, user);
     }
 
     @Override
@@ -100,6 +107,7 @@ public class FgBakAeTrigger extends AbstractDBAwareCidsTrigger {
 
     @Override
     public void afterCommittedDelete(final CidsBean cidsBean, final User user) {
+        restat(cidsBean, user);
     }
 
     /**
@@ -115,15 +123,19 @@ public class FgBakAeTrigger extends AbstractDBAwareCidsTrigger {
                 final Object id = cidsBean.getProperty("bak_st.von.route.id");
                 final Statement s = getDbServer().getActiveDBConnection().getConnection().createStatement();
                 // refresh fg_ba
-                s.execute("select dlm25w.import_fg_ba_by_fg_bak(" + id.toString() + ", '" + user.getName() + "')");
+                s.execute("select dlm25w.import_fg_ba(" + id.toString() + ", '" + user.getName() + "')");
                 // refresh the stations on fg_ba
-                s.execute("select dlm25w.replace_fg_ba_by_fg_bak(" + id.toString() + ")");
-                // refresh fg_lak
-                s.execute("select dlm25w.import_fg_lak_by_fg_bak(" + id.toString() + ", '" + user.getName() + "')");
-                // refresh the stations on fg_lak
-                s.execute("select dlm25w.replace_fg_lak_by_fg_bak(" + id.toString() + ")");
-                // refresh fg_la
-                s.execute("select dlm25w.import_fg_la_by_fg_bak(" + id.toString() + ", '" + user.getName() + "')");
+// s.execute("select dlm25w.replace_fg_ba_by_fg_bak(" + id.toString() + ")");
+                // refresh stat layer
+                s.execute("select dlm25w.add_fg_ba_stat(" + id.toString() + ")");
+                s.execute("select dlm25w.import_fg_ba_pr_pfByBakId(" + id.toString() + ", '" + user.getName() + "')");
+
+                s.execute("select dlm25w.import_fg_ba_gmdByFgBak(" + id.toString() + ", '" + user.getName() + "')");
+                s.execute("select dlm25w.import_fg_ba_gbByFgBak(" + id.toString() + ", '" + user.getName() + "')");
+                // update derived layer s.execute("select dlm25w.update_derived_layer(" + id.toString() + ", '" +
+                // user.getName() + ")"); s.execute("select dlm25w.add_fg_ba_gerogByBak(" + id.toString() + ")");
+                // s.execute("select dlm25w.add_fg_ba_gerogaByBak(" + id.toString() + ", '" + user.getName() + "')");
+                // s.execute("select dlm25w.add_fg_ba_geroga_rsByBak(" + id.toString() + ", '" + user.getName() + "')");
                 log.error("time to update stations " + (System.currentTimeMillis() - start));
             } catch (Exception e) {
                 log.error("Error while executing fgsk trigger.", e);

@@ -12,6 +12,7 @@
 package de.cismet.watergisserver.cidslayer;
 
 import Sirius.server.middleware.types.MetaClass;
+import Sirius.server.newuser.User;
 
 /**
  * DOCUMENT ME!
@@ -19,18 +20,20 @@ import Sirius.server.middleware.types.MetaClass;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class FgBakAeCidsLayer extends WatergisDefaultCidsLayer {
+public class FgBakAeCidsLayer extends Default1505ConsideredCidsLayer {
 
     //~ Constructors -----------------------------------------------------------
 
     /**
      * Creates a new FgBakCidsLayer object.
      *
-     * @param  mc  DOCUMENT ME!
+     * @param  mc    DOCUMENT ME!
+     * @param  user  DOCUMENT ME!
      */
-    public FgBakAeCidsLayer(final MetaClass mc) {
+    public FgBakAeCidsLayer(final MetaClass mc, final User user) {
         super(
             mc,
+            user,
             false,
             false,
             null,

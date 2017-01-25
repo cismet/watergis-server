@@ -52,7 +52,7 @@ public class VwAlkGmdCidsLayer extends WatergisDefaultCidsLayer {
      */
     public void handleGmd(final MemberAttributeInfo attr,
             final MetaClass foreignClass,
-            final StringBuilder sb,
+            final List<String> sb,
             final List<String> columnNamesList,
             final List<String> columnPropertyNamesList,
             final List<String> sqlColumnNamesList,
@@ -67,7 +67,7 @@ public class VwAlkGmdCidsLayer extends WatergisDefaultCidsLayer {
                 mc.getTableName()
                         + ".gmd",
                 "id");
-        sb.append(alias).append(".").append(nameAttr.getMai().getFieldName());
+        sb.add(alias + "." + nameAttr.getMai().getFieldName());
         columnNamesList.add("gmd_nr");
         sqlColumnNamesList.add(alias + "." + nameAttr.getMai().getFieldName());
         columnPropertyNamesList.add(attr.getName());
@@ -77,7 +77,7 @@ public class VwAlkGmdCidsLayer extends WatergisDefaultCidsLayer {
         // gmd_name
         nameAttr = (ObjectAttribute)foreignClass.getEmptyInstance().getAttribute("name");
 
-        sb.append(",").append(alias).append(".").append(nameAttr.getMai().getFieldName());
+        sb.add("," + alias + "." + nameAttr.getMai().getFieldName());
         columnNamesList.add("gmd_name");
         sqlColumnNamesList.add(alias + "." + nameAttr.getMai().getFieldName());
         columnPropertyNamesList.add(attr.getName() + "." + nameAttr.getMai().getFieldName());
@@ -90,7 +90,7 @@ public class VwAlkGmdCidsLayer extends WatergisDefaultCidsLayer {
             if ((i != 3) && (i != 21) && (i != 26) && (i != 29)) {
                 nameAttr = (ObjectAttribute)foreignClass.getEmptyInstance().getAttribute("wbv_" + toTwoDigit(i));
 
-                sb.append(",").append(alias).append(".").append(nameAttr.getMai().getFieldName());
+                sb.add("," + alias + "." + nameAttr.getMai().getFieldName());
                 columnNamesList.add("wbv_" + toTwoDigit(i));
                 sqlColumnNamesList.add(alias + "." + nameAttr.getMai().getFieldName());
                 columnPropertyNamesList.add(attr.getName() + "." + nameAttr.getMai().getFieldName());
