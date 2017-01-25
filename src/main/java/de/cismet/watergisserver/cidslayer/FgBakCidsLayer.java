@@ -12,6 +12,7 @@
 package de.cismet.watergisserver.cidslayer;
 
 import Sirius.server.middleware.types.MetaClass;
+import Sirius.server.newuser.User;
 
 import java.util.HashMap;
 
@@ -21,7 +22,7 @@ import java.util.HashMap;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class FgBakCidsLayer extends WatergisDefaultCidsLayer {
+public class FgBakCidsLayer extends Default1505ConsideredCidsLayer {
 
     //~ Static fields/initializers ---------------------------------------------
 
@@ -36,9 +37,22 @@ public class FgBakCidsLayer extends WatergisDefaultCidsLayer {
     /**
      * Creates a new FgBakCidsLayer object.
      *
-     * @param  mc  DOCUMENT ME!
+     * @param  mc    DOCUMENT ME!
+     * @param  user  DOCUMENT ME!
      */
-    public FgBakCidsLayer(final MetaClass mc) {
-        super(mc, CATALOGUE_NAME_MAP);
+    public FgBakCidsLayer(final MetaClass mc, final User user) {
+        super(mc, user, CATALOGUE_NAME_MAP);
+    }
+
+    //~ Methods ----------------------------------------------------------------
+
+    @Override
+    public String getRestriction() {
+        if ((user == null) || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
+            return null;
+        } else {
+            return "(dlm25wPk_ww_gr1.wdm <> 1505 or dlm25wPk_ww_gr1.owner = '" + user
+                        .getUserGroup().getName() + "')";
+        }
     }
 }

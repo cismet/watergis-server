@@ -11,7 +11,7 @@
             <exec.format.skip>true</exec.format.skip>
             <exec.classpathScope>runtime</exec.classpathScope>
             <exec.workingdir>${de.cismet.cids.server.workingDir}</exec.workingdir>
-            <exec.args>-Xmx1524m -classpath %classpath Sirius.server.middleware.impls.domainserver.DomainServerImpl runtime.properties</exec.args>
+            <exec.args>-Xmx2048m -classpath %classpath Sirius.server.middleware.impls.domainserver.DomainServerImpl runtime.properties</exec.args>
             <exec.executable>java</exec.executable>
         </properties>
     </action>

@@ -54,18 +54,18 @@ public class MnOwPegelCidsLayer extends WatergisDefaultCidsLayer {
      */
     public void handleLa_st(final MemberAttributeInfo attr,
             final MetaClass foreignClass,
-            final StringBuilder sb,
+            final List<String> sb,
             final List<String> columnNamesList,
             final List<String> columnPropertyNamesList,
             final List<String> sqlColumnNamesList,
             final List<String> primitiveColumnTypesList,
             final StringBuilder joins) {
         final String columnName = "station";
-        sb.append("dlm25w.fg_la.la_cd");
+        sb.add("dlm25w.fg_la.la_cd,");
         columnNamesList.add("gwk_lawa");
         sqlColumnNamesList.add("dlm25w.fg_la.la_cd"); // urspruenglich bis.wert
         columnPropertyNamesList.add(attr.getName() + ".route.la_cd");
-        sb.append(", lastat.wert");
+        sb.add("lastat.wert");
         columnNamesList.add(columnName);
         sqlColumnNamesList.add("lastat.wert");
         columnPropertyNamesList.add(attr.getName() + ".wert");

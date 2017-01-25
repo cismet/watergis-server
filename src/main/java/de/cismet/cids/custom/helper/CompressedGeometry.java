@@ -61,13 +61,13 @@ public class CompressedGeometry implements Serializable {
             zstream.write(iout.toByteArray());
             zstream.finish();
 
-            final FileOutputStream foutUncompressed = new FileOutputStream("/home/therter/tmp/uncomp.out");
-            foutUncompressed.write(iout.toByteArray());
-            foutUncompressed.close();
-
-            final FileOutputStream foutCompressed = new FileOutputStream("/home/therter/tmp/comp.out");
-            foutCompressed.write(bout.toByteArray());
-            foutCompressed.close();
+//            final FileOutputStream foutUncompressed = new FileOutputStream("/home/therter/tmp/uncomp.out");
+//            foutUncompressed.write(iout.toByteArray());
+//            foutUncompressed.close();
+//
+//            final FileOutputStream foutCompressed = new FileOutputStream("/home/therter/tmp/comp.out");
+//            foutCompressed.write(bout.toByteArray());
+//            foutCompressed.close();
             compressedGeometry = bout.toByteArray();
         } catch (Exception e) {
             LOG.error("error while compressing.-", e);

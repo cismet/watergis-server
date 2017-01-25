@@ -24,7 +24,7 @@ public class SonstHwEnFCidsLayer extends WatergisDefaultCidsLayer {
 
     //~ Instance fields --------------------------------------------------------
 
-    private User user;
+    private final User user;
 
     //~ Constructors -----------------------------------------------------------
 

@@ -36,6 +36,10 @@ public class FgBaLeisCidsLayer extends WatergisDefaultCidsLayer {
         CATALOGUE_NAME_MAP.put("leis", "leis");
     }
 
+    //~ Instance fields --------------------------------------------------------
+
+    private User user;
+
     //~ Constructors -----------------------------------------------------------
 
     /**
@@ -46,5 +50,18 @@ public class FgBaLeisCidsLayer extends WatergisDefaultCidsLayer {
      */
     public FgBaLeisCidsLayer(final MetaClass mc, final User user) {
         super(mc, false, false, CATALOGUE_NAME_MAP);
+        this.user = user;
+    }
+
+    //~ Methods ----------------------------------------------------------------
+
+    @Override
+    public String getRestriction() {
+        if ((user == null) || user.getUserGroup().getName().startsWith("lung")
+                    || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
+            return null;
+        } else {
+            return "(dlm25wPk_ww_gr1.owner = '" + user.getUserGroup().getName() + "' or dlm25wPk_ww_gr1.ww_gr = 4000 )";
+        }
     }
 }
