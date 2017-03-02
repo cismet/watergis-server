@@ -1,21 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
   
-  <parent>
-    <groupId>de.cismet.cids</groupId>
-    <artifactId>cids-parent</artifactId>
-    <version>2.4</version>
-  </parent>
+    <!-- 
+      FIXME: Replace deprecated cids-parent by cismet-parent
+    -->
+    <parent>
+        <groupId>de.cismet.cids</groupId>
+        <artifactId>cids-parent</artifactId>
+        <version>5.0-SNAPSHOT</version>
+    </parent>
     
-  <groupId>de.cismet.watergis</groupId>
-  <artifactId>watergis-server</artifactId>
-  <version>4.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+    <groupId>de.cismet.watergis</groupId>
+    <artifactId>watergis-server</artifactId>
+    <version>5.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-  <name>WaterGis Server</name>
-  <url>http://maven.apache.org</url>
-
+    <name>WaterGis Server</name>
+    <description>!!! description pending !!!</description>
+  
     <properties>
+        <!-- 
+            TODO: Remove when deprecated cids-parent is replaced by cismet-parent
+        -->
         <de.cismet.libDir>lib/localWatergis</de.cismet.libDir>
     </properties>
   
@@ -23,77 +30,111 @@
         <connection>https://github.com/cismet/watergis-server.git</connection>
         <developerConnection>scm:git:git@github.com:cismet/watergis-server.git</developerConnection>
         <url>https://github.com/cismet/watergis-server</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
-    <repositories>
-        <repository>
-            <id>cismet-repo</id>
-            <url>https://repo.cismet.de/repo</url>
-            <releases>
-                <enabled>true</enabled>
-                <checksumPolicy>warn</checksumPolicy>
-                <updatePolicy>daily</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <checksumPolicy>warn</checksumPolicy>
-                <updatePolicy>interval:60</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
+   
+           
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/cismet/cids-custom-wrrl-db-mv-server/issues</url>
+    </issueManagement>
     
-  <dependencies>
-    <dependency>
-        <groupId>de.cismet.cids</groupId>
-        <artifactId>cids-server</artifactId>
-        <version>4.0</version>
-    </dependency>      
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+    <ciManagement>
+        <system>jenkins</system>
+        <url>https://ci.cismet.de/job/cids-custom-wrrl-db-mv-server/</url>
+    </ciManagement>
+
+    <dependencyManagement>  
+        <!-- IMPORT of cismet-ext-bom -->
+        <dependencies>
+            <dependency>
+                <groupId>de.cismet</groupId>
+                <artifactId>cismet-ext-bom</artifactId>
+                <version>5.0-SNAPSHOT</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        
+            <!-- BEGIN: managed cids-dependencies -->
+            <dependency>
+                <groupId>de.cismet.commons</groupId>
+                <artifactId>cismet-commons</artifactId>
+                <version>5.0-SNAPSHOT</version>
+                <type>jar</type>
+                <scope>compile</scope>
+            </dependency>
+            
+            <dependency>
+                <groupId>de.cismet.cids</groupId>
+                <artifactId>cids-server</artifactId>
+                <version>5.0-SNAPSHOT</version>
+                <type>jar</type>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>de.cismet.cids</groupId>
+                <artifactId>cids-server-rest-types</artifactId>
+                <version>5.0-SNAPSHOT</version>
+                <scope>compile</scope>
+                <type>jar</type>
+            </dependency>                   
+            <!-- END: managed cids-dependencies -->    
+        </dependencies>
+    </dependencyManagement>
+  
+    <dependencies>
+        <!-- BEGIN: cids-dependencies -->
+        <dependency>
+            <groupId>de.cismet.commons</groupId>
+            <artifactId>cismet-commons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.cismet.cids</groupId>
+            <artifactId>cids-server</artifactId>
+        </dependency>
+        <!-- END: cids-dependencies -->
+     
+        <!-- BEGIN: Runtime dependencies -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+        <!-- END: Runtime dependencies -->
+        
+        <!-- BEGIN: TEST dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- END: TEST dependencies -->
+    </dependencies>
   
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <mainClass>Sirius.server.middleware.impls.domainserver.DomainServerImpl</mainClass>
+                            </manifest>
+                        </archive>
+                    </configuration>
+                </plugin>     
+            </plugins>
+        </pluginManagement>
+         
+        <!--
+            CAUTION ! Ugly Winning bei der Namens-Auswahl !!! siehe Slack =>
+            https://cismet.slack.com/files/jruiz/F3ZC7HX7V/Snapshot_als_finalName_in_pom_xml
+        -->
         <finalName>WaterGISServer</finalName>
     </build>
-  
-  
-<!--    <build>
-        <plugins>
-             overwritten because the artifact has to be renamed du to
-                 compatibility reasons to the cidsDistribution 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-installed</id>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <destFileName>cidsCustomServerStuff.jar</destFileName>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.12</version>
-                <configuration>
-                     
-                        all those tests have to be excluded because they require a connection to a postgres db or the
-                        remote test helper service, respectively. as this service is only internally available we have
-                        to think of another method to test these things
-                     
-                </configuration>
-           </plugin>
-        </plugins>
-    </build>  -->
 </project>
