@@ -56,30 +56,14 @@
                 <scope>import</scope>
             </dependency>
         
-            <!-- BEGIN: managed cids-dependencies -->
-            <dependency>
-                <groupId>de.cismet.commons</groupId>
-                <artifactId>cismet-commons</artifactId>
-                <version>5.0-SNAPSHOT</version>
-                <type>jar</type>
-                <scope>compile</scope>
-            </dependency>
-            
+            <!-- BEGIN: managed cids-dependencies -->            
             <dependency>
                 <groupId>de.cismet.cids</groupId>
                 <artifactId>cids-server</artifactId>
                 <version>5.0-SNAPSHOT</version>
                 <type>jar</type>
                 <scope>compile</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>de.cismet.cids</groupId>
-                <artifactId>cids-server-rest-types</artifactId>
-                <version>5.0-SNAPSHOT</version>
-                <scope>compile</scope>
-                <type>jar</type>
-            </dependency>                   
+            </dependency>                
             <!-- END: managed cids-dependencies -->    
         </dependencies>
     </dependencyManagement>
@@ -87,14 +71,25 @@
     <dependencies>
         <!-- BEGIN: cids-dependencies -->
         <dependency>
-            <groupId>de.cismet.commons</groupId>
-            <artifactId>cismet-commons</artifactId>
-        </dependency>
-        <dependency>
             <groupId>de.cismet.cids</groupId>
             <artifactId>cids-server</artifactId>
         </dependency>
         <!-- END: cids-dependencies -->
+        
+        <!-- BEGIN: managed dependencies -->
+        <dependency>
+            <groupId>com.vividsolutions</groupId>
+            <artifactId>jts</artifactId>
+            <scope>compile</scope>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <scope>compile</scope>
+            <type>jar</type>
+        </dependency>
+        <!-- END: managed dependencies -->
      
         <!-- BEGIN: Runtime dependencies -->
         <dependency>
