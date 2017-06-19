@@ -48,7 +48,7 @@ public class QpCidsLayer extends WatergisDefaultCidsLayer {
      * @param  user  DOCUMENT ME!
      */
     public QpCidsLayer(final MetaClass mc, final User user) {
-        super(mc, false, true, CATALOGUE_NAME_MAP);
+        super(mc, true, true, CATALOGUE_NAME_MAP);
         this.user = user;
     }
 

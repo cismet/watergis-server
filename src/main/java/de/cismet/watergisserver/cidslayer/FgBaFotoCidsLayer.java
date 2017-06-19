@@ -32,7 +32,7 @@ public class FgBaFotoCidsLayer extends WatergisDefaultCidsLayer {
         CATALOGUE_NAME_MAP.put("ww_gr", "ww_gr");
         CATALOGUE_NAME_MAP.put("l_st", "l_st");
         CATALOGUE_NAME_MAP.put("l_rl", "l_rl");
-        CATALOGUE_NAME_MAP.put("k_freigabe", "freigabe");
+        CATALOGUE_NAME_MAP.put("freigabe", "freigabe");
     }
 
     //~ Instance fields --------------------------------------------------------
@@ -48,7 +48,7 @@ public class FgBaFotoCidsLayer extends WatergisDefaultCidsLayer {
      * @param  user  DOCUMENT ME!
      */
     public FgBaFotoCidsLayer(final MetaClass mc, final User user) {
-        super(mc, false, true, CATALOGUE_NAME_MAP);
+        super(mc, true, true, CATALOGUE_NAME_MAP);
         this.user = user;
     }
 

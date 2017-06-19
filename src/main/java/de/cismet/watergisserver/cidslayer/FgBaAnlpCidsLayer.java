@@ -33,6 +33,7 @@ public class FgBaAnlpCidsLayer extends Default1505ConsideredCidsLayer {
         CATALOGUE_NAME_MAP.put("traeger", "traeger");
         CATALOGUE_NAME_MAP.put("zust_kl", "zust_kl");
         CATALOGUE_NAME_MAP.put("l_st", "l_st");
+        CATALOGUE_NAME_MAP.put("l_rl", "l_rl");
     }
 
     //~ Constructors -----------------------------------------------------------

@@ -60,6 +60,7 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
     private String[] columnPropertyNames;
     private String[] primitiveColumnTypes;
     private boolean showFgLa = false;
+    private boolean firstFgLa = true;
     private boolean additionalGeom = false;
     private boolean inheritedWwGr = false;
     private String additionalJoins = null;
@@ -232,7 +233,7 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
                 }
                 sb.add("dlm25w.fg_bak.ba_cd");
                 columnNamesList.add("fg_bak.ba_cd");
-                sqlColumnNamesList.add("fg_bak.ba_cd");       // urspruenglich bis.wert
+                sqlColumnNamesList.add("fg_bak.ba_cd");           // urspruenglich bis.wert
                 columnPropertyNamesList.add(attr.getName() + ".route.ba_cd");
                 sb.add(" stat.wert");
                 columnNamesList.add(columnName);
@@ -266,7 +267,7 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
                 }
                 sb.add("dlm25w.fg_ba.ba_cd");
                 columnNamesList.add("ba_cd");
-                sqlColumnNamesList.add("dlm25w.fg_ba.ba_cd"); // urspruenglich bis.wert
+                sqlColumnNamesList.add("dlm25w.fg_ba.ba_cd");     // urspruenglich bis.wert
                 columnPropertyNamesList.add(attr.getName() + ".route.ba_cd");
                 sb.add(" stat.wert");
                 columnNamesList.add(columnName);
@@ -288,41 +289,76 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
             } else if (attr.isForeignKey()
                         && getBeanClassName(allClasses, attr.getForeignKeyClassId()).toLowerCase().equals(
                             "fg_la_punkt")) {
-                if (this.showFgLa) {
+                if (this.showFgLa && firstFgLa) {
+                    firstFgLa = false;
                     fgLaPosition = sb.size();
                     continue;
                 }
-                sqlGeoField = "geo_field";
-                final String columnName = "la_st";
-                if (!additionalGeom) {
-                    geoField = "geom";
-                    sb.add(1, "ST_AsEWKb(geom.geo_field) as " + geoField);
-                    columnNamesList.add(1, "geom");
-                    sqlColumnNamesList.add(1, "geom.geo_field");
-                    columnPropertyNamesList.add(1, attr.getName() + ".real_point.geo_field");
-                    primitiveColumnTypesList.add(1, "Geometry");
+                if (firstFgLa) {
+                    sqlGeoField = "geo_field";
+                    final String columnName = "la_st";
+                    if (!additionalGeom) {
+                        geoField = "geom";
+                        sb.add(1, "ST_AsEWKb(geom.geo_field) as " + geoField);
+                        columnNamesList.add(1, "geom");
+                        sqlColumnNamesList.add(1, "geom.geo_field");
+                        columnPropertyNamesList.add(1, attr.getName() + ".real_point.geo_field");
+                        primitiveColumnTypesList.add(1, "Geometry");
+                    }
+                    sb.add("dlm25w.fg_la.la_cd");
+                    columnNamesList.add("la_cd");
+                    sqlColumnNamesList.add("dlm25w.fg_la.la_cd"); // urspruenglich bis.wert
+                    columnPropertyNamesList.add(attr.getName() + ".route.la_cd");
+                    sb.add(" statl.wert");
+                    columnNamesList.add(columnName);
+                    sqlColumnNamesList.add("statl.wert");
+                    columnPropertyNamesList.add(attr.getName() + ".wert");
+                    joins.append(joinExtension)
+                            .append(" join dlm25w.fg_la_punkt statl on (statl.id = ")
+                            .append(attr.getFieldName())
+                            .append(")");
+                    if (!additionalGeom) {
+                        joins.append(" join geom on (real_point = geom.id)");
+                        referencedClass.put(geoField, geomMc.getID());
+                    }
+                    joins.append(joinExtension).append(" join dlm25w.fg_la on (statl.route = dlm25w.fg_la.id)");
+                    primitiveColumnTypesList.add("BigDecimal");
+                    primitiveColumnTypesList.add("java.lang.Double");
+                    final StationInfo s = new StationInfo(false, true, "dlm25w.fg_la", ++lineId, "la_cd");
+                    stationTypes.put(columnName, s);
+                } else {
+                    sqlGeoField = "geo_field";
+                    final String columnName = "station";
+                    if (!additionalGeom) {
+                        geoField = "geom";
+                        sb.add(1, "ST_AsEWKb(geom.geo_field) as " + geoField);
+                        columnNamesList.add(1, "geom");
+                        sqlColumnNamesList.add(1, "geom.geo_field");
+                        columnPropertyNamesList.add(1, attr.getName() + ".real_point.geo_field");
+                        primitiveColumnTypesList.add(1, "Geometry");
+                    }
+                    sb.add("dlm25w.fg_la.la_cd as gwk_lawa");
+                    columnNamesList.add("gwk_lawa");
+                    sqlColumnNamesList.add("dlm25w.fg_la.la_cd"); // urspruenglich bis.wert
+                    columnPropertyNamesList.add(attr.getName() + ".route.la_cd");
+                    sb.add(" statl.wert as station");
+                    columnNamesList.add(columnName);
+                    sqlColumnNamesList.add("statl.wert");
+                    columnPropertyNamesList.add(attr.getName() + ".wert");
+                    joins.append(joinExtension)
+                            .append(" join dlm25w.fg_la_punkt statl on (statl.id = ")
+                            .append(attr.getFieldName())
+                            .append(")");
+                    if (!additionalGeom) {
+                        joins.append(" join geom on (real_point = geom.id)");
+                        referencedClass.put(geoField, geomMc.getID());
+                    }
+                    joins.append(joinExtension).append(" join dlm25w.fg_la on (statl.route = dlm25w.fg_la.id)");
+                    primitiveColumnTypesList.add("BigDecimal");
+                    primitiveColumnTypesList.add("java.lang.Double");
+                    final StationInfo s = new StationInfo(false, true, "dlm25w.fg_la", ++lineId, "la_cd");
+                    stationTypes.put(columnName, s);
                 }
-                sb.add("dlm25w.fg_la.la_cd");
-                columnNamesList.add("la_cd");
-                sqlColumnNamesList.add("dlm25w.fg_la.la_cd"); // urspruenglich bis.wert
-                columnPropertyNamesList.add(attr.getName() + ".route.la_cd");
-                sb.add(" statl.wert");
-                columnNamesList.add(columnName);
-                sqlColumnNamesList.add("statl.wert");
-                columnPropertyNamesList.add(attr.getName() + ".wert");
-                joins.append(joinExtension)
-                        .append(" join dlm25w.fg_la_punkt statl on (statl.id = ")
-                        .append(attr.getFieldName())
-                        .append(")");
-                if (!additionalGeom) {
-                    joins.append(" join geom on (real_point = geom.id)");
-                    referencedClass.put(geoField, geomMc.getID());
-                }
-                joins.append(joinExtension).append(" join dlm25w.fg_la on (statl.route = dlm25w.fg_la.id)");
-                primitiveColumnTypesList.add("String");
-                primitiveColumnTypesList.add("java.lang.Double");
-                final StationInfo s = new StationInfo(false, true, "dlm25w.fg_la", ++lineId, "la_cd");
-                stationTypes.put(columnName, s);
             } else if (attr.isForeignKey()
                         && getBeanClassName(allClasses, attr.getForeignKeyClassId()).toLowerCase().equals(
                             "fg_bak_linie")) {
@@ -615,7 +651,7 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
                 fgLaPosition = sb.size();
             }
             sb.add(fgLaPosition, " la_lp.la_cd as la_cd ");
-            sb.add(fgLaPosition + 1, " la_lp.wert as la_st ");
+            sb.add(fgLaPosition + 1, " la_lp.statval as la_st ");
             columnNamesList.add(fgLaPosition, "la_cd");
             columnNamesList.add(fgLaPosition + 1, "la_st");
             sqlColumnNamesList.add(fgLaPosition, "la_cd");
@@ -630,7 +666,7 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
                     .append(" and la_lp.ba_cd = ")
                     .append(baCd)
                     .append(")");
-            primitiveColumnTypesList.add(fgLaPosition, "java.lang.String");
+            primitiveColumnTypesList.add(fgLaPosition, "BigDecimal");
             primitiveColumnTypesList.add(fgLaPosition + 1, "java.lang.Double");
         }
 
