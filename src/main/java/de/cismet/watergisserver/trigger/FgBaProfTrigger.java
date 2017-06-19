@@ -26,14 +26,14 @@ import de.cismet.cids.trigger.CidsTriggerKey;
  * @version  $Revision$, $Date$
  */
 @ServiceProvider(service = CidsTrigger.class)
-public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
+public class FgBaProfTrigger extends AbstractDBAwareCidsTrigger {
 
     //~ Static fields/initializers ---------------------------------------------
 
     private static final transient org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(
-            VwAlkGmdTrigger.class);
-    private static final String VW_ALK_GMD_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.vw_alk_gmd";
-    private static final String VW_ALK_GMD_TABLE_NAME = "dlm25w.vw_alk_gmd";
+            FgBaProfTrigger.class);
+    private static final String FG_BAK_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.fg_ba_prof";
+    private static final String FG_BAK_TABLE_NAME = "dlm25w.fg_ba_prof";
 
     //~ Methods ----------------------------------------------------------------
 
@@ -63,7 +63,7 @@ public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
 
     @Override
     public CidsTriggerKey getTriggerKey() {
-        return new CidsTriggerKey(CidsTriggerKey.ALL, VW_ALK_GMD_TABLE_NAME);
+        return new CidsTriggerKey(CidsTriggerKey.ALL, FG_BAK_TABLE_NAME);
     }
 
     /**
@@ -86,7 +86,7 @@ public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
      * @return  DOCUMENT ME!
      */
     private boolean isFgBakObject(final CidsBean cidsBean) {
-        return (cidsBean.getClass().getName().equals(VW_ALK_GMD_CLASS_NAME));
+        return (cidsBean.getClass().getName().equals(FG_BAK_CLASS_NAME));
     }
 
     @Override
@@ -114,13 +114,18 @@ public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
         if (isFgBakObject(cidsBean)) {
             try {
                 final long start = System.currentTimeMillis();
-                final Object id = cidsBean.getMetaObject().getID();
+                // If the cidsBean is a new object, the meta object contains the new id while the cidsBean has still
+                // the id -1
+                final Object id = cidsBean.getProperty("bs_st.bak_id");
                 final Statement s = getDbServer().getActiveDBConnection().getConnection().createStatement();
-                // refresh fg_ba_gmd layer
-                s.execute("select dlm25w.dlm25w.import_fg_ba_gmdbygmd(" + id.toString() + ")");
+                s.execute("select dlm25w.import_fg_ba_geroByBak(" + id.toString() + ")");
+                s.execute("select dlm25w.import_fg_ba_gerogByBak(" + id.toString() + ")");
+                s.execute("select dlm25w.import_fg_ba_gerogaByBak(" + id.toString() + ")");
+                s.execute("select dlm25w.import_fg_ba_gerog_rsByBak(" + id.toString() + ")");
+                s.execute("select dlm25w.import_fg_ba_geroga_rsByBak(" + id.toString() + ")");
                 log.error("time to update stations " + (System.currentTimeMillis() - start));
             } catch (Exception e) {
-                log.error("Error while executing VwAlkGmd trigger.", e);
+                log.error("Error while executing fgBak trigger.", e);
             }
         }
     }

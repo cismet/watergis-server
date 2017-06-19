@@ -130,6 +130,9 @@ public class FgBakAeTrigger extends AbstractDBAwareCidsTrigger {
                 s.execute("select dlm25w.add_fg_ba_stat(" + id.toString() + ")");
                 s.execute("select dlm25w.import_fg_ba_pr_pfByBakId(" + id.toString() + ", '" + user.getName() + "')");
 
+                s.execute("select dlm25w.import_qp_gaf_pByFgBak(" + id.toString() + ", '" + user.getName() + "')");
+                s.execute("select dlm25w.import_qp_gaf_l_pr_pfByBak(" + id.toString() + ", '" + user.getName()
+                            + "')");
                 s.execute("select dlm25w.import_fg_ba_gmdByFgBak(" + id.toString() + ", '" + user.getName() + "')");
                 s.execute("select dlm25w.import_fg_ba_gbByFgBak(" + id.toString() + ", '" + user.getName() + "')");
                 // update derived layer s.execute("select dlm25w.update_derived_layer(" + id.toString() + ", '" +

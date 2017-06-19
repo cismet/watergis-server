@@ -24,14 +24,6 @@ import java.util.HashMap;
  */
 public class FgBakGn1CidsLayer extends Default1505ConsideredCidsLayer {
 
-    //~ Static fields/initializers ---------------------------------------------
-
-    private static final HashMap<String, String> CATALOGUE_NAME_MAP = new HashMap<String, String>();
-
-    static {
-        CATALOGUE_NAME_MAP.put("ww_gr", "ww_gr");
-    }
-
     //~ Constructors -----------------------------------------------------------
 
     /**
@@ -41,9 +33,6 @@ public class FgBakGn1CidsLayer extends Default1505ConsideredCidsLayer {
      * @param  user  DOCUMENT ME!
      */
     public FgBakGn1CidsLayer(final MetaClass mc, final User user) {
-        super(
-            mc,
-            user,
-            CATALOGUE_NAME_MAP);
+        super(mc, user);
     }
 }

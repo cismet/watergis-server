@@ -14,6 +14,8 @@ package de.cismet.watergisserver.cidslayer;
 import Sirius.server.middleware.types.MetaClass;
 import Sirius.server.newuser.User;
 
+import java.util.HashMap;
+
 /**
  * DOCUMENT ME!
  *
@@ -21,6 +23,14 @@ import Sirius.server.newuser.User;
  * @version  $Revision$, $Date$
  */
 public class SonstHwEnFCidsLayer extends WatergisDefaultCidsLayer {
+
+    //~ Static fields/initializers ---------------------------------------------
+
+    private static final HashMap<String, String> CATALOGUE_NAME_MAP = new HashMap<String, String>();
+
+    static {
+        CATALOGUE_NAME_MAP.put("ww_gr", "ww_gr");
+    }
 
     //~ Instance fields --------------------------------------------------------
 
@@ -35,7 +45,7 @@ public class SonstHwEnFCidsLayer extends WatergisDefaultCidsLayer {
      * @param  user  DOCUMENT ME!
      */
     public SonstHwEnFCidsLayer(final MetaClass mc, final User user) {
-        super(mc);
+        super(mc, CATALOGUE_NAME_MAP);
         this.user = user;
     }
 
@@ -47,7 +57,7 @@ public class SonstHwEnFCidsLayer extends WatergisDefaultCidsLayer {
                     || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
             return null;
         } else {
-            return "dlm25w.k_ww_gr.owner = '" + user.getUserGroup().getName() + "'";
+            return "dlm25wPk_ww_gr1.owner = '" + user.getUserGroup().getName() + "'";
         }
     }
 }

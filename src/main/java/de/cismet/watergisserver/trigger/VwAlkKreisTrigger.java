@@ -26,14 +26,14 @@ import de.cismet.cids.trigger.CidsTriggerKey;
  * @version  $Revision$, $Date$
  */
 @ServiceProvider(service = CidsTrigger.class)
-public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
+public class VwAlkKreisTrigger extends AbstractDBAwareCidsTrigger {
 
     //~ Static fields/initializers ---------------------------------------------
 
     private static final transient org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(
-            VwAlkGmdTrigger.class);
-    private static final String VW_ALK_GMD_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.vw_alk_gmd";
-    private static final String VW_ALK_GMD_TABLE_NAME = "dlm25w.vw_alk_gmd";
+            VwAlkKreisTrigger.class);
+    private static final String VW_ALK_KREIS_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.vw_alk_kreis";
+    private static final String VW_ALK_KREIS_TABLE_NAME = "dlm25w.vw_alk_kreis";
 
     //~ Methods ----------------------------------------------------------------
 
@@ -63,7 +63,7 @@ public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
 
     @Override
     public CidsTriggerKey getTriggerKey() {
-        return new CidsTriggerKey(CidsTriggerKey.ALL, VW_ALK_GMD_TABLE_NAME);
+        return new CidsTriggerKey(CidsTriggerKey.ALL, VW_ALK_KREIS_TABLE_NAME);
     }
 
     /**
@@ -86,7 +86,7 @@ public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
      * @return  DOCUMENT ME!
      */
     private boolean isFgBakObject(final CidsBean cidsBean) {
-        return (cidsBean.getClass().getName().equals(VW_ALK_GMD_CLASS_NAME));
+        return (cidsBean.getClass().getName().equals(VW_ALK_KREIS_CLASS_NAME));
     }
 
     @Override
@@ -117,10 +117,10 @@ public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
                 final Object id = cidsBean.getMetaObject().getID();
                 final Statement s = getDbServer().getActiveDBConnection().getConnection().createStatement();
                 // refresh fg_ba_gmd layer
-                s.execute("select dlm25w.dlm25w.import_fg_ba_gmdbygmd(" + id.toString() + ")");
+                s.execute("select dlm25w.dlm25w.import_fg_ba_gmdbykreis(" + id.toString() + ")");
                 log.error("time to update stations " + (System.currentTimeMillis() - start));
             } catch (Exception e) {
-                log.error("Error while executing VwAlkGmd trigger.", e);
+                log.error("Error while executing VwAlkKreis trigger.", e);
             }
         }
     }

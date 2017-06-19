@@ -116,10 +116,10 @@ public class QpTrigger extends AbstractDBAwareCidsTrigger {
                 final Statement s = getDbServer().getActiveDBConnection().getConnection().createStatement();
                 // refresh the stations on fg_bak
                 if (qpNr instanceof Integer) {
+                    s.execute("select dlm25w.import_qp_gaf_pById(" + qpNr.toString() + ", '" + user.getName() + "')");
                     s.execute("select dlm25w.import_qp_gaf_lById(" + qpNr.toString() + ", '" + user.getName() + "')");
                     s.execute("select dlm25w.import_qp_gaf_l_pr_pfById(" + qpNr.toString() + ", '" + user.getName()
                                 + "')");
-                    s.execute("select dlm25w.import_qp_gaf_pById(" + qpNr.toString() + ", '" + user.getName() + "')");
                 }
             } catch (Exception e) {
                 log.error("Error while executing qp trigger.", e);
