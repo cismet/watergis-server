@@ -26,14 +26,21 @@ import de.cismet.cids.trigger.CidsTriggerKey;
  * @version  $Revision$, $Date$
  */
 @ServiceProvider(service = CidsTrigger.class)
-public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
+public class FgBaPrAblTrigger extends AbstractDBAwareCidsTrigger {
 
     //~ Static fields/initializers ---------------------------------------------
 
     private static final transient org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(
-            VwAlkGmdTrigger.class);
-    private static final String VW_ALK_GMD_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.vw_alk_gmd";
-    private static final String VW_ALK_GMD_TABLE_NAME = "dlm25w.vw_alk_gmd";
+            FgBaPrAblTrigger.class);
+    private static final String FG_BA_PROF_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.fg_ba_prof";
+    private static final String FG_BA_SBEF_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.fg_ba_sbef";
+    private static final String FG_BA_RL_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.fg_ba_rl";
+    private static final String FG_BA_D_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.fg_ba_d";
+    private static final String FG_BA_DUE_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.fg_ba_due";
+    private static final String FG_BA_ANLL_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.fg_ba_anll";
+    private static final String FG_BA_UBEF_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.fg_ba_ubef";
+    private static final String FG_BA_BBEF_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.fg_ba_bbef";
+    private static final String FG_BA_UGHZ_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.fg_ba_ughz";
 
     //~ Methods ----------------------------------------------------------------
 
@@ -63,7 +70,7 @@ public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
 
     @Override
     public CidsTriggerKey getTriggerKey() {
-        return new CidsTriggerKey(CidsTriggerKey.ALL, VW_ALK_GMD_TABLE_NAME);
+        return new CidsTriggerKey(CidsTriggerKey.ALL, CidsTriggerKey.ALL);
     }
 
     /**
@@ -85,8 +92,16 @@ public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
      *
      * @return  DOCUMENT ME!
      */
-    private boolean isFgBakObject(final CidsBean cidsBean) {
-        return (cidsBean.getClass().getName().equals(VW_ALK_GMD_CLASS_NAME));
+    private boolean isRelevantObject(final CidsBean cidsBean) {
+        return cidsBean.getClass().getName().equals(FG_BA_SBEF_CLASS_NAME)
+                    || cidsBean.getClass().getName().equals(FG_BA_RL_CLASS_NAME)
+                    || cidsBean.getClass().getName().equals(FG_BA_D_CLASS_NAME)
+                    || cidsBean.getClass().getName().equals(FG_BA_DUE_CLASS_NAME)
+                    || cidsBean.getClass().getName().equals(FG_BA_UGHZ_CLASS_NAME)
+                    || cidsBean.getClass().getName().equals(FG_BA_ANLL_CLASS_NAME)
+                    || cidsBean.getClass().getName().equals(FG_BA_PROF_CLASS_NAME)
+                    || cidsBean.getClass().getName().equals(FG_BA_UBEF_CLASS_NAME)
+                    || cidsBean.getClass().getName().equals(FG_BA_BBEF_CLASS_NAME);
     }
 
     @Override
@@ -111,16 +126,18 @@ public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
      * @param  user      DOCUMENT ME!
      */
     private void restat(final CidsBean cidsBean, final User user) {
-        if (isFgBakObject(cidsBean)) {
+        if (isRelevantObject(cidsBean)) {
             try {
                 final long start = System.currentTimeMillis();
-                final Object id = cidsBean.getMetaObject().getID();
+                final Object id = cidsBean.getProperty("ba_st.route.id");
                 final Statement s = getDbServer().getActiveDBConnection().getConnection().createStatement();
                 // refresh fg_ba_gmd layer
-                s.execute("select dlm25w.dlm25w.import_fg_ba_gmdbygmd(" + id.toString() + ")");
+                if (id != null) {
+                    s.execute("select dlm25w.import_fg_ba_pr_abl(" + id.toString() + ")");
+                }
                 log.error("time to update stations " + (System.currentTimeMillis() - start));
             } catch (Exception e) {
-                log.error("Error while executing VwAlkGmd trigger.", e);
+                log.error("Error while executing fgBak trigger.", e);
             }
         }
     }

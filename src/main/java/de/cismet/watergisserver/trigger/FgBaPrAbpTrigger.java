@@ -26,14 +26,18 @@ import de.cismet.cids.trigger.CidsTriggerKey;
  * @version  $Revision$, $Date$
  */
 @ServiceProvider(service = CidsTrigger.class)
-public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
+public class FgBaPrAbpTrigger extends AbstractDBAwareCidsTrigger {
 
     //~ Static fields/initializers ---------------------------------------------
 
     private static final transient org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(
-            VwAlkGmdTrigger.class);
-    private static final String VW_ALK_GMD_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.vw_alk_gmd";
-    private static final String VW_ALK_GMD_TABLE_NAME = "dlm25w.vw_alk_gmd";
+            FgBaPrAbpTrigger.class);
+    private static final String FG_BA_SCHA_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.fg_ba_scha";
+    private static final String FG_BA_WEHR_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.fg_ba_wehr";
+    private static final String FG_BA_SCHW_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.fg_ba_schw";
+    private static final String FG_BA_KR_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.fg_ba_kr";
+    private static final String FG_BA_ANLP_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.fg_ba_anlp";
+    private static final String FG_BA_EA_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.fg_ba_ea";
 
     //~ Methods ----------------------------------------------------------------
 
@@ -63,7 +67,7 @@ public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
 
     @Override
     public CidsTriggerKey getTriggerKey() {
-        return new CidsTriggerKey(CidsTriggerKey.ALL, VW_ALK_GMD_TABLE_NAME);
+        return new CidsTriggerKey(CidsTriggerKey.ALL, CidsTriggerKey.ALL);
     }
 
     /**
@@ -85,8 +89,13 @@ public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
      *
      * @return  DOCUMENT ME!
      */
-    private boolean isFgBakObject(final CidsBean cidsBean) {
-        return (cidsBean.getClass().getName().equals(VW_ALK_GMD_CLASS_NAME));
+    private boolean isRelevantObject(final CidsBean cidsBean) {
+        return cidsBean.getClass().getName().equals(FG_BA_SCHA_CLASS_NAME)
+                    || cidsBean.getClass().getName().equals(FG_BA_WEHR_CLASS_NAME)
+                    || cidsBean.getClass().getName().equals(FG_BA_SCHW_CLASS_NAME)
+                    || cidsBean.getClass().getName().equals(FG_BA_KR_CLASS_NAME)
+                    || cidsBean.getClass().getName().equals(FG_BA_ANLP_CLASS_NAME)
+                    || cidsBean.getClass().getName().equals(FG_BA_EA_CLASS_NAME);
     }
 
     @Override
@@ -111,16 +120,18 @@ public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
      * @param  user      DOCUMENT ME!
      */
     private void restat(final CidsBean cidsBean, final User user) {
-        if (isFgBakObject(cidsBean)) {
+        if (isRelevantObject(cidsBean)) {
             try {
                 final long start = System.currentTimeMillis();
-                final Object id = cidsBean.getMetaObject().getID();
+                final Object id = cidsBean.getProperty("ba_st.route.id");
                 final Statement s = getDbServer().getActiveDBConnection().getConnection().createStatement();
                 // refresh fg_ba_gmd layer
-                s.execute("select dlm25w.dlm25w.import_fg_ba_gmdbygmd(" + id.toString() + ")");
+                if (id != null) {
+                    s.execute("select dlm25w.import_fg_ba_pr_abp(" + id.toString() + ")");
+                }
                 log.error("time to update stations " + (System.currentTimeMillis() - start));
             } catch (Exception e) {
-                log.error("Error while executing VwAlkGmd trigger.", e);
+                log.error("Error while executing fgBak trigger.", e);
             }
         }
     }

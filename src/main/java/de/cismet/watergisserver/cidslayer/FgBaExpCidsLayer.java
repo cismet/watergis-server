@@ -57,7 +57,7 @@ public class FgBaExpCidsLayer extends WatergisDefaultCidsLayer {
                     || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
             return null;
         } else {
-            return "dlm25w.k_ww_gr.owner = '" + user.getUserGroup().getName() + "'";
+            return "dlm25wPk_ww_gr1.owner = '" + user.getUserGroup().getName() + "'";
         }
     }
 }

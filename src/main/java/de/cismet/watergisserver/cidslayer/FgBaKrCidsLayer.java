@@ -33,6 +33,7 @@ public class FgBaKrCidsLayer extends Default1505ConsideredCidsLayer {
         CATALOGUE_NAME_MAP.put("traeger", "traeger");
         CATALOGUE_NAME_MAP.put("l_st", "l_st");
         CATALOGUE_NAME_MAP.put("l_oiu", "l_oiu");
+        CATALOGUE_NAME_MAP.put("zust_kl", "zust_kl");
     }
 
     //~ Constructors -----------------------------------------------------------
