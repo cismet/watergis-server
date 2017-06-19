@@ -123,7 +123,7 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                 // refresh fg_ba
                 s.execute("select dlm25w.import_fg_ba(" + id.toString() + ", '" + user.getName() + "')");
                 // refresh the stations on fg_ba
-// s.execute("select dlm25w.replace_fg_ba_by_fg_bak(" + id.toString() + ")");
+                s.execute("select dlm25w.replace_fg_ba_by_fg_bak(" + id.toString() + ")");
                 // refresh fg_lak
                 s.execute("select dlm25w.import_fg_lak_by_fg_bak(" + id.toString() + ", '" + user.getName() + "')");
                 // refresh the stations on fg_lak
@@ -143,6 +143,12 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
 
                 s.execute("select dlm25w.import_fg_ba_gmdByFgBak(" + id.toString() + ", '" + user.getName() + "')");
                 s.execute("select dlm25w.import_fg_ba_gbByFgBak(" + id.toString() + ", '" + user.getName() + "')");
+                s.execute("select dlm25w.import_qp_gaf_pByFgBak(" + id.toString() + ", '" + user.getName() + "')");
+                s.execute("select dlm25w.import_qp_gaf_lbyfgbak(" + id.toString() + ", '" + user.getName() + "')");
+                s.execute("select dlm25w.import_qp_gaf_l_pr_pfByBak(" + id.toString() + ", '" + user.getName()
+                            + "')");
+                s.execute("select dlm25w.import_fg_ba_pr_ablByBak(" + id.toString() + ")");
+                s.execute("select dlm25w.import_fg_ba_pr_abpByBak(" + id.toString() + ")");
 //                s.execute("select dlm25w.add_fg_ba_gerogByBak(" + id.toString() + ")");
 //                s.execute("select dlm25w.add_fg_ba_gerogaByBak(" + id.toString() + ")");
 //                s.execute("select dlm25w.add_fg_ba_geroga_rsByBak(" + id.toString() + ")");
