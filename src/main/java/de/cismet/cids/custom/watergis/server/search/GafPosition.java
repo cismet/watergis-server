@@ -45,7 +45,7 @@ public class GafPosition extends AbstractCidsServerSearch {
                 + "from\n"
                 + "dlm25w.fg_ba\n"
                 + "join geom on (geom = geom.id)\n"
-                + "where st_intersects(geo_field, '%1$s') limit %1$s";
+                + "where st_intersects(geo_field, '%1$s') limit %2$s";
 
     //~ Instance fields --------------------------------------------------------
 
