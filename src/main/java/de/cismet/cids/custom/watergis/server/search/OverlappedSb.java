@@ -39,12 +39,12 @@ public class OverlappedSb extends AbstractAnalyzeSearch {
         if ((owner == null) || owner.startsWith("lung")
                     || owner.equalsIgnoreCase("administratoren")) {
             return
-                "select id, ww_gr, geom, ba_cd, ba_st_von, ba_st_bis, sb, laenge, fis_g_date, fis_g_user from dlm25w.select_overlapped_fg_ba_sb(null, "
+                "select id, geom, ww_gr, ba_cd, ba_st_von, ba_st_bis, laenge, fis_g_date, fis_g_user from dlm25w.select_overlapped_fg_ba_sb(null, "
                         + createSqlString(ids)
                         + ")";
         } else {
             return
-                "select id, ww_gr, geom, ba_cd, ba_st_von, ba_st_bis, sb, laenge, fis_g_date, fis_g_user from dlm25w.select_overlapped_fg_ba_sb('"
+                "select id, geom, ww_gr, ba_cd, ba_st_von, ba_st_bis, laenge, fis_g_date, fis_g_user from dlm25w.select_overlapped_fg_ba_sb('"
                         + owner
                         + "', "
                         + createSqlString(ids)

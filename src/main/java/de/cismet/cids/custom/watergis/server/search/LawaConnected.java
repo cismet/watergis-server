@@ -37,10 +37,11 @@ public class LawaConnected extends AbstractCidsServerSearch {
     private static final transient Logger LOG = Logger.getLogger(LawaConnected.class);
 
     public static final String DOMAIN_NAME = "DLM25W";
-    private static final String CONNECTION_QUERY = "select k.la_cd, unnest(array_append(\n"
+    private static final String CONNECTION_QUERY = "select (row_number() over ())::integer, a.*\n"
+                + "from (select unnest(array_append(\n"
                 + "  st_asBinary(st_line_substring(geo_field, least(von.wert, bis.wert) / st_length(geo_field), \n"
                 + "  case when (greatest(bis.wert, von.wert) / st_length(geo_field)) <= 1.0 then (greatest(bis.wert, von.wert) / st_length(geo_field)) else 1.0 end)\n"
-                + ")))\n"
+                + "))), k.la_cd\n"
                 + "from dlm25w.fg_bak_gwk gwk \n"
                 + "join dlm25w.fg_bak_linie linie on (gwk.bak_st = linie.id) \n"
                 + "join dlm25w.fg_bak_punkt von on (linie.von = von.id) \n"
@@ -56,7 +57,7 @@ public class LawaConnected extends AbstractCidsServerSearch {
                 + "least(von.wert, bis.wert) / st_length(geo_field), \n"
                 + "case when (greatest(bis.wert, von.wert) / st_length(geo_field)) <= 1.0 then (greatest(bis.wert, von.wert) / st_length(geo_field)) else 1.0 end\n"
                 + ") )), 0.1)) <> 'ST_LineString'\n"
-                + "order by la_cd";
+                + "order by la_cd) a";
 
     //~ Instance fields --------------------------------------------------------
 

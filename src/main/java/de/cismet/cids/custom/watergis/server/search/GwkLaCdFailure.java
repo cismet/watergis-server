@@ -39,16 +39,16 @@ public class GwkLaCdFailure extends AbstractAnalyzeSearch {
         if ((owner == null) || owner.startsWith("lung")
                     || owner.equalsIgnoreCase("administratoren")) {
             return
-                "select id, geom, ba_cd, von, bis, la_cd, fis_g_date, fis_g_user from dlm25w.select_fg_bak_gwk_with_incorrect_gbk_coverage(null, "
+                "select id, geom, ba_cd, von, bis, la_cd, gbk_lawa, laenge, fis_g_date, fis_g_user from dlm25w.select_fg_bak_gwk_with_incorrect_gbk_coverage(null, "
                         + createSqlString(ids)
-                        + ")";
+                        + ") where laenge > 0.1";
         } else {
             return
-                "select id, geom, ba_cd, von, bis, la_cd, fis_g_date, fis_g_user from dlm25w.select_fg_bak_gwk_with_incorrect_gbk_coverage('"
+                "select id, geom, ba_cd, von, bis, la_cd, gbk_lawa, laenge, fis_g_date, fis_g_user from dlm25w.select_fg_bak_gwk_with_incorrect_gbk_coverage('"
                         + owner
                         + "', "
                         + createSqlString(ids)
-                        + ")";
+                        + ") where laenge > 0.1";
         }
     }
 }
