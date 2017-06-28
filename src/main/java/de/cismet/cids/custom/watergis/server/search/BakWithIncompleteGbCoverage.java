@@ -39,16 +39,16 @@ public class BakWithIncompleteGbCoverage extends AbstractAnalyzeSearch {
         if ((owner == null) || owner.startsWith("lung")
                     || owner.equalsIgnoreCase("administratoren")) {
             return
-                "select id, ww_gr, geom, ba_cd, ba_st_von, ba_st_bis, gb, laenge, fis_g_date, fis_g_user from dlm25w.select_fg_ba_with_incomplete_gb_coverage(null, "
+                "select id, geom, ww_gr, ba_cd, ba_st_von, ba_st_bis, laenge, fis_g_date, fis_g_user from dlm25w.select_fg_ba_with_incomplete_gb_coverage(null, "
                         + createSqlString(ids)
-                        + ")";
+                        + ") where laenge > 0.01";
         } else {
             return
-                "select id, ww_gr, geom, ba_cd, ba_st_von, ba_st_bis, gb, laenge, fis_g_date, fis_g_user from dlm25w.select_fg_ba_with_incomplete_gb_coverage('"
+                "select id, geom, ww_gr, ba_cd, ba_st_von, ba_st_bis, laenge, fis_g_date, fis_g_user from dlm25w.select_fg_ba_with_incomplete_gb_coverage('"
                         + owner
                         + "', "
                         + createSqlString(ids)
-                        + ")";
+                        + ") where laenge > 0.01";
         }
     }
 }

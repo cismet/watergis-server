@@ -14,8 +14,6 @@ package de.cismet.cids.custom.watergis.server.search;
 
 import Sirius.server.middleware.interfaces.domainserver.MetaService;
 
-import com.vividsolutions.jts.geom.Geometry;
-
 import org.apache.log4j.Logger;
 
 import java.rmi.RemoteException;
@@ -23,46 +21,38 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import de.cismet.cids.custom.helper.SQLFormatter;
-
 import de.cismet.cids.server.search.AbstractCidsServerSearch;
 
 /**
- * Retrieves next fg_ba station.
+ * DOCUMENT ME!
  *
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class GafPosition extends AbstractCidsServerSearch {
+public class MergeBaExp extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
-    private static final transient Logger LOG = Logger.getLogger(GafPosition.class);
+    private static final transient Logger LOG = Logger.getLogger(MergeBaExp.class);
 
+    private static final String QUERY_WITHOUT_OWNER = "select dlm25w.merge_fg_ba_exp(null);"; // NOI18N
+    private static final String QUERY = "select dlm25w.merge_fg_ba_exp('%1$s');";             // NOI18N
     public static final String DOMAIN_NAME = "DLM25W";
-    private static final String QUERY = "select st_asbinary(st_intersection(geo_field, '%1$s'))\n"
-                + "from\n"
-                + "dlm25w.fg_ba\n"
-                + "join geom on (geom = geom.id)\n"
-                + "where st_intersects(geo_field, '%1$s') limit %2$s";
 
     //~ Instance fields --------------------------------------------------------
 
-    private final Geometry geom;
-    private int limit;
+    private String owner;
 
     //~ Constructors -----------------------------------------------------------
 
     /**
-     * Creates a new PhotoGetPhotoNumber object.
+     * Creates a new WkkSearch object.
      *
-     * @param  geom   DOCUMENT ME!
-     * @param  limit  DOCUMENT ME!
+     * @param  owner  DOCUMENT ME!
      */
-    public GafPosition(final Geometry geom, final int limit) {
-        this.geom = geom;
-        this.limit = limit;
+    public MergeBaExp(final String owner) {
+        this.owner = owner;
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -73,7 +63,8 @@ public class GafPosition extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final ArrayList<ArrayList> lists = ms.performCustomSearch(String.format(QUERY, geom.toText(), limit));
+                final String query = ((owner == null) ? QUERY_WITHOUT_OWNER : String.format(QUERY, owner));
+                final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
                 return lists;
             } catch (RemoteException ex) {
                 LOG.error(ex.getMessage(), ex);

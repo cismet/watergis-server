@@ -12,17 +12,6 @@
  */
 package de.cismet.cids.custom.watergis.server.search;
 
-import Sirius.server.middleware.interfaces.domainserver.MetaService;
-
-import org.apache.log4j.Logger;
-
-import java.rmi.RemoteException;
-
-import java.util.ArrayList;
-import java.util.Collection;
-
-import de.cismet.cids.server.search.AbstractCidsServerSearch;
-
 /**
  * DOCUMENT ME!
  *
@@ -50,16 +39,16 @@ public class BakWithIncompleteSbCoverage extends AbstractAnalyzeSearch {
         if ((owner == null) || owner.startsWith("lung")
                     || owner.equalsIgnoreCase("administratoren")) {
             return
-                "select id, ww_gr, geom, ba_cd, ba_st_von, ba_st_bis, sb, laenge, fis_g_date, fis_g_user from dlm25w.select_fg_ba_with_incomplete_sb_coverage(null, "
+                "select id, geom, ww_gr, ba_cd, ba_st_von, ba_st_bis, laenge, fis_g_date, fis_g_user from dlm25w.select_fg_ba_with_incomplete_sb_coverage(null, "
                         + createSqlString(ids)
-                        + ")";
+                        + ") where laenge > 0.01";
         } else {
             return
-                "select id, ww_gr, geom, ba_cd, ba_st_von, ba_st_bis, sb, laenge, fis_g_date, fis_g_user from dlm25w.select_fg_ba_with_incomplete_sb_coverage('"
+                "select id, geom, ww_gr, ba_cd, ba_st_von, ba_st_bis, laenge, fis_g_date, fis_g_user from dlm25w.select_fg_ba_with_incomplete_sb_coverage('"
                         + owner
                         + "', "
                         + createSqlString(ids)
-                        + ")";
+                        + ") where laenge > 0.01";
         }
     }
 }

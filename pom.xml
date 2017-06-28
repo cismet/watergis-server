@@ -33,18 +33,18 @@
         <tag>HEAD</tag>
     </scm>
 
-   
+           
            
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/cismet/cids-custom-wrrl-db-mv-server/issues</url>
+        <url>https://github.com/cismet/watergis-server/issues</url>
     </issueManagement>
-    
+
     <ciManagement>
         <system>jenkins</system>
-        <url>https://ci.cismet.de/job/cids-custom-wrrl-db-mv-server/</url>
+        <url>https://ci.cismet.de/job/watergis-server/</url>
     </ciManagement>
-
+    
     <dependencyManagement>  
         <!-- IMPORT of cismet-ext-bom -->
         <dependencies>
@@ -60,7 +60,7 @@
             <dependency>
                 <groupId>de.cismet.cids</groupId>
                 <artifactId>cids-server</artifactId>
-                <version>5.0.3</version>
+                <version>5.0.5</version>
                 <type>jar</type>
                 <scope>compile</scope>
             </dependency>                

@@ -50,12 +50,12 @@ public class OverlappedGmd extends AbstractAnalyzeSearch {
         if ((owner == null) || owner.startsWith("lung")
                     || owner.equalsIgnoreCase("administratoren")) {
             return
-                "select id, ww_gr, geom, ba_cd, ba_st_von, ba_st_bis, gmd_nr_re, gmd_nr_li, laenge, fis_g_date, fis_g_user from dlm25w.select_overlapped_fg_ba_gmd(null, "
+                "select id, geom, ww_gr, ba_cd, ba_st_von, ba_st_bis, laenge, fis_g_date, fis_g_user from dlm25w.select_overlapped_fg_ba_gmd(null, "
                         + createSqlString(ids)
                         + ")";
         } else {
             return
-                "select id, ww_gr, geom, ba_cd, ba_st_von, ba_st_bis, gmd_nr_re, gmd_nr_li, laenge, fis_g_date, fis_g_user from dlm25w.select_overlapped_fg_ba_gmd('"
+                "select id, geom, ww_gr, ba_cd, ba_st_von, ba_st_bis, laenge, fis_g_date, fis_g_user from dlm25w.select_overlapped_fg_ba_gmd('"
                         + owner
                         + "', "
                         + createSqlString(ids)

@@ -18,7 +18,7 @@ package de.cismet.cids.custom.watergis.server.search;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class OverlappedGb extends AbstractAnalyzeSearch {
+public class OverlappedBBefWithR extends AbstractAnalyzeSearch {
 
     //~ Constructors -----------------------------------------------------------
 
@@ -28,7 +28,7 @@ public class OverlappedGb extends AbstractAnalyzeSearch {
      * @param  owner  DOCUMENT ME!
      * @param  ids    DOCUMENT ME!
      */
-    public OverlappedGb(final String owner, final int[] ids) {
+    public OverlappedBBefWithR(final String owner, final int[] ids) {
         super(owner, ids);
     }
 
@@ -39,12 +39,12 @@ public class OverlappedGb extends AbstractAnalyzeSearch {
         if ((owner == null) || owner.startsWith("lung")
                     || owner.equalsIgnoreCase("administratoren")) {
             return
-                "select id, geom, ww_gr, ba_cd, ba_st_von, ba_st_bis, laenge, fis_g_date, fis_g_user from dlm25w.select_overlapped_fg_ba_gb(null, "
+                "select id, geom, ww_gr, ba_cd, ba_st_von, ba_st_bis, laenge, fis_g_date, fis_g_user from dlm25w.select_overlapped_fg_ba_bbef_with_rddue(null, "
                         + createSqlString(ids)
                         + ")";
         } else {
             return
-                "select id, geom, ww_gr, ba_cd, ba_st_von, ba_st_bis, laenge, fis_g_date, fis_g_user from dlm25w.select_overlapped_fg_ba_gb('"
+                "select id, geom, ww_gr, ba_cd, ba_st_von, ba_st_bis, laenge, fis_g_date, fis_g_user from dlm25w.select_overlapped_fg_ba_bbef_with_rddue('"
                         + owner
                         + "', "
                         + createSqlString(ids)
