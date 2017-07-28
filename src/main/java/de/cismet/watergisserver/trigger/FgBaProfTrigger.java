@@ -116,7 +116,7 @@ public class FgBaProfTrigger extends AbstractDBAwareCidsTrigger {
                 final long start = System.currentTimeMillis();
                 // If the cidsBean is a new object, the meta object contains the new id while the cidsBean has still
                 // the id -1
-                final Object id = cidsBean.getProperty("bs_st.bak_id");
+                final Object id = cidsBean.getProperty("ba_st.von.route.bak_id");
                 final Statement s = getDbServer().getActiveDBConnection().getConnection().createStatement();
                 s.execute("select dlm25w.import_fg_ba_geroByBak(" + id.toString() + ")");
                 s.execute("select dlm25w.import_fg_ba_gerogByBak(" + id.toString() + ")");
@@ -125,7 +125,7 @@ public class FgBaProfTrigger extends AbstractDBAwareCidsTrigger {
                 s.execute("select dlm25w.import_fg_ba_geroga_rsByBak(" + id.toString() + ")");
                 log.error("time to update stations " + (System.currentTimeMillis() - start));
             } catch (Exception e) {
-                log.error("Error while executing fgBak trigger.", e);
+                log.error("Error while executing fgBaProf trigger.", e);
             }
         }
     }
