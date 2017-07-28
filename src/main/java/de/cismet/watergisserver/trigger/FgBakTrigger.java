@@ -112,11 +112,12 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
      */
     private void restat(final CidsBean cidsBean, final User user) {
         if (isFgBakObject(cidsBean)) {
+            Object id = null;
             try {
                 final long start = System.currentTimeMillis();
                 // If the cidsBean is a new object, the meta object contains the new id while the cidsBean has still
                 // the id -1
-                final Object id = cidsBean.getMetaObject().getID();
+                id = cidsBean.getMetaObject().getID();
                 final Statement s = getDbServer().getActiveDBConnection().getConnection().createStatement();
                 // refresh the stations on fg_bak
                 s.execute("select dlm25w.replace_fg_bak(" + id.toString() + ")");
@@ -149,12 +150,14 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                             + "')");
                 s.execute("select dlm25w.import_fg_ba_pr_ablByBak(" + id.toString() + ")");
                 s.execute("select dlm25w.import_fg_ba_pr_abpByBak(" + id.toString() + ")");
-//                s.execute("select dlm25w.add_fg_ba_gerogByBak(" + id.toString() + ")");
-//                s.execute("select dlm25w.add_fg_ba_gerogaByBak(" + id.toString() + ")");
-//                s.execute("select dlm25w.add_fg_ba_geroga_rsByBak(" + id.toString() + ")");
+                s.execute("select dlm25w.import_fg_ba_geroByBak(" + id.toString() + ")");
+                s.execute("select dlm25w.import_fg_ba_gerogByBak(" + id.toString() + ")");
+                s.execute("select dlm25w.import_fg_ba_gerogaByBak(" + id.toString() + ")");
+                s.execute("select dlm25w.import_fg_ba_gerog_rsByBak(" + id.toString() + ")");
+                s.execute("select dlm25w.import_fg_ba_geroga_rsByBak(" + id.toString() + ")");
                 log.error("time to update stations " + (System.currentTimeMillis() - start));
             } catch (Exception e) {
-                log.error("Error while executing fgBak trigger.", e);
+                log.error("Error while executing fgBak trigger." + String.valueOf(id), e);
             }
         }
     }
