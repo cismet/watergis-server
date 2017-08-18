@@ -33,6 +33,14 @@ public class FgBakGn1CidsLayer extends Default1505ConsideredCidsLayer {
      * @param  user  DOCUMENT ME!
      */
     public FgBakGn1CidsLayer(final MetaClass mc, final User user) {
-        super(mc, user);
+//        super(mc, user);
+        super(
+            mc,
+            user,
+            false,
+            false,
+            null,
+            false,
+            " left join dlm25w.k_ww_gr dlm25wPk_ww_gr1 on (dlm25w.fg_bak.ww_gr = dlm25wPk_ww_gr1.id)");
     }
 }

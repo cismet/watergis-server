@@ -12,6 +12,7 @@
 package de.cismet.watergisserver.cidslayer;
 
 import Sirius.server.middleware.types.MetaClass;
+import Sirius.server.newuser.User;
 
 /**
  * DOCUMENT ME!
@@ -19,16 +20,24 @@ import Sirius.server.middleware.types.MetaClass;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class FgBaGbkDeltaCidsLayer extends WatergisDefaultCidsLayer {
+public class FgBaGbkDeltaCidsLayer extends Default1505ConsideredCidsLayer {
 
     //~ Constructors -----------------------------------------------------------
 
     /**
      * Creates a new VwDvgStaluCidsLayer object.
      *
-     * @param  mc  DOCUMENT ME!
+     * @param  mc    DOCUMENT ME!
+     * @param  user  DOCUMENT ME!
      */
-    public FgBaGbkDeltaCidsLayer(final MetaClass mc) {
-        super(mc);
+    public FgBaGbkDeltaCidsLayer(final MetaClass mc, final User user) {
+        super(
+            mc,
+            user,
+            false,
+            false,
+            null,
+            false,
+            " left join dlm25w.k_ww_gr dlm25wPk_ww_gr1 on (dlm25w.fg_ba.ww_gr = dlm25wPk_ww_gr1.id)");
     }
 }
