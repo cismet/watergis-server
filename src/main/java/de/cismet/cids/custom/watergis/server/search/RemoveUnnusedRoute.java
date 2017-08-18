@@ -13,12 +13,15 @@
 package de.cismet.cids.custom.watergis.server.search;
 
 import Sirius.server.middleware.interfaces.domainserver.MetaService;
+import Sirius.server.sql.PreparableStatement;
 
 import com.vividsolutions.jts.geom.Geometry;
 
 import org.apache.log4j.Logger;
 
 import java.rmi.RemoteException;
+
+import java.sql.Types;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,39 +36,41 @@ import de.cismet.cids.server.search.AbstractCidsServerSearch;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class PhotoGetBaStat extends AbstractCidsServerSearch {
+public class RemoveUnnusedRoute extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
-    private static final transient Logger LOG = Logger.getLogger(PhotoGetBaStat.class);
+    private static final transient Logger LOG = Logger.getLogger(RemoveUnnusedRoute.class);
 
     public static final String DOMAIN_NAME = "DLM25W";
-    private static final String QUERY =
-        "select ba.id, ba_cd, round((ST_line_locate_point(geo_field, '%1$s') * st_length(geo_field))::numeric, 2)::double precision as stat"
-                + ",st_asBinary(ST_line_interpolate_point(geo_field, round((ST_line_locate_point(geo_field, '%1$s') "
-                + "* st_length(geo_field))::numeric, 2)::double precision  / st_length(geo_field) )) as point from\n"
-                + "(select ba.id, ba_cd, geo_field from dlm25w.fg_ba ba join geom on (geom = geom.id) \n"
-                + "where st_distance(geo_field, '%1$s') <= %2$s\n"
-                + "order by st_distance(geo_field, '%1$s') asc\n"
-                + "limit 1) ba";
+    public static final int FG_BA = 1;
+    public static final int FG_LA = 2;
+    public static final int FG_BAK = 3;
+    public static final int FG_LAK = 4;
+    public static final int SU = 5;
+    private static final String QUERY_FGBA = "select dlm25w.remove_unused_fgbapoints(?)";
+    private static final String QUERY_FGLA = "select dlm25w.remove_unused_fglapoints(?)";
+    private static final String QUERY_FGBAK = "select dlm25w.remove_unused_fgbakpoints(?)";
+    private static final String QUERY_FGLAK = "select dlm25w.remove_unused_fglakpoints(?)";
+    private static final String QUERY_SU = "select dlm25w.remove_unused_supoints(?)";
 
     //~ Instance fields --------------------------------------------------------
 
-    private final Geometry geom;
-    private final double maxDist;
+    private final int id;
+    private final int routeType;
 
     //~ Constructors -----------------------------------------------------------
 
     /**
      * Creates a new PhotoGetPhotoNumber object.
      *
-     * @param  geom     DOCUMENT ME!
-     * @param  maxDist  DOCUMENT ME!
+     * @param  id         fgBak geom DOCUMENT ME!
+     * @param  routeType  DOCUMENT ME!
      */
-    public PhotoGetBaStat(final Geometry geom, final double maxDist) {
-        this.geom = geom;
-        this.maxDist = maxDist;
+    public RemoveUnnusedRoute(final int id, final int routeType) {
+        this.id = id;
+        this.routeType = routeType;
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -76,7 +81,36 @@ public class PhotoGetBaStat extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final ArrayList<ArrayList> lists = ms.performCustomSearch(String.format(QUERY, geom.toText(), maxDist));
+                final PreparableStatement ps;
+
+                switch (routeType) {
+                    case FG_BA: {
+                        ps = new PreparableStatement(QUERY_FGBA, new int[] { Types.INTEGER });
+                        break;
+                    }
+                    case FG_BAK: {
+                        ps = new PreparableStatement(QUERY_FGBAK, new int[] { Types.INTEGER });
+                        break;
+                    }
+                    case FG_LA: {
+                        ps = new PreparableStatement(QUERY_FGLA, new int[] { Types.INTEGER });
+                        break;
+                    }
+                    case FG_LAK: {
+                        ps = new PreparableStatement(QUERY_FGLAK, new int[] { Types.INTEGER });
+                        break;
+                    }
+                    case SU: {
+                        ps = new PreparableStatement(QUERY_SU, new int[] { Types.INTEGER });
+                        break;
+                    }
+                    default: {
+                        ps = new PreparableStatement(QUERY_FGBA, new int[] { Types.INTEGER });
+                        break;
+                    }
+                }
+                ps.setObjects(id);
+                final ArrayList<ArrayList> lists = ms.performCustomSearch(ps);
                 return lists;
             } catch (RemoteException ex) {
                 LOG.error(ex.getMessage(), ex);

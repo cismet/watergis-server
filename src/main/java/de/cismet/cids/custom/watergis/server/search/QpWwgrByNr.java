@@ -13,6 +13,8 @@
 package de.cismet.cids.custom.watergis.server.search;
 
 import Sirius.server.middleware.interfaces.domainserver.MetaService;
+import Sirius.server.middleware.types.MetaClass;
+import Sirius.server.middleware.types.MetaObject;
 
 import org.apache.log4j.Logger;
 
@@ -29,15 +31,16 @@ import de.cismet.cids.server.search.AbstractCidsServerSearch;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class QpUplNameByNr extends AbstractCidsServerSearch {
+public class QpWwgrByNr extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
-    private static final transient Logger LOG = Logger.getLogger(QpUplNameByNr.class);
+    private static final transient Logger LOG = Logger.getLogger(QpWwgrByNr.class);
 
     public static final String DOMAIN_NAME = "DLM25W";
-    private static final String QUERY = "Select upl_name from dlm25w.qp where qp_nr = %s";
+    private static final String QUERY =
+        "Select gr.id from dlm25w.qp q join dlm25w.k_ww_gr gr on (q.ww_gr = gr.id) where qp_nr = %s";
 
     //~ Instance fields --------------------------------------------------------
 
@@ -50,7 +53,7 @@ public class QpUplNameByNr extends AbstractCidsServerSearch {
      *
      * @param  qpNr  DOCUMENT ME!
      */
-    public QpUplNameByNr(final String qpNr) {
+    public QpWwgrByNr(final String qpNr) {
         this.qpNr = qpNr;
     }
 
@@ -62,9 +65,17 @@ public class QpUplNameByNr extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
+                final MetaClass mc = ms.getClassByTableName(getUser(), "dlm25w.k_ww_gr");
                 final ArrayList<ArrayList> lists = ms.performCustomSearch(String.format(QUERY, qpNr));
 
-                return lists;
+                if ((lists != null) && (lists.size() > 0) && (lists.get(0) != null) && (lists.get(0).size() > 0)) {
+                    final MetaObject route = ms.getMetaObject(getUser(), (Integer)lists.get(0).get(0), mc.getId());
+
+                    final ArrayList<MetaObject> result = new ArrayList<MetaObject>();
+                    result.add(route);
+
+                    return result;
+                }
             } catch (RemoteException ex) {
                 LOG.error(ex.getMessage(), ex);
             }
