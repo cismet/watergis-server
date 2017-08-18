@@ -64,6 +64,7 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
     private boolean additionalGeom = false;
     private boolean inheritedWwGr = false;
     private String additionalJoins = null;
+    private boolean showSgSuAttributes = false;
 
     //~ Constructors -----------------------------------------------------------
 
@@ -74,6 +75,28 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
      */
     public WatergisDefaultCidsLayer(final MetaClass mc) {
         this(mc, false, false, null);
+    }
+
+    /**
+     * Creates a new FgBakAeCidsLayer object.
+     *
+     * @param  mc                  DOCUMENT ME!
+     * @param  showSgSuAttributes  DOCUMENT ME!
+     */
+    public WatergisDefaultCidsLayer(final MetaClass mc, final boolean showSgSuAttributes) {
+        this.mc = mc;
+        this.showFgLa = false;
+        this.additionalGeom = false;
+        this.catalogueNameMap = null;
+        this.inheritedWwGr = false;
+        this.additionalJoins = null;
+        this.showSgSuAttributes = showSgSuAttributes;
+
+        if (showFgLa) {
+            useDistinct = true;
+        }
+
+        init(mc);
     }
 
     /**
@@ -469,6 +492,31 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
                 columnNamesList.add("su_st_bis");
                 sqlColumnNamesList.add("bis.wert");
                 columnPropertyNamesList.add(attr.getName() + ".bis.wert");
+
+                primitiveColumnTypesList.add("String");
+                primitiveColumnTypesList.add("java.lang.Double");
+                primitiveColumnTypesList.add("java.lang.Double");
+
+                if (showSgSuAttributes) {
+                    sb.add("dlm25w.sg_su.see_gn");
+                    columnNamesList.add("see_gn");
+                    sqlColumnNamesList.add("dlm25w.sg_su.see_gn");
+                    columnPropertyNamesList.add(attr.getName() + ".see_gn");
+                    primitiveColumnTypesList.add("String");
+
+                    sb.add("dlm25w.sg_su.see_lawa");
+                    columnNamesList.add("see_lawa");
+                    sqlColumnNamesList.add("dlm25w.sg_su.see_lawa");
+                    columnPropertyNamesList.add(attr.getName() + ".see_lawa");
+                    primitiveColumnTypesList.add("String");
+
+                    sb.add("dlm25w.sg_su.see_sp");
+                    columnNamesList.add("see_sp");
+                    sqlColumnNamesList.add("dlm25w.sg_su.see_sp");
+                    columnPropertyNamesList.add(attr.getName() + ".see_sp");
+                    primitiveColumnTypesList.add("String");
+                }
+
                 joins.append(joinExtension)
                         .append(" join dlm25w.sg_su_linie on (")
                         .append(attr.getFieldName())
@@ -480,9 +528,6 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
                 joins.append(joinExtension).append(" join dlm25w.sg_su_punkt von on (von.id = dlm25w.sg_su_linie.von)");
                 joins.append(joinExtension).append(" join dlm25w.sg_su_punkt bis on (bis.id = dlm25w.sg_su_linie.bis)");
                 joins.append(joinExtension).append(" join dlm25w.sg_su on (bis.route = dlm25w.sg_su.id)");
-                primitiveColumnTypesList.add("String");
-                primitiveColumnTypesList.add("java.lang.Double");
-                primitiveColumnTypesList.add("java.lang.Double");
                 StationInfo s = new StationInfo(true, true, "dlm25w.sg_su", ++lineId, "su_cd");
                 stationTypes.put("su_st_von", s);
                 s = new StationInfo(true, false, "dlm25w.sg_su", lineId, "su_cd");
