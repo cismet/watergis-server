@@ -29,6 +29,6 @@ public class SgSuUsgCidsLayer extends WatergisDefaultCidsLayer {
      * @param  mc  DOCUMENT ME!
      */
     public SgSuUsgCidsLayer(final MetaClass mc) {
-        super(mc);
+        super(mc, true);
     }
 }
