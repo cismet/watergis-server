@@ -39,12 +39,12 @@ public class DueWithHole extends AbstractAnalyzeSearch {
         if ((owner == null) || owner.startsWith("lung")
                     || owner.equalsIgnoreCase("administratoren")) {
             return
-                "select id, geom, ww_gr, ba_cd, ba_st_von, ba_st_bis, laenge, fis_g_date, fis_g_user from dlm25w.select_fg_ba_rl_hole(null, "
+                "select id, geom, ww_gr, ba_cd, ba_st_von, ba_st_bis, laenge, fis_g_date, fis_g_user from dlm25w.select_fg_ba_due_hole(null, "
                         + createSqlString(ids)
                         + ")";
         } else {
             return
-                "select id, geom, ww_gr, ba_cd, ba_st_von, ba_st_bis, laenge, fis_g_date, fis_g_user from dlm25w.select_fg_ba_rl_hole('"
+                "select id, geom, ww_gr, ba_cd, ba_st_von, ba_st_bis, laenge, fis_g_date, fis_g_user from dlm25w.select_fg_ba_due_hole('"
                         + owner
                         + "', "
                         + createSqlString(ids)

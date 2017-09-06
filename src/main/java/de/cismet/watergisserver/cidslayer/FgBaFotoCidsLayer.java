@@ -60,7 +60,8 @@ public class FgBaFotoCidsLayer extends WatergisDefaultCidsLayer {
             // the admin has no restrictions
             return null;
         } else {
-            String rest = "((dlm25wPk_freigabe1.freigabe = 'uploader' and upl_name = '" + user.getName()
+            String rest = "((dlm25wPk_freigabe1.freigabe = 'uploader' and dlm25wPk_ww_gr1.owner = '"
+                        + user.getUserGroup().getName()
                         + "') or dlm25wPk_freigabe1.freigabe is null or dlm25wPk_freigabe1.freigabe = 'frei')";
 
             if ((user != null)

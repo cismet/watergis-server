@@ -131,7 +131,7 @@ public class FgLakAeTrigger extends AbstractDBAwareCidsTrigger {
                     log.error("time to update stations " + (System.currentTimeMillis() - start));
                 }
             } catch (Exception e) {
-                log.error("Error while executing fgBak trigger.", e);
+                log.error("Error while executing fgLakAe trigger.", e);
             }
         }
     }
