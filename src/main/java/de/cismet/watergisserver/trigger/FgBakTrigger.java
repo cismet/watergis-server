@@ -123,6 +123,11 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                 s.execute("select dlm25w.replace_fg_bak(" + id.toString() + ")");
                 // refresh fg_ba
                 s.execute("select dlm25w.import_fg_ba(" + id.toString() + ", '" + user.getName() + "')");
+                // the gmd and gb themes should be recreated before the fg_ba station are refreshed. Otherwise, the gmd,
+                // gb object could be moved to an other route and this leads to overlapping objects
+                s.execute("select dlm25w.import_fg_ba_gmdByFgBak(" + id.toString() + ", '" + user.getName() + "')");
+                s.execute("select dlm25w.import_fg_ba_gbByFgBak(" + id.toString() + ", '" + user.getName() + "')");
+
                 // refresh the stations on fg_ba
                 s.execute("select dlm25w.replace_fg_ba_by_fg_bak(" + id.toString() + ")");
                 // refresh fg_lak
@@ -142,8 +147,6 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                 s.execute("select dlm25w.import_fg_la_pr_pfByFgBak(" + id.toString() + ", '" + user.getName()
                             + "')");
 
-                s.execute("select dlm25w.import_fg_ba_gmdByFgBak(" + id.toString() + ", '" + user.getName() + "')");
-                s.execute("select dlm25w.import_fg_ba_gbByFgBak(" + id.toString() + ", '" + user.getName() + "')");
                 s.execute("select dlm25w.import_qp_gaf_pByFgBak(" + id.toString() + ", '" + user.getName() + "')");
                 s.execute("select dlm25w.import_qp_gaf_lbyfgbak(" + id.toString() + ", '" + user.getName() + "')");
                 s.execute("select dlm25w.import_qp_gaf_l_pr_pfByBak(" + id.toString() + ", '" + user.getName()
