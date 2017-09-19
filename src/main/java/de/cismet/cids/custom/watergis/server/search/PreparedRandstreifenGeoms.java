@@ -47,7 +47,7 @@ public class PreparedRandstreifenGeoms extends AbstractCidsServerSearch {
     private static final String FG_QUERY =
         "select geo_field from dlm25w.fg_ba_gerog join geom on (geom = geom.id) where typ = 'so' and st_intersects(geo_field, '%1s')";
     private static final String FG_BR_QUERY =
-        "select st_buffer(geo_field, %1s) as geo_field from dlm25w.fg_ba join geom on (geom = geom.id) where st_intersects(geo_field, '%1s')";
+        "select st_buffer(geom, %1s) as geo_field from dlm25w.select_fgba_open_without_prof(null, null, '%1s') where art = 'o'";
     private static final String FG_FL_QUERY =
         "select geo_field from dlm25w.fg_ba_fl join geom on (geom = geom.id) where st_intersects(geo_field, '%1s')";
     private static final String SEE_QUERY =
@@ -60,7 +60,7 @@ public class PreparedRandstreifenGeoms extends AbstractCidsServerSearch {
     private static final String FG_QUERY_WITHOUT_GEO =
         "select geo_field from dlm25w.fg_ba_gerog join geom on (geom = geom.id) where typ = 'so'";
     private static final String FG_BR_QUERY_WITHOUT_GEO =
-        "select st_buffer(geo_field, %1s) as geo_field from dlm25w.fg_ba join geom on (geom = geom.id)";
+        "select st_buffer(geom, %1s) as geo_field from dlm25w.select_fgba_open_without_prof(null, null) where art = 'o'";
     private static final String FG_FL_QUERY_WITHOUT_GEO =
         "select geo_field from dlm25w.fg_ba_fl join geom on (geom = geom.id)";
     private static final String SEE_QUERY_WITHOUT_GEO =
