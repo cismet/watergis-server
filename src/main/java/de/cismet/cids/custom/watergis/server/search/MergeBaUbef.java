@@ -36,8 +36,8 @@ public class MergeBaUbef extends AbstractCidsServerSearch {
     /** LOGGER. */
     private static final transient Logger LOG = Logger.getLogger(MergeBaUbef.class);
 
-    private static final String QUERY_WITHOUT_OWNER = "select dlm25w.merge_fg_ba_prof(null);"; // NOI18N
-    private static final String QUERY = "select dlm25w.merge_fg_ba_prof('%1$s');";             // NOI18N
+    private static final String QUERY_WITHOUT_OWNER = "select dlm25w.merge_fg_ba_ubef(null);"; // NOI18N
+    private static final String QUERY = "select dlm25w.merge_fg_ba_ubef('%1$s');";             // NOI18N
     public static final String DOMAIN_NAME = "DLM25W";
 
     //~ Instance fields --------------------------------------------------------
