@@ -38,7 +38,8 @@ public class LawaDirection extends AbstractCidsServerSearch {
 
     public static final String DOMAIN_NAME = "DLM25W";
     private static final String DIRECTION_QUERY =
-        "select la_cd, unnest(ARRAY[array_append(st_asBinary(geo_field)), array_append(st_asBinary(st_reverse(geo_field)))])\n"
+//        "select st_asBinary(st_lineMerge(st_union(geo_field))), (select kl.la_cd from dlm25w.k_gwk_lawa kl where kl.id = gwk.la_cd)::text\n"
+        "select unnest(array_agg((st_asBinary(geo_field)))), (select kl.la_cd from dlm25w.k_gwk_lawa kl where kl.id = gwk.la_cd)::text\n"
                 + "from dlm25w.fg_bak_gwk gwk \n"
                 + "join dlm25w.fg_bak_linie linie on (gwk.bak_st = linie.id) \n"
                 + "join dlm25w.fg_bak_punkt von on (linie.von = von.id)\n"
