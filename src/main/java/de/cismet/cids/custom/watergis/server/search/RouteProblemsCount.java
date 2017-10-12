@@ -70,11 +70,14 @@ public class RouteProblemsCount extends AbstractCidsServerSearch {
 //                + "), 0\n"
 //                + ")\n";
     private static final String QUERY = "select dlm25w.correction_count(%1$s, %2$s)";
+    private static final String QUERY_WITH_CLASS = "select dlm25w.correction_count(%1$s, %2$s, %3$s, %4$s)";
 
     //~ Instance fields --------------------------------------------------------
 
     private final String owner;
     private int[] ids;
+    private int[] classIds = null;
+    private boolean fgBakIds = true;
 
     //~ Constructors -----------------------------------------------------------
 
@@ -89,6 +92,21 @@ public class RouteProblemsCount extends AbstractCidsServerSearch {
         this.ids = ids;
     }
 
+    /**
+     * Creates a new RouteProblemsCount object.
+     *
+     * @param  owner     DOCUMENT ME!
+     * @param  ids       DOCUMENT ME!
+     * @param  classIds  DOCUMENT ME!
+     * @param  fgBakIds  DOCUMENT ME!
+     */
+    public RouteProblemsCount(final String owner, final int[] ids, final int[] classIds, final boolean fgBakIds) {
+        this.owner = owner;
+        this.ids = ids;
+        this.classIds = classIds;
+        this.fgBakIds = fgBakIds;
+    }
+
     //~ Methods ----------------------------------------------------------------
 
     @Override
@@ -97,11 +115,21 @@ public class RouteProblemsCount extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final ArrayList<ArrayList> lists = ms.performCustomSearch(String.format(
-                            QUERY,
-                            owner,
-                            SQLFormatter.createSqlArrayString(ids)));
-                return lists;
+                if (classIds != null) {
+                    final ArrayList<ArrayList> lists = ms.performCustomSearch(String.format(
+                                QUERY_WITH_CLASS,
+                                owner,
+                                SQLFormatter.createSqlArrayString(ids),
+                                SQLFormatter.createSqlArrayString(classIds),
+                                String.valueOf(fgBakIds)));
+                    return lists;
+                } else {
+                    final ArrayList<ArrayList> lists = ms.performCustomSearch(String.format(
+                                QUERY,
+                                owner,
+                                SQLFormatter.createSqlArrayString(ids)));
+                    return lists;
+                }
             } catch (RemoteException ex) {
                 LOG.error(ex.getMessage(), ex);
             }
