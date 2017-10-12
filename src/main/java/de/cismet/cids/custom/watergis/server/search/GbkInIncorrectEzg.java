@@ -39,12 +39,12 @@ public class GbkInIncorrectEzg extends AbstractAnalyzeSearch {
         if ((owner == null) || owner.startsWith("lung")
                     || owner.equalsIgnoreCase("administratoren")) {
             return
-                "select id, geom, ww_gr, ba_cd, ba_gn, wdm, gu_zust, gu_cd, laenge, fis_g_date, fis_g_user from dlm25w.select_fg_bak_gbk_in_incorrect_ezg(null, "
+                "select id, geom, ba_cd, bak_st_von, bak_st_bis, gbk_lawa, laenge, fis_g_date, fis_g_user from dlm25w.select_fg_bak_gbk_in_incorrect_ezg(null, "
                         + createSqlString(ids)
                         + ")";
         } else {
             return
-                "select id, geom, ww_gr, ba_cd, ba_gn, wdm, gu_zust, gu_cd, laenge, fis_g_date, fis_g_user from dlm25w.select_fg_bak_gbk_in_incorrect_ezg('"
+                "select id, geom, ba_cd, bak_st_von, bak_st_bis, gbk_lawa, laenge, fis_g_date, fis_g_user from dlm25w.select_fg_bak_gbk_in_incorrect_ezg('"
                         + owner
                         + "', "
                         + createSqlString(ids)

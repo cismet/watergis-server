@@ -41,14 +41,14 @@ public class BakWithIncompleteGbkCoverage extends AbstractAnalyzeSearch {
             return
                 "select id, geom, ba_cd, bak_st_von, bak_st_bis, gbk_lawa, laenge, fis_g_date, fis_g_user from dlm25w.select_fg_bak_with_incomplete_gbk_coverage(null, "
                         + createSqlString(ids)
-                        + ") where laenge > 0.01";
+                        + ") where laenge > 0.001";
         } else {
             return
                 "select id, geom, ba_cd, bak_st_von, bak_st_bis, gbk_lawa, laenge, fis_g_date, fis_g_user from dlm25w.select_fg_bak_with_incomplete_gbk_coverage('"
                         + owner
                         + "', "
                         + createSqlString(ids)
-                        + ") where laenge > 0.01";
+                        + ") where laenge > 0.001";
         }
     }
 }
