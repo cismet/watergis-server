@@ -35,7 +35,7 @@ public class FgBaWehrCidsLayer extends Default1505ConsideredCidsLayer {
         CATALOGUE_NAME_MAP.put("wehr_v", "wehr_v");
         CATALOGUE_NAME_MAP.put("wehr_av", "wehr_av");
         CATALOGUE_NAME_MAP.put("l_st", "l_st");
-        CATALOGUE_NAME_MAP.put("material", "material");
+        CATALOGUE_NAME_MAP.put("material_v", "material");
     }
 
     //~ Constructors -----------------------------------------------------------
