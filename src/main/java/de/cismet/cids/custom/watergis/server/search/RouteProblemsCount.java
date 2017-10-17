@@ -74,7 +74,7 @@ public class RouteProblemsCount extends AbstractCidsServerSearch {
 
     //~ Instance fields --------------------------------------------------------
 
-    private final String owner;
+    private String owner;
     private int[] ids;
     private int[] classIds = null;
     private boolean fgBakIds = true;
@@ -90,6 +90,9 @@ public class RouteProblemsCount extends AbstractCidsServerSearch {
     public RouteProblemsCount(final String owner, final int[] ids) {
         this.owner = owner;
         this.ids = ids;
+        if (owner != null) {
+            this.owner = "'" + owner + "'";
+        }
     }
 
     /**
@@ -105,6 +108,9 @@ public class RouteProblemsCount extends AbstractCidsServerSearch {
         this.ids = ids;
         this.classIds = classIds;
         this.fgBakIds = fgBakIds;
+        if (owner != null) {
+            this.owner = "'" + owner + "'";
+        }
     }
 
     //~ Methods ----------------------------------------------------------------
