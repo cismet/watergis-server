@@ -117,7 +117,7 @@ public class FgBaProfTrigger extends AbstractDBAwareCidsTrigger {
                 // If the cidsBean is a new object, the meta object contains the new id while the cidsBean has still
                 // the id -1
                 final Object id = cidsBean.getProperty("ba_st.von.route.bak_id");
-                final Statement s = getDbServer().getActiveDBConnection().getConnection().createStatement();
+                final Statement s = getDbServer().getConnectionPool().getConnection(true).createStatement();
                 s.execute("select dlm25w.import_fg_ba_geroByBak(" + id.toString() + ")");
                 s.execute("select dlm25w.import_fg_ba_gerogByBak(" + id.toString() + ")");
                 s.execute("select dlm25w.import_fg_ba_gerogaByBak(" + id.toString() + ")");
