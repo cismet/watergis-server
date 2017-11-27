@@ -116,7 +116,7 @@ public class FgBakGwkTrigger extends AbstractDBAwareCidsTrigger {
                 final long start = System.currentTimeMillis();
                 final Object id = cidsBean.getProperty("bak_st.von.route.id");
                 if (id != null) {
-                    final Statement s = getDbServer().getActiveDBConnection().getConnection().createStatement();
+                    final Statement s = getDbServer().getConnectionPool().getConnection(true).createStatement();
                     // refresh fg_lak
                     s.execute("select dlm25w.import_fg_lak_by_fg_bak(" + id.toString() + ", '" + user.getName() + "')");
                     // refresh the stations on fg_lak

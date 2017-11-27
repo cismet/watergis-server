@@ -115,7 +115,7 @@ public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
             try {
                 final long start = System.currentTimeMillis();
                 final Object id = cidsBean.getMetaObject().getID();
-                final Statement s = getDbServer().getActiveDBConnection().getConnection().createStatement();
+                final Statement s = getDbServer().getConnectionPool().getConnection(true).createStatement();
                 // refresh fg_ba_gmd layer
                 s.execute("select dlm25w.dlm25w.import_fg_ba_gmdbygmd(" + id.toString() + ")");
                 log.error("time to update stations " + (System.currentTimeMillis() - start));

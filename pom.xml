@@ -63,7 +63,14 @@
                 <version>5.4.1</version>
                 <type>jar</type>
                 <scope>compile</scope>
-            </dependency>                
+            </dependency>
+            <dependency>
+                <groupId>de.cismet.commons</groupId>
+                <artifactId>cismet-commons</artifactId>
+                <version>5.1.4</version>
+                <type>jar</type>
+                <scope>compile</scope>
+            </dependency>
             <!-- END: managed cids-dependencies -->    
         </dependencies>
     </dependencyManagement>
@@ -73,6 +80,10 @@
         <dependency>
             <groupId>de.cismet.cids</groupId>
             <artifactId>cids-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.cismet.commons</groupId>
+            <artifactId>cismet-commons</artifactId>
         </dependency>
         <!-- END: cids-dependencies -->
         

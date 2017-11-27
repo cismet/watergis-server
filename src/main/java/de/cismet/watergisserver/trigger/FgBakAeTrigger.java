@@ -121,7 +121,7 @@ public class FgBakAeTrigger extends AbstractDBAwareCidsTrigger {
             try {
                 final long start = System.currentTimeMillis();
                 final Object id = cidsBean.getProperty("bak_st.von.route.id");
-                final Statement s = getDbServer().getActiveDBConnection().getConnection().createStatement();
+                final Statement s = getDbServer().getConnectionPool().getConnection(true).createStatement();
                 // refresh fg_ba
                 s.execute("select dlm25w.import_fg_ba(" + id.toString() + ", '" + user.getName() + "')");
                 // refresh the stations on fg_ba
