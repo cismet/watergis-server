@@ -130,7 +130,7 @@ public class FgBaPrAblTrigger extends AbstractDBAwareCidsTrigger {
             try {
                 final long start = System.currentTimeMillis();
                 final Object id = cidsBean.getProperty("ba_st.route.id");
-                final Statement s = getDbServer().getActiveDBConnection().getConnection().createStatement();
+                final Statement s = getDbServer().getConnectionPool().getConnection(true).createStatement();
                 // refresh fg_ba_gmd layer
                 if (id != null) {
                     s.execute("select dlm25w.import_fg_ba_pr_abl(" + id.toString() + ")");
