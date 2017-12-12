@@ -16,6 +16,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -118,10 +119,12 @@ public class FgBakAeTrigger extends AbstractDBAwareCidsTrigger {
      */
     private void restat(final CidsBean cidsBean, final User user) {
         if (isFgBakObject(cidsBean)) {
+            Connection con = null;
             try {
                 final long start = System.currentTimeMillis();
                 final Object id = cidsBean.getProperty("bak_st.von.route.id");
-                final Statement s = getDbServer().getConnectionPool().getConnection(true).createStatement();
+                con = getDbServer().getConnectionPool().getConnection(true);
+                final Statement s = con.createStatement();
                 // refresh fg_ba
                 s.execute("select dlm25w.import_fg_ba(" + id.toString() + ", '" + user.getName() + "')");
                 // refresh the stations on fg_ba
@@ -148,6 +151,10 @@ public class FgBakAeTrigger extends AbstractDBAwareCidsTrigger {
                 log.error("time to update stations " + (System.currentTimeMillis() - start));
             } catch (Exception e) {
                 log.error("Error while executing fg_bak_ae trigger.", e);
+            } finally {
+                if (con != null) {
+                    getDbServer().getConnectionPool().releaseDbConnection(con);
+                }
             }
         }
     }

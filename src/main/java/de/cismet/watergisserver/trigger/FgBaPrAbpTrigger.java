@@ -11,6 +11,7 @@ import Sirius.server.newuser.User;
 
 import org.openide.util.lookup.ServiceProvider;
 
+import java.sql.Connection;
 import java.sql.Statement;
 
 import de.cismet.cids.dynamics.CidsBean;
@@ -121,10 +122,12 @@ public class FgBaPrAbpTrigger extends AbstractDBAwareCidsTrigger {
      */
     private void restat(final CidsBean cidsBean, final User user) {
         if (isRelevantObject(cidsBean)) {
+            Connection con = null;
             try {
                 final long start = System.currentTimeMillis();
                 final Object id = cidsBean.getProperty("ba_st.route.id");
-                final Statement s = getDbServer().getConnectionPool().getConnection(true).createStatement();
+                con = getDbServer().getConnectionPool().getConnection(true);
+                final Statement s = con.createStatement();
                 // refresh fg_ba_gmd layer
                 if (id != null) {
                     s.execute("select dlm25w.import_fg_ba_pr_abp(" + id.toString() + ")");
@@ -132,6 +135,10 @@ public class FgBaPrAbpTrigger extends AbstractDBAwareCidsTrigger {
                 log.error("time to update stations " + (System.currentTimeMillis() - start));
             } catch (Exception e) {
                 log.error("Error while executing fgBak trigger.", e);
+            } finally {
+                if (con != null) {
+                    getDbServer().getConnectionPool().releaseDbConnection(con);
+                }
             }
         }
     }

@@ -11,6 +11,7 @@ import Sirius.server.newuser.User;
 
 import org.openide.util.lookup.ServiceProvider;
 
+import java.sql.Connection;
 import java.sql.Statement;
 
 import de.cismet.cids.dynamics.CidsBean;
@@ -111,18 +112,24 @@ public class SgSuTrigger extends AbstractDBAwareCidsTrigger {
      */
     private void restat(final CidsBean cidsBean, final User user) {
         if (isFgBakObject(cidsBean)) {
+            Connection con = null;
             try {
                 final long start = System.currentTimeMillis();
                 // If the cidsBean is a new object, the meta object contains the new id while the cidsBean has still
                 // the id -1
                 final Object id = cidsBean.getMetaObject().getID();
-                final Statement s = getDbServer().getActiveDBConnection().getConnection().createStatement();
+                con = getDbServer().getConnectionPool().getConnection(true);
+                final Statement s = con.createStatement();
                 // refresh the stations on fg_bak
                 s.execute("select dlm25w.replace_sg_su(" + id.toString() + ")");
                 s.execute("select dlm25w.add_sg_su_stat(" + id.toString() + ")");
                 log.error("time to update stations " + (System.currentTimeMillis() - start));
             } catch (Exception e) {
                 log.error("Error while executing fgBak trigger.", e);
+            } finally {
+                if (con != null) {
+                    getDbServer().getConnectionPool().releaseDbConnection(con);
+                }
             }
         }
     }

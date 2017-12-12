@@ -21,6 +21,8 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import de.cismet.cids.custom.helper.SQLFormatter;
+
 import de.cismet.cids.server.search.AbstractCidsServerSearch;
 
 /**
@@ -29,32 +31,32 @@ import de.cismet.cids.server.search.AbstractCidsServerSearch;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class MoveFgBaAfterSplit extends AbstractCidsServerSearch {
+public class RecoverFgBakAfterSplit extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
     private static final transient Logger LOG = Logger.getLogger(MergeFgBakGwk.class);
 
-    private static final String QUERY = "select dlm25w.move_fg_ba_to_new_route_after_split(%1$s, %2$s);"; // NOI18N
+    private static final String QUERY = "select dlm25w.recover_fg_bak_after_split(%1$s, %2$s);"; // NOI18N
     public static final String DOMAIN_NAME = "DLM25W";
 
     //~ Instance fields --------------------------------------------------------
 
     private int fgBakId;
-    private int newFgBaId;
+    private int[] statIds;
 
     //~ Constructors -----------------------------------------------------------
 
     /**
      * Creates a new WkkSearch object.
      *
-     * @param  fgBakId    owner DOCUMENT ME!
-     * @param  newFgBaId  DOCUMENT ME!
+     * @param  fgBakId  owner DOCUMENT ME!
+     * @param  statIds  DOCUMENT ME!
      */
-    public MoveFgBaAfterSplit(final int fgBakId, final int newFgBaId) {
+    public RecoverFgBakAfterSplit(final int fgBakId, final int[] statIds) {
         this.fgBakId = fgBakId;
-        this.newFgBaId = newFgBaId;
+        this.statIds = statIds;
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -65,7 +67,7 @@ public class MoveFgBaAfterSplit extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final String query = String.format(QUERY, fgBakId, newFgBaId);
+                final String query = String.format(QUERY, SQLFormatter.createSqlArrayString(statIds), fgBakId);
                 final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
                 return lists;
             } catch (RemoteException ex) {

@@ -11,6 +11,7 @@ import Sirius.server.newuser.User;
 
 import org.openide.util.lookup.ServiceProvider;
 
+import java.sql.Connection;
 import java.sql.Statement;
 
 import de.cismet.cids.dynamics.CidsBean;
@@ -112,15 +113,21 @@ public class VwAlkKreisTrigger extends AbstractDBAwareCidsTrigger {
      */
     private void restat(final CidsBean cidsBean, final User user) {
         if (isFgBakObject(cidsBean)) {
+            Connection con = null;
             try {
                 final long start = System.currentTimeMillis();
                 final Object id = cidsBean.getMetaObject().getID();
-                final Statement s = getDbServer().getConnectionPool().getConnection(true).createStatement();
+                con = getDbServer().getConnectionPool().getConnection(true);
+                final Statement s = con.createStatement();
                 // refresh fg_ba_gmd layer
                 s.execute("select dlm25w.dlm25w.import_fg_ba_gmdbykreis(" + id.toString() + ")");
                 log.error("time to update stations " + (System.currentTimeMillis() - start));
             } catch (Exception e) {
                 log.error("Error while executing VwAlkKreis trigger.", e);
+            } finally {
+                if (con != null) {
+                    getDbServer().getConnectionPool().releaseDbConnection(con);
+                }
             }
         }
     }
