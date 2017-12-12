@@ -122,6 +122,7 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                 final DbUpdater updater = new DbUpdater(getDbServer().getConnectionPool());
                 // refresh the stations on fg_bak
                 updater.addUpdate("select dlm25w.replace_fg_bak(" + id.toString() + ")");
+                updater.execute();
                 // refresh fg_ba
                 updater.addUpdate("select dlm25w.import_fg_ba(" + id.toString() + ", '" + user.getName() + "')");
                 updater.execute();
@@ -173,7 +174,7 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
 
                 updater.addUpdate("select dlm25w.import_fg_ba_pr_ablByBak(" + id.toString() + ")");
                 updater.addUpdate("select dlm25w.import_fg_ba_pr_abpByBak(" + id.toString() + ")");
-                updater.execute();
+//                updater.execute();
 
                 updater.addUpdate("select dlm25w.import_fg_ba_geroByBak(" + id.toString() + ")");
                 updater.execute();
