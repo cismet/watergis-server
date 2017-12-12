@@ -100,7 +100,7 @@ public class DbUpdater {
      *
      * @version  $Revision$, $Date$
      */
-    private static class DBExecutor implements Runnable {
+    private class DBExecutor implements Runnable {
 
         //~ Instance fields ----------------------------------------------------
 
@@ -129,6 +129,8 @@ public class DbUpdater {
                 s.execute(command);
             } catch (SQLException ex) {
                 LOG.error("Error while executing the following sql command: " + command, ex);
+            } finally {
+                connectionPool.releaseDbConnection(con);
             }
         }
     }

@@ -29,14 +29,14 @@ import de.cismet.cids.server.search.AbstractCidsServerSearch;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class MoveFgBaAfterSplit extends AbstractCidsServerSearch {
+public class MoveFgBakAfterSplit extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
     private static final transient Logger LOG = Logger.getLogger(MergeFgBakGwk.class);
 
-    private static final String QUERY = "select dlm25w.move_fg_ba_to_new_route_after_split(%1$s, %2$s);"; // NOI18N
+    private static final String QUERY = "select dlm25w.move_fg_bak_to_new_route_after_split(%1$s, %2$s);"; // NOI18N
     public static final String DOMAIN_NAME = "DLM25W";
 
     //~ Instance fields --------------------------------------------------------
@@ -52,7 +52,7 @@ public class MoveFgBaAfterSplit extends AbstractCidsServerSearch {
      * @param  fgBakId    owner DOCUMENT ME!
      * @param  newFgBaId  DOCUMENT ME!
      */
-    public MoveFgBaAfterSplit(final int fgBakId, final int newFgBaId) {
+    public MoveFgBakAfterSplit(final int fgBakId, final int newFgBaId) {
         this.fgBakId = fgBakId;
         this.newFgBaId = newFgBaId;
     }

@@ -11,6 +11,7 @@ import Sirius.server.newuser.User;
 
 import org.openide.util.lookup.ServiceProvider;
 
+import java.sql.Connection;
 import java.sql.Statement;
 
 import de.cismet.cids.dynamics.CidsBean;
@@ -112,12 +113,14 @@ public class FgLakAeTrigger extends AbstractDBAwareCidsTrigger {
      */
     private void restat(final CidsBean cidsBean, final User user) {
         if (isFgBakObject(cidsBean)) {
+            Connection con = null;
             try {
                 final long start = System.currentTimeMillis();
                 final Object id = cidsBean.getProperty("lak_st.von.route.id");
                 final Object la_cd = cidsBean.getProperty("lak_st.von.route.la_cd");
                 if (id != null) {
-                    final Statement s = getDbServer().getConnectionPool().getConnection(true).createStatement();
+                    con = getDbServer().getConnectionPool().getConnection(true);
+                    final Statement s = con.createStatement();
                     // refresh fg_la
                     s.execute("select dlm25w.import_fg_la(" + la_cd.toString() + ", '" + user.getName() + "')");
                     s.execute("select dlm25w.replace_fg_la(id) from dlm25w.fg_la where la_cd = " + la_cd.toString());
@@ -132,6 +135,10 @@ public class FgLakAeTrigger extends AbstractDBAwareCidsTrigger {
                 }
             } catch (Exception e) {
                 log.error("Error while executing fgLakAe trigger.", e);
+            } finally {
+                if (con != null) {
+                    getDbServer().getConnectionPool().releaseDbConnection(con);
+                }
             }
         }
     }

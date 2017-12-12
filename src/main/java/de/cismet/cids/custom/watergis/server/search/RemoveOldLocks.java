@@ -13,10 +13,16 @@
 package de.cismet.cids.custom.watergis.server.search;
 
 import Sirius.server.middleware.interfaces.domainserver.MetaService;
+import Sirius.server.middleware.types.MetaObject;
+import Sirius.server.sql.PreparableStatement;
 
 import org.apache.log4j.Logger;
 
+import org.openide.util.Exceptions;
+
 import java.rmi.RemoteException;
+
+import java.sql.Types;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,32 +35,32 @@ import de.cismet.cids.server.search.AbstractCidsServerSearch;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class MoveFgBaAfterSplit extends AbstractCidsServerSearch {
+public class RemoveOldLocks extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
-    private static final transient Logger LOG = Logger.getLogger(MergeFgBakGwk.class);
+    private static final transient Logger LOG = Logger.getLogger(RemoveOldLocks.class);
 
-    private static final String QUERY = "select dlm25w.move_fg_ba_to_new_route_after_split(%1$s, %2$s);"; // NOI18N
+    private static final String QUERY = "select dlm25w.deleteLocksFromUser(?, ?)";
     public static final String DOMAIN_NAME = "DLM25W";
 
     //~ Instance fields --------------------------------------------------------
 
-    private int fgBakId;
-    private int newFgBaId;
+    private String owner;
+    private String computerName;
 
     //~ Constructors -----------------------------------------------------------
 
     /**
      * Creates a new WkkSearch object.
      *
-     * @param  fgBakId    owner DOCUMENT ME!
-     * @param  newFgBaId  DOCUMENT ME!
+     * @param  owner         DOCUMENT ME!
+     * @param  computerName  DOCUMENT ME!
      */
-    public MoveFgBaAfterSplit(final int fgBakId, final int newFgBaId) {
-        this.fgBakId = fgBakId;
-        this.newFgBaId = newFgBaId;
+    public RemoveOldLocks(final String owner, final String computerName) {
+        this.owner = owner;
+        this.computerName = computerName;
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -65,9 +71,11 @@ public class MoveFgBaAfterSplit extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final String query = String.format(QUERY, fgBakId, newFgBaId);
-                final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
-                return lists;
+                final PreparableStatement ps = new PreparableStatement(
+                        QUERY,
+                        new int[] { Types.VARCHAR, Types.VARCHAR });
+                ps.setObjects(owner, computerName);
+                ms.performCustomSearch(ps);
             } catch (RemoteException ex) {
                 LOG.error(ex.getMessage(), ex);
             }

@@ -11,6 +11,7 @@ import Sirius.server.newuser.User;
 
 import org.openide.util.lookup.ServiceProvider;
 
+import java.sql.Connection;
 import java.sql.Statement;
 
 import de.cismet.cids.dynamics.CidsBean;
@@ -111,12 +112,14 @@ public class FotoTrigger extends AbstractDBAwareCidsTrigger {
      */
     private void restat(final CidsBean cidsBean, final User user) {
         if (isFgBakObject(cidsBean)) {
+            Connection con = null;
             try {
                 // If the cidsBean is a new object, the meta object contains the new id while the cidsBean has still
                 // the id -1
                 final Object id = cidsBean.getMetaObject().getID();
                 final Object fotoNr = cidsBean.getProperty("foto_nr");
-                final Statement s = getDbServer().getActiveDBConnection().getConnection().createStatement();
+                con = getDbServer().getConnectionPool().getConnection(true);
+                final Statement s = con.createStatement();
                 // refresh the stations on fg_bak
                 if (fotoNr instanceof Integer) {
                     s.execute("select dlm25w.import_fg_ba_foto_pr_pfById(" + fotoNr.toString() + ", '" + user.getName()
@@ -124,6 +127,10 @@ public class FotoTrigger extends AbstractDBAwareCidsTrigger {
                 }
             } catch (Exception e) {
                 log.error("Error while executing foto trigger.", e);
+            } finally {
+                if (con != null) {
+                    getDbServer().getConnectionPool().releaseDbConnection(con);
+                }
             }
         }
     }

@@ -11,6 +11,7 @@ import Sirius.server.newuser.User;
 
 import org.openide.util.lookup.ServiceProvider;
 
+import java.sql.Connection;
 import java.sql.Statement;
 
 import de.cismet.cids.dynamics.CidsBean;
@@ -111,9 +112,11 @@ public class QpTrigger extends AbstractDBAwareCidsTrigger {
      */
     private void restat(final CidsBean cidsBean, final User user) {
         if (isQpObject(cidsBean)) {
+            Connection con = null;
             try {
                 final Object qpNr = cidsBean.getProperty("qp_nr");
-                final Statement s = getDbServer().getActiveDBConnection().getConnection().createStatement();
+                con = getDbServer().getConnectionPool().getConnection(true);
+                final Statement s = con.createStatement();
                 // refresh the stations on fg_bak
                 if (qpNr instanceof Integer) {
                     s.execute("select dlm25w.import_qp_gaf_pById(" + qpNr.toString() + ", '" + user.getName() + "')");
@@ -123,6 +126,10 @@ public class QpTrigger extends AbstractDBAwareCidsTrigger {
                 }
             } catch (Exception e) {
                 log.error("Error while executing qp trigger.", e);
+            } finally {
+                if (con != null) {
+                    getDbServer().getConnectionPool().releaseDbConnection(con);
+                }
             }
         }
     }
