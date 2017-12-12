@@ -31,14 +31,14 @@ import de.cismet.cids.server.search.AbstractCidsServerSearch;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class RecoverFgBaAfterSplit extends AbstractCidsServerSearch {
+public class RecoverFgBakAfterSplit extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
     private static final transient Logger LOG = Logger.getLogger(MergeFgBakGwk.class);
 
-    private static final String QUERY = "select dlm25w.recover_fg_ba_after_split(%1$s, %2$s);"; // NOI18N
+    private static final String QUERY = "select dlm25w.recover_fg_bak_after_split(%1$s, %2$s);"; // NOI18N
     public static final String DOMAIN_NAME = "DLM25W";
 
     //~ Instance fields --------------------------------------------------------
@@ -54,7 +54,7 @@ public class RecoverFgBaAfterSplit extends AbstractCidsServerSearch {
      * @param  fgBakId  owner DOCUMENT ME!
      * @param  statIds  DOCUMENT ME!
      */
-    public RecoverFgBaAfterSplit(final int fgBakId, final int[] statIds) {
+    public RecoverFgBakAfterSplit(final int fgBakId, final int[] statIds) {
         this.fgBakId = fgBakId;
         this.statIds = statIds;
     }

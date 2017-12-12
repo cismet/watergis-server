@@ -36,22 +36,25 @@ public class MoveFgBaAfterSplit extends AbstractCidsServerSearch {
     /** LOGGER. */
     private static final transient Logger LOG = Logger.getLogger(MergeFgBakGwk.class);
 
-    private static final String QUERY = "select dlm25w.move_fg_ba_to_new_route_after_split(%1$s);"; // NOI18N
+    private static final String QUERY = "select dlm25w.move_fg_ba_to_new_route_after_split(%1$s, %2$s);"; // NOI18N
     public static final String DOMAIN_NAME = "DLM25W";
 
     //~ Instance fields --------------------------------------------------------
 
     private int fgBakId;
+    private int newFgBaId;
 
     //~ Constructors -----------------------------------------------------------
 
     /**
      * Creates a new WkkSearch object.
      *
-     * @param  fgBakId  owner DOCUMENT ME!
+     * @param  fgBakId    owner DOCUMENT ME!
+     * @param  newFgBaId  DOCUMENT ME!
      */
-    public MoveFgBaAfterSplit(final int fgBakId) {
+    public MoveFgBaAfterSplit(final int fgBakId, final int newFgBaId) {
         this.fgBakId = fgBakId;
+        this.newFgBaId = newFgBaId;
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -62,7 +65,7 @@ public class MoveFgBaAfterSplit extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final String query = String.format(QUERY, fgBakId);
+                final String query = String.format(QUERY, fgBakId, newFgBaId);
                 final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
                 return lists;
             } catch (RemoteException ex) {
