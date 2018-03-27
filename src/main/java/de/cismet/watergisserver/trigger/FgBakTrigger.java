@@ -9,8 +9,15 @@ package de.cismet.watergisserver.trigger;
 
 import Sirius.server.newuser.User;
 
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.PrecisionModel;
+import com.vividsolutions.jts.io.WKBReader;
+
 import org.openide.util.lookup.ServiceProvider;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 import de.cismet.cids.dynamics.CidsBean;
@@ -34,6 +41,7 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
             FgBakTrigger.class);
     private static final String FG_BAK_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.fg_bak";
     private static final String FG_BAK_TABLE_NAME = "dlm25w.fg_bak";
+    private static Geometry beforeInsert;
 
     //~ Methods ----------------------------------------------------------------
 
@@ -59,6 +67,38 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
 
     @Override
     public void beforeUpdate(final CidsBean cidsBean, final User user) {
+        if (isFgBakObject(cidsBean)) {
+            final int id = cidsBean.getMetaObject().getID();
+            Connection con = null;
+
+            try {
+                if (id > 0) {
+                    con = getDbServer().getConnectionPool().getConnection(true);
+                    final Statement st = con.createStatement();
+                    final ResultSet rs = st.executeQuery(
+                            "select st_asBinary(geo_field) from dlm25w.fg_bak b join geom on (b.geom = geom.id) where b.id = "
+                                    + id);
+
+                    if (rs.next()) {
+                        final GeometryFactory geomFactory = new GeometryFactory(new PrecisionModel(
+                                    PrecisionModel.FLOATING),
+                                -1);
+                        final WKBReader wkbReader = new WKBReader(geomFactory);
+                        final byte[] geometryAsByteArray = (byte[])rs.getObject(1);
+
+                        if (geometryAsByteArray != null) {
+                            beforeInsert = wkbReader.read(geometryAsByteArray);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                log.error("Error while executing fgBak beforeUpdate trigger." + String.valueOf(id), e);
+            } finally {
+                if (con != null) {
+                    getDbServer().getConnectionPool().releaseDbConnection(con);
+                }
+            }
+        }
     }
 
     @Override
@@ -150,6 +190,8 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                             + "')");
                 updater.execute();
 
+                // refresh the stations on fg_la
+                updater.addUpdate("select dlm25w.replace_fg_la_by_fg_bak(" + id.toString() + ")");
                 // refresh stat layer
                 updater.addUpdate("select dlm25w.add_fg_ba_stat(" + id.toString() + ")");
                 updater.addUpdate("select dlm25w.add_fg_la_stat(" + id.toString() + ")");
@@ -182,9 +224,40 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                 updater.execute();
                 updater.addUpdate("select dlm25w.import_fg_ba_gerogaByBak(" + id.toString() + ")");
                 updater.execute();
+
+                if (beforeInsert != null) {
+                    final Geometry g = (Geometry)cidsBean.getProperty("geom.geo_field");
+
+                    if ((g != null) && beforeInsert.equalsExact(g)) {
+                        beforeInsert = null;
+                    } else if (g != null) {
+                        final Geometry oldWithoutNew = beforeInsert.buffer(0.1).difference(g.buffer(0.1));
+
+                        if (oldWithoutNew.isEmpty()) {
+                            beforeInsert = null;
+                        } else {
+                            beforeInsert = oldWithoutNew;
+                        }
+                    }
+                }
+                if (beforeInsert != null) {
+                    updater.addUpdate("select dlm25w.dlm25w.import_fg_ba_geroga_tile(st_buffer('" + beforeInsert
+                                + "', 20), '" + user.getName() + "')");
+                    updater.execute();
+                }
+
                 updater.addUpdate("select dlm25w.import_fg_ba_gerog_rsByBak(" + id.toString() + ")");
                 updater.addUpdate("select dlm25w.import_fg_ba_geroga_rsByBak(" + id.toString() + ")");
+
+                if (beforeInsert != null) {
+                    updater.addUpdate("select dlm25w.dlm25w.import_fg_ba_geroga_rs_tile(st_buffer('" + beforeInsert
+                                + "', 2), '" + user.getName() + "', Array[1,3,5,10,15,20,25,30]::double precision[])");
+//                    updater.execute();
+                }
+
                 updater.execute();
+
+                beforeInsert = null;
 //                final Statement s = getDbServer().getConnectionPool().getConnection(true).createStatement();
 //                // refresh the stations on fg_bak
 //                s.execute("select dlm25w.replace_fg_bak(" + id.toString() + ")");
