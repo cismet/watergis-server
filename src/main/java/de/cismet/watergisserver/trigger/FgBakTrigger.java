@@ -241,7 +241,7 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                     }
                 }
                 if (beforeInsert != null) {
-                    updater.addUpdate("select dlm25w.dlm25w.import_fg_ba_geroga_tile(st_buffer('" + beforeInsert
+                    updater.addUpdate("select dlm25w.import_fg_ba_geroga_tile(st_buffer('" + beforeInsert
                                 + "', 20), '" + user.getName() + "')");
                     updater.execute();
                 }
@@ -250,8 +250,8 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                 updater.addUpdate("select dlm25w.import_fg_ba_geroga_rsByBak(" + id.toString() + ")");
 
                 if (beforeInsert != null) {
-                    updater.addUpdate("select dlm25w.dlm25w.import_fg_ba_geroga_rs_tile(st_buffer('" + beforeInsert
-                                + "', 2), '" + user.getName() + "', Array[1,3,5,10,15,20,25,30]::double precision[])");
+                    updater.addUpdate("select dlm25w.import_fg_ba_geroga_rs_tile(st_buffer('" + beforeInsert
+                                + "', 40), '" + user.getName() + "', Array[1,3,5,10,15,20,25,30]::double precision[])");
 //                    updater.execute();
                 }
 

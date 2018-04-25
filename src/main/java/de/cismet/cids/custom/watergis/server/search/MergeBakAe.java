@@ -38,11 +38,13 @@ public class MergeBakAe extends AbstractCidsServerSearch {
 
     private static final String QUERY_WITHOUT_OWNER = "select dlm25w.merge_fg_bak_ae(null);"; // NOI18N
     private static final String QUERY = "select dlm25w.merge_fg_bak_ae('%1$s');";             // NOI18N
+    private static final String QUERY_BY_ID = "select dlm25w.merge_fg_bak_ae_by_id(%1$s);";   // NOI18N
     public static final String DOMAIN_NAME = "DLM25W";
 
     //~ Instance fields --------------------------------------------------------
 
-    private String owner;
+    private String owner = null;
+    private Integer bakId = null;
 
     //~ Constructors -----------------------------------------------------------
 
@@ -55,6 +57,15 @@ public class MergeBakAe extends AbstractCidsServerSearch {
         this.owner = owner;
     }
 
+    /**
+     * Creates a new WkkSearch object.
+     *
+     * @param  bakId  owner DOCUMENT ME!
+     */
+    public MergeBakAe(final Integer bakId) {
+        this.bakId = bakId;
+    }
+
     //~ Methods ----------------------------------------------------------------
 
     @Override
@@ -63,9 +74,17 @@ public class MergeBakAe extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final String query = ((owner == null) ? QUERY_WITHOUT_OWNER : String.format(QUERY, owner));
-                final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
-                return lists;
+                if (bakId != null) {
+                    final String query = String.format(QUERY_BY_ID, bakId);
+                    final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
+
+                    return lists;
+                } else {
+                    final String query = ((owner == null) ? QUERY_WITHOUT_OWNER : String.format(QUERY, owner));
+                    final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
+
+                    return lists;
+                }
             } catch (RemoteException ex) {
                 LOG.error(ex.getMessage(), ex);
             }
