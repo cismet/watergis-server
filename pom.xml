@@ -13,7 +13,7 @@
     
     <groupId>de.cismet.watergis</groupId>
     <artifactId>watergis-server</artifactId>
-    <version>6.1-SNAPSHOT</version>
+    <version>6.0.2</version>
     <packaging>jar</packaging>
 
     <name>WaterGis Server</name>
@@ -30,7 +30,7 @@
         <connection>https://github.com/cismet/watergis-server.git</connection>
         <developerConnection>scm:git:git@github.com:cismet/watergis-server.git</developerConnection>
         <url>https://github.com/cismet/watergis-server</url>
-        <tag>HEAD</tag>
+        <tag>v6.0.2</tag>
     </scm>
 
            
