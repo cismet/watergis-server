@@ -47,7 +47,13 @@ public class FgBaDokuCidsLayer extends WatergisDefaultCidsLayer {
      * @param  user  DOCUMENT ME!
      */
     public FgBaDokuCidsLayer(final MetaClass mc, final User user) {
-        super(mc, false, false, CATALOGUE_NAME_MAP);
+        super(
+            mc,
+            false,
+            false,
+            CATALOGUE_NAME_MAP,
+            true,
+            " left join dlm25w.k_ww_gr dlm25wPk_ww_gr1 on (dlm25w.fg_ba.ww_gr = dlm25wPk_ww_gr1.id)");
         this.user = user;
     }
 
