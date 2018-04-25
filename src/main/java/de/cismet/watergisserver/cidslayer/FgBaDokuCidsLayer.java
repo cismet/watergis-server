@@ -17,12 +17,12 @@ import Sirius.server.newuser.User;
 import java.util.HashMap;
 
 /**
- * This layer was removed.
+ * DOCUMENT ME!
  *
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class FgBaProjCidsLayer extends WatergisDefaultCidsLayer {
+public class FgBaDokuCidsLayer extends WatergisDefaultCidsLayer {
 
     //~ Static fields/initializers ---------------------------------------------
 
@@ -46,7 +46,7 @@ public class FgBaProjCidsLayer extends WatergisDefaultCidsLayer {
      * @param  mc    DOCUMENT ME!
      * @param  user  DOCUMENT ME!
      */
-    public FgBaProjCidsLayer(final MetaClass mc, final User user) {
+    public FgBaDokuCidsLayer(final MetaClass mc, final User user) {
         super(
             mc,
             false,
