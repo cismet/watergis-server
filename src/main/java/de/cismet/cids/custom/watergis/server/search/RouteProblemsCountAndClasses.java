@@ -39,7 +39,8 @@ public class RouteProblemsCountAndClasses extends AbstractCidsServerSearch {
     private static final transient Logger LOG = Logger.getLogger(RouteProblemsCountAndClasses.class);
 
     public static final String DOMAIN_NAME = "DLM25W";
-    private static final String QUERY_WITH_CLASS = "select dlm25w.correction_count_and_names(%1$s, %2$s, %3$s, %4$s)";
+    private static final String QUERY_WITH_CLASS =
+        "select dlm25w.correction_count_and_names(%1$s, %2$s, %3$s, %4$s, %5$s)";
 
     //~ Instance fields --------------------------------------------------------
 
@@ -47,18 +48,21 @@ public class RouteProblemsCountAndClasses extends AbstractCidsServerSearch {
     private int[] ids;
     private int[] classIds = null;
     private boolean fgBakIds = true;
+    private boolean export = false;
 
     //~ Constructors -----------------------------------------------------------
 
     /**
      * Creates a new WkkSearch object.
      *
-     * @param  owner  DOCUMENT ME!
-     * @param  ids    DOCUMENT ME!
+     * @param  owner   DOCUMENT ME!
+     * @param  ids     DOCUMENT ME!
+     * @param  export  DOCUMENT ME!
      */
-    public RouteProblemsCountAndClasses(final String owner, final int[] ids) {
+    public RouteProblemsCountAndClasses(final String owner, final int[] ids, final boolean export) {
         this.owner = owner;
         this.ids = ids;
+        this.export = export;
         if (owner != null) {
             this.owner = "'" + owner + "'";
         }
@@ -71,15 +75,18 @@ public class RouteProblemsCountAndClasses extends AbstractCidsServerSearch {
      * @param  ids       DOCUMENT ME!
      * @param  classIds  DOCUMENT ME!
      * @param  fgBakIds  DOCUMENT ME!
+     * @param  export    DOCUMENT ME!
      */
     public RouteProblemsCountAndClasses(final String owner,
             final int[] ids,
             final int[] classIds,
-            final boolean fgBakIds) {
+            final boolean fgBakIds,
+            final boolean export) {
         this.owner = owner;
         this.ids = ids;
         this.classIds = classIds;
         this.fgBakIds = fgBakIds;
+        this.export = export;
         if (owner != null) {
             this.owner = "'" + owner + "'";
         }
@@ -98,7 +105,8 @@ public class RouteProblemsCountAndClasses extends AbstractCidsServerSearch {
                             owner,
                             SQLFormatter.createSqlArrayString(ids),
                             SQLFormatter.createSqlArrayString(classIds),
-                            String.valueOf(fgBakIds)));
+                            String.valueOf(fgBakIds),
+                            export));
                 return lists;
             } catch (RemoteException ex) {
                 LOG.error(ex.getMessage(), ex);
