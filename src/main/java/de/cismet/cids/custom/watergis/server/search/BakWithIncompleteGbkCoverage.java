@@ -25,17 +25,18 @@ public class BakWithIncompleteGbkCoverage extends AbstractAnalyzeSearch {
     /**
      * Creates a new WkkSearch object.
      *
-     * @param  owner  DOCUMENT ME!
-     * @param  ids    DOCUMENT ME!
+     * @param  owner   DOCUMENT ME!
+     * @param  ids     DOCUMENT ME!
+     * @param  export  DOCUMENT ME!
      */
-    public BakWithIncompleteGbkCoverage(final String owner, final int[] ids) {
-        super(owner, ids);
+    public BakWithIncompleteGbkCoverage(final String owner, final int[] ids, final boolean export) {
+        super(owner, ids, export);
     }
 
     //~ Methods ----------------------------------------------------------------
 
     @Override
-    protected String createQuery(final String owner, final int[] ids) {
+    protected String createQuery(final String owner, final int[] ids, final boolean export) {
         if ((owner == null) || owner.startsWith("lung")
                     || owner.equalsIgnoreCase("administratoren")) {
             return

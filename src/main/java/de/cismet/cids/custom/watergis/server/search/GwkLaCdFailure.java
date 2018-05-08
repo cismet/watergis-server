@@ -25,17 +25,19 @@ public class GwkLaCdFailure extends AbstractAnalyzeSearch {
     /**
      * Creates a new WkkSearch object.
      *
-     * @param  owner  DOCUMENT ME!
-     * @param  ids    DOCUMENT ME!
+     * @param  owner   DOCUMENT ME!
+     * @param  ids     DOCUMENT ME!
+     * @param  export  DOCUMENT ME!
      */
-    public GwkLaCdFailure(final String owner, final int[] ids) {
-        super(owner, ids);
+    public GwkLaCdFailure(final String owner, final int[] ids, final boolean export) {
+        super(owner, ids, export);
     }
 
     //~ Methods ----------------------------------------------------------------
 
     @Override
-    protected String createQuery(final String owner, final int[] ids) {
+    protected String createQuery(final String owner, final int[] ids, final boolean export) {
+        // ignore export parameter
         if ((owner == null) || owner.startsWith("lung")
                     || owner.equalsIgnoreCase("administratoren")) {
             return

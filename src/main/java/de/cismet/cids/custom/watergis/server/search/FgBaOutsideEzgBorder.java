@@ -12,22 +12,12 @@
  */
 package de.cismet.cids.custom.watergis.server.search;
 
-import Sirius.server.middleware.interfaces.domainserver.MetaService;
-
-import org.apache.log4j.Logger;
-
-import java.rmi.RemoteException;
-
-import java.util.ArrayList;
-import java.util.Collection;
-
-import de.cismet.cids.server.search.AbstractCidsServerSearch;
-
 /**
  * DOCUMENT ME!
  *
- * @author   therter
- * @version  $Revision$, $Date$
+ * @author      therter
+ * @version     $Revision$, $Date$
+ * @deprecated  DOCUMENT ME!
  */
 public class FgBaOutsideEzgBorder extends AbstractAnalyzeSearch {
 
@@ -36,17 +26,18 @@ public class FgBaOutsideEzgBorder extends AbstractAnalyzeSearch {
     /**
      * Creates a new WkkSearch object.
      *
-     * @param  owner  DOCUMENT ME!
-     * @param  ids    DOCUMENT ME!
+     * @param  owner   DOCUMENT ME!
+     * @param  ids     DOCUMENT ME!
+     * @param  export  DOCUMENT ME!
      */
-    public FgBaOutsideEzgBorder(final String owner, final int[] ids) {
-        super(owner, ids);
+    public FgBaOutsideEzgBorder(final String owner, final int[] ids, final boolean export) {
+        super(owner, ids, export);
     }
 
     //~ Methods ----------------------------------------------------------------
 
     @Override
-    protected String createQuery(final String owner, final int[] ids) {
+    protected String createQuery(final String owner, final int[] ids, final boolean export) {
         if ((owner == null) || owner.startsWith("lung")
                     || owner.equalsIgnoreCase("administratoren")) {
             return

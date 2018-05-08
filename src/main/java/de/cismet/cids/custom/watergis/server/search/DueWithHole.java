@@ -15,8 +15,9 @@ package de.cismet.cids.custom.watergis.server.search;
 /**
  * DOCUMENT ME!
  *
- * @author   therter
- * @version  $Revision$, $Date$
+ * @author      therter
+ * @version     $Revision$, $Date$
+ * @deprecated  DOCUMENT ME!
  */
 public class DueWithHole extends AbstractAnalyzeSearch {
 
@@ -25,17 +26,18 @@ public class DueWithHole extends AbstractAnalyzeSearch {
     /**
      * Creates a new WkkSearch object.
      *
-     * @param  owner  DOCUMENT ME!
-     * @param  ids    DOCUMENT ME!
+     * @param  owner   DOCUMENT ME!
+     * @param  ids     DOCUMENT ME!
+     * @param  export  DOCUMENT ME!
      */
-    public DueWithHole(final String owner, final int[] ids) {
-        super(owner, ids);
+    public DueWithHole(final String owner, final int[] ids, final boolean export) {
+        super(owner, ids, export);
     }
 
     //~ Methods ----------------------------------------------------------------
 
     @Override
-    protected String createQuery(final String owner, final int[] ids) {
+    protected String createQuery(final String owner, final int[] ids, final boolean export) {
         if ((owner == null) || owner.startsWith("lung")
                     || owner.equalsIgnoreCase("administratoren")) {
             return

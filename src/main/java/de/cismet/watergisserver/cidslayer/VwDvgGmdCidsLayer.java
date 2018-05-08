@@ -19,7 +19,7 @@ import Sirius.server.middleware.types.MetaClass;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class VwDvgOrtCidsLayer extends WatergisDefaultCidsLayer {
+public class VwDvgGmdCidsLayer extends WatergisDefaultCidsLayer {
 
     //~ Constructors -----------------------------------------------------------
 
@@ -28,7 +28,7 @@ public class VwDvgOrtCidsLayer extends WatergisDefaultCidsLayer {
      *
      * @param  mc  DOCUMENT ME!
      */
-    public VwDvgOrtCidsLayer(final MetaClass mc) {
+    public VwDvgGmdCidsLayer(final MetaClass mc) {
         super(mc);
     }
 }
