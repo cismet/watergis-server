@@ -25,22 +25,25 @@ public class BaWithIncompleteProfCoverage extends AbstractAnalyzeSearch {
     /**
      * Creates a new WkkSearch object.
      *
-     * @param  owner  DOCUMENT ME!
-     * @param  ids    DOCUMENT ME!
+     * @param  owner   DOCUMENT ME!
+     * @param  ids     DOCUMENT ME!
+     * @param  export  DOCUMENT ME!
      */
-    public BaWithIncompleteProfCoverage(final String owner, final int[] ids) {
-        super(owner, ids);
+    public BaWithIncompleteProfCoverage(final String owner, final int[] ids, final boolean export) {
+        super(owner, ids, export);
     }
 
     //~ Methods ----------------------------------------------------------------
 
     @Override
-    protected String createQuery(final String owner, final int[] ids) {
+    protected String createQuery(final String owner, final int[] ids, final boolean export) {
         if ((owner == null) || owner.startsWith("lung")
                     || owner.equalsIgnoreCase("administratoren")) {
             return
                 "select id, geom, ww_gr, ba_cd, ba_st_von, ba_st_bis, laenge, fis_g_date, fis_g_user from dlm25w.select_fg_ba_with_incomplete_prof_coverage(null, "
                         + createSqlString(ids)
+                        + ", "
+                        + export
                         + ")";
         } else {
             return
@@ -48,6 +51,8 @@ public class BaWithIncompleteProfCoverage extends AbstractAnalyzeSearch {
                         + owner
                         + "', "
                         + createSqlString(ids)
+                        + ", "
+                        + export
                         + ")";
         }
     }

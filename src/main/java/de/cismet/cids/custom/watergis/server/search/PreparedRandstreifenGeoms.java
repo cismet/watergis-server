@@ -42,7 +42,7 @@ public class PreparedRandstreifenGeoms extends AbstractCidsServerSearch {
     private static final transient Logger LOG = Logger.getLogger(PreparedRandstreifenGeoms.class);
 
     public static final String DOMAIN_NAME = "DLM25W";
-    private static final String QUERY = "Select st_asBinary(st_buffer(ST_Collect(ST_SnapToGrid(geo_field, 0.001)), 0))"
+    private static final String QUERY = "Select st_asBinary(st_buffer(ST_Collect(ST_SnapToGrid(geo_field, 0.01)), 0))"
                 + " from (%1s) a";
     private static final String FG_QUERY =
         "select geo_field from dlm25w.fg_ba_gerog join geom on (geom = geom.id) where typ in ('so', 'b_li', 'b_re', 'bn_li', 'bn_re', 'bt_li', 'bt_re')  and st_intersects(geo_field, '%1s')";

@@ -49,11 +49,12 @@ public abstract class AbstractAnalyzeSearch extends AbstractCidsServerSearch {
     /**
      * Creates a new WkkSearch object.
      *
-     * @param  owner  DOCUMENT ME!
-     * @param  ids    DOCUMENT ME!
+     * @param  owner   DOCUMENT ME!
+     * @param  ids     DOCUMENT ME!
+     * @param  export  the value of export
      */
-    public AbstractAnalyzeSearch(final String owner, final int[] ids) {
-        dbQuery = createQuery(owner, ids);
+    public AbstractAnalyzeSearch(final String owner, final int[] ids, final boolean export) {
+        dbQuery = createQuery(owner, ids, export);
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -61,12 +62,13 @@ public abstract class AbstractAnalyzeSearch extends AbstractCidsServerSearch {
     /**
      * DOCUMENT ME!
      *
-     * @param   owner  DOCUMENT ME!
-     * @param   ids    DOCUMENT ME!
+     * @param   owner   DOCUMENT ME!
+     * @param   ids     DOCUMENT ME!
+     * @param   export  the value of export
      *
-     * @return  DOCUMENT ME!
+     * @return  the java.lang.String
      */
-    protected abstract String createQuery(final String owner, final int[] ids);
+    protected abstract String createQuery(final String owner, final int[] ids, boolean export);
 
     /**
      * DOCUMENT ME!
