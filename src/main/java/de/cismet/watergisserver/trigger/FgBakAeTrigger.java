@@ -98,17 +98,17 @@ public class FgBakAeTrigger extends AbstractDBAwareCidsTrigger {
 
     @Override
     public void afterCommittedInsert(final CidsBean cidsBean, final User user) {
-        restat(cidsBean, user);
+//jean-workaround-05.2018        restat(cidsBean, user);
     }
 
     @Override
     public void afterCommittedUpdate(final CidsBean cidsBean, final User user) {
-        restat(cidsBean, user);
+//jean-workaround-05.2018        restat(cidsBean, user);
     }
 
     @Override
     public void afterCommittedDelete(final CidsBean cidsBean, final User user) {
-        restat(cidsBean, user);
+//jean-workaround-05.2018        restat(cidsBean, user);
     }
 
     /**
