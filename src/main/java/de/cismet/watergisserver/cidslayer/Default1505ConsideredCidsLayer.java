@@ -27,7 +27,6 @@ public class Default1505ConsideredCidsLayer extends WatergisDefaultCidsLayer {
 
     //~ Instance fields --------------------------------------------------------
 
-    protected final User user;
     private boolean additionalJoin = false;
 
     //~ Constructors -----------------------------------------------------------
@@ -39,8 +38,7 @@ public class Default1505ConsideredCidsLayer extends WatergisDefaultCidsLayer {
      * @param  user  DOCUMENT ME!
      */
     public Default1505ConsideredCidsLayer(final MetaClass mc, final User user) {
-        super(mc);
-        this.user = user;
+        super(mc, user);
     }
 
     /**
@@ -53,8 +51,7 @@ public class Default1505ConsideredCidsLayer extends WatergisDefaultCidsLayer {
     public Default1505ConsideredCidsLayer(final MetaClass mc,
             final User user,
             final HashMap<String, String> CATALOGUE_NAME_MAP) {
-        super(mc, CATALOGUE_NAME_MAP);
-        this.user = user;
+        super(mc, CATALOGUE_NAME_MAP, user);
     }
 
     /**
@@ -86,8 +83,7 @@ public class Default1505ConsideredCidsLayer extends WatergisDefaultCidsLayer {
             final boolean showFgLa,
             final boolean additionalGeom,
             final Map<String, String> catalogueNameMap) {
-        super(mc, showFgLa, additionalGeom, catalogueNameMap);
-        this.user = user;
+        super(mc, showFgLa, additionalGeom, catalogueNameMap, user);
     }
 
     /**
@@ -108,8 +104,7 @@ public class Default1505ConsideredCidsLayer extends WatergisDefaultCidsLayer {
             final Map<String, String> catalogueNameMap,
             final boolean inheritedWwGr,
             final String additionalJoins) {
-        super(mc, showFgLa, additionalGeom, catalogueNameMap, inheritedWwGr, additionalJoins);
-        this.user = user;
+        super(mc, showFgLa, additionalGeom, catalogueNameMap, inheritedWwGr, additionalJoins, user);
         additionalJoin = true;
     }
 

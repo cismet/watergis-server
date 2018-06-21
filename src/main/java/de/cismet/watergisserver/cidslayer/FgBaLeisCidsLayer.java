@@ -36,10 +36,6 @@ public class FgBaLeisCidsLayer extends WatergisDefaultCidsLayer {
         CATALOGUE_NAME_MAP.put("leis", "leis");
     }
 
-    //~ Instance fields --------------------------------------------------------
-
-    private User user;
-
     //~ Constructors -----------------------------------------------------------
 
     /**
@@ -55,8 +51,8 @@ public class FgBaLeisCidsLayer extends WatergisDefaultCidsLayer {
             false,
             CATALOGUE_NAME_MAP,
             true,
-            " left join dlm25w.k_ww_gr dlm25wPk_ww_gr1 on (dlm25w.fg_ba.ww_gr = dlm25wPk_ww_gr1.id)");
-        this.user = user;
+            " left join dlm25w.k_ww_gr dlm25wPk_ww_gr1 on (dlm25w.fg_ba.ww_gr = dlm25wPk_ww_gr1.id)",
+            user);
     }
 
     //~ Methods ----------------------------------------------------------------

@@ -11,6 +11,7 @@
  */
 package de.cismet.watergisserver.cidslayer;
 
+import Sirius.server.localserver.attribute.MemberAttributeInfo;
 import Sirius.server.middleware.types.MetaClass;
 import Sirius.server.newuser.User;
 
@@ -53,5 +54,43 @@ public class FgBaSchaCidsLayer extends Default1505ConsideredCidsLayer {
             CATALOGUE_NAME_MAP,
             true,
             " left join dlm25w.k_ww_gr dlm25wPk_ww_gr1 on (dlm25w.fg_ba.ww_gr = dlm25wPk_ww_gr1.id)");
+    }
+
+    //~ Methods ----------------------------------------------------------------
+
+    @Override
+    protected boolean hasAttributeReadPermission(final String column, final User user) {
+        if (column.equals("dlm25w.fg_ba_scha.material")
+                    || column.equals("dlm25w.fg_ba_scha.obj_nr_gu")
+                    || column.equals("dlm25w.fg_ba_scha.traeger")
+                    || column.equals("dlm25w.fg_ba_scha.traeger_gu")
+                    || column.equals("dlm25w.fg_ba_scha.ausbaujahr")) {
+            return ((user != null)
+                            && (user.getUserGroup().getName().contains("lu")
+                                || user.getUserGroup().getName().contains("wbv")
+                                || user.getUserGroup().getName().contains("uwb")
+                                || user.getUserGroup().getName().contains("wsa")
+                                || user.getUserGroup().getName().contains("stalu")));
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    protected String getFieldRestriction(final String column) {
+        if (column.equals("dlm25w.fg_ba_scha.name")
+                    || column.equals("dlm25w.fg_ba_scha.zust_kl")
+                    || column.equals("dlm25w.fg_ba_scha.bemerkung")
+                    || column.equals("dlm25w.fg_ba_scha.ho_so")
+                    || column.equals("dlm25w.fg_ba_scha.ho_d_so_ok")) {
+            if ((user == null) || user.getUserGroup().getName().startsWith("lung")
+                        || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
+                return null;
+            } else {
+                return "dlm25wPk_ww_gr1.owner = '" + user.getUserGroup().getName() + "'";
+            }
+        }
+
+        return null;
     }
 }

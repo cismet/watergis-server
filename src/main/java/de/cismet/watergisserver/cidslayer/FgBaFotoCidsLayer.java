@@ -35,10 +35,6 @@ public class FgBaFotoCidsLayer extends WatergisDefaultCidsLayer {
         CATALOGUE_NAME_MAP.put("freigabe", "freigabe");
     }
 
-    //~ Instance fields --------------------------------------------------------
-
-    private final User user;
-
     //~ Constructors -----------------------------------------------------------
 
     /**
@@ -48,11 +44,24 @@ public class FgBaFotoCidsLayer extends WatergisDefaultCidsLayer {
      * @param  user  DOCUMENT ME!
      */
     public FgBaFotoCidsLayer(final MetaClass mc, final User user) {
-        super(mc, true, true, CATALOGUE_NAME_MAP);
-        this.user = user;
+        super(mc, true, true, CATALOGUE_NAME_MAP, user);
     }
 
     //~ Methods ----------------------------------------------------------------
+
+    @Override
+    protected String getFieldRestriction(final String column) {
+        if (column.equals("dlm25w.foto.bemerkung")) {
+            if ((user == null) || user.getUserGroup().getName().startsWith("lung")
+                        || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
+                return null;
+            } else {
+                return "upl_name = '" + user.getName() + "'";
+            }
+        }
+
+        return null;
+    }
 
     @Override
     public String getRestriction() {

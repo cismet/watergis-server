@@ -14,6 +14,7 @@ package de.cismet.watergisserver.cidslayer;
 import Sirius.server.localserver.attribute.MemberAttributeInfo;
 import Sirius.server.localserver.attribute.ObjectAttribute;
 import Sirius.server.middleware.types.MetaClass;
+import Sirius.server.newuser.User;
 
 import java.io.Serializable;
 
@@ -28,6 +29,8 @@ import javax.swing.JComponent;
 
 import de.cismet.cids.server.cidslayer.CidsLayerInfo;
 import de.cismet.cids.server.cidslayer.StationInfo;
+
+import de.cismet.connectioncontext.ConnectionContext;
 //import de.cismet.cismap.commons.gui.attributetable.DefaultAttributeTableRuleSet;
 
 /**
@@ -52,6 +55,7 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
     protected final Map<String, StationInfo> stationTypes = new HashMap<String, StationInfo>();
     protected final Map<String, Integer> referencedClass = new HashMap<String, Integer>();
     protected boolean useDistinct = false;
+    protected User user = null;
     private String sqlGeoField;
     private String geoField;
     private String selectionString;
@@ -71,10 +75,11 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
     /**
      * Creates a new FgBakAeCidsLayer object.
      *
-     * @param  mc  DOCUMENT ME!
+     * @param  mc    DOCUMENT ME!
+     * @param  user  DOCUMENT ME!
      */
-    public WatergisDefaultCidsLayer(final MetaClass mc) {
-        this(mc, false, false, null);
+    public WatergisDefaultCidsLayer(final MetaClass mc, final User user) {
+        this(mc, false, false, null, user);
     }
 
     /**
@@ -82,8 +87,9 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
      *
      * @param  mc                  DOCUMENT ME!
      * @param  showSgSuAttributes  DOCUMENT ME!
+     * @param  user                DOCUMENT ME!
      */
-    public WatergisDefaultCidsLayer(final MetaClass mc, final boolean showSgSuAttributes) {
+    public WatergisDefaultCidsLayer(final MetaClass mc, final boolean showSgSuAttributes, final User user) {
         this.mc = mc;
         this.showFgLa = false;
         this.additionalGeom = false;
@@ -91,6 +97,7 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
         this.inheritedWwGr = false;
         this.additionalJoins = null;
         this.showSgSuAttributes = showSgSuAttributes;
+        this.user = user;
 
         if (showFgLa) {
             useDistinct = true;
@@ -104,9 +111,10 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
      *
      * @param  mc                DOCUMENT ME!
      * @param  catalogueNameMap  DOCUMENT ME!
+     * @param  user              DOCUMENT ME!
      */
-    public WatergisDefaultCidsLayer(final MetaClass mc, final Map<String, String> catalogueNameMap) {
-        this(mc, false, false, catalogueNameMap);
+    public WatergisDefaultCidsLayer(final MetaClass mc, final Map<String, String> catalogueNameMap, final User user) {
+        this(mc, false, false, catalogueNameMap, user);
     }
 
     /**
@@ -115,9 +123,13 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
      * @param  mc               DOCUMENT ME!
      * @param  inheritedWwGr    DOCUMENT ME!
      * @param  additionalJoins  DOCUMENT ME!
+     * @param  user             DOCUMENT ME!
      */
-    public WatergisDefaultCidsLayer(final MetaClass mc, final boolean inheritedWwGr, final String additionalJoins) {
-        this(mc, false, false, null, inheritedWwGr, additionalJoins);
+    public WatergisDefaultCidsLayer(final MetaClass mc,
+            final boolean inheritedWwGr,
+            final String additionalJoins,
+            final User user) {
+        this(mc, false, false, null, inheritedWwGr, additionalJoins, user);
     }
 
     /**
@@ -126,9 +138,13 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
      * @param  mc              DOCUMENT ME!
      * @param  showFgLa        DOCUMENT ME!
      * @param  additionalGeom  DOCUMENT ME!
+     * @param  user            DOCUMENT ME!
      */
-    public WatergisDefaultCidsLayer(final MetaClass mc, final boolean showFgLa, final boolean additionalGeom) {
-        this(mc, showFgLa, additionalGeom, null);
+    public WatergisDefaultCidsLayer(final MetaClass mc,
+            final boolean showFgLa,
+            final boolean additionalGeom,
+            final User user) {
+        this(mc, showFgLa, additionalGeom, null, user);
     }
 
     /**
@@ -138,12 +154,14 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
      * @param  showFgLa          DOCUMENT ME!
      * @param  additionalGeom    DOCUMENT ME!
      * @param  catalogueNameMap  DOCUMENT ME!
+     * @param  user              DOCUMENT ME!
      */
     public WatergisDefaultCidsLayer(final MetaClass mc,
             final boolean showFgLa,
             final boolean additionalGeom,
-            final Map<String, String> catalogueNameMap) {
-        this(mc, showFgLa, additionalGeom, catalogueNameMap, false, null);
+            final Map<String, String> catalogueNameMap,
+            final User user) {
+        this(mc, showFgLa, additionalGeom, catalogueNameMap, false, null, user);
     }
 
     /**
@@ -154,13 +172,15 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
      * @param  additionalGeom    DOCUMENT ME!
      * @param  catalogueNameMap  DOCUMENT ME!
      * @param  inheritedWwGr     DOCUMENT ME!
+     * @param  user              DOCUMENT ME!
      */
     public WatergisDefaultCidsLayer(final MetaClass mc,
             final boolean showFgLa,
             final boolean additionalGeom,
             final Map<String, String> catalogueNameMap,
-            final boolean inheritedWwGr) {
-        this(mc, showFgLa, additionalGeom, catalogueNameMap, inheritedWwGr, null);
+            final boolean inheritedWwGr,
+            final User user) {
+        this(mc, showFgLa, additionalGeom, catalogueNameMap, inheritedWwGr, null, user);
     }
 
     /**
@@ -172,19 +192,22 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
      * @param  catalogueNameMap  DOCUMENT ME!
      * @param  inheritedWwGr     DOCUMENT ME!
      * @param  additionalJoins   DOCUMENT ME!
+     * @param  user              DOCUMENT ME!
      */
     public WatergisDefaultCidsLayer(final MetaClass mc,
             final boolean showFgLa,
             final boolean additionalGeom,
             final Map<String, String> catalogueNameMap,
             final boolean inheritedWwGr,
-            final String additionalJoins) {
+            final String additionalJoins,
+            final User user) {
         this.mc = mc;
         this.showFgLa = showFgLa;
         this.additionalGeom = additionalGeom;
         this.catalogueNameMap = catalogueNameMap;
         this.inheritedWwGr = inheritedWwGr;
         this.additionalJoins = additionalJoins;
+        this.user = user;
 
         if (showFgLa) {
             useDistinct = true;
@@ -200,7 +223,7 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
      *
      * @param  mc  DOCUMENT ME!
      */
-    private void init(final MetaClass mc) {
+    protected void init(final MetaClass mc) {
         final HashMap attrMap = mc.getMemberAttributeInfos();
         final List<String> sb = new ArrayList<String>();
         final StringBuilder joins = new StringBuilder();
@@ -218,7 +241,9 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
 
         for (final Object key : attrMap.keySet()) {
             final MemberAttributeInfo attr = (MemberAttributeInfo)attrMap.get(key);
-
+            if ((user != null) && !hasAttributeReadPermission(mc.getTableName() + "." + attr.getFieldName(), user)) {
+                continue;
+            }
             if (!attr.getName().equalsIgnoreCase("id") && !attr.isVisible()) {
                 continue;
             }
@@ -680,7 +705,14 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
 //                    sb.deleteCharAt(sb.length() - 1);
                 }
             } else {
-                sb.add(mc.getTableName() + "." + attr.getFieldName());
+                final String fieldRestriction = getFieldRestriction(mc.getTableName() + "." + attr.getFieldName());
+
+                if (fieldRestriction != null) {
+                    sb.add("case when " + fieldRestriction + " then " + mc.getTableName() + "." + attr.getFieldName()
+                                + " else null end");
+                } else {
+                    sb.add(mc.getTableName() + "." + attr.getFieldName());
+                }
                 columnNamesList.add(attr.getName());
                 sqlColumnNamesList.add(mc.getTableName() + "." + attr.getFieldName());
                 columnPropertyNamesList.add(attr.getName());
@@ -749,6 +781,29 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
     /**
      * DOCUMENT ME!
      *
+     * @param   column  DOCUMENT ME!
+     *
+     * @return  DOCUMENT ME!
+     */
+    protected String getFieldRestriction(final String column) {
+        return null;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param   column  DOCUMENT ME!
+     * @param   user    DOCUMENT ME!
+     *
+     * @return  DOCUMENT ME!
+     */
+    protected boolean hasAttributeReadPermission(final String column, final User user) {
+        return true;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
      * @param  attr                      DOCUMENT ME!
      * @param  foreignClass              DOCUMENT ME!
      * @param  sb                        DOCUMENT ME!
@@ -773,6 +828,7 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
         }
         final ObjectAttribute nameAttr = (ObjectAttribute)foreignClass.getEmptyInstance()
                     .getAttribute(namePropertyName);
+        final String fieldRestriction = getFieldRestriction(mc.getTableName() + "." + attr.getFieldName());
 
         if (nameAttr != null) {
             final String alias = addLeftJoin(
@@ -782,14 +838,24 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
                             + "."
                             + attr.getFieldName(),
                     "id");
-            sb.add(alias + "." + nameAttr.getMai().getFieldName());
+            if (fieldRestriction != null) {
+                sb.add("case when " + fieldRestriction + " then " + alias + "." + nameAttr.getMai().getFieldName()
+                            + " else null end");
+            } else {
+                sb.add(alias + "." + nameAttr.getMai().getFieldName());
+            }
             columnNamesList.add(attr.getName());
             sqlColumnNamesList.add(alias + "." + nameAttr.getMai().getFieldName());
             columnPropertyNamesList.add(attr.getName());
             catalogueTypes.put(columnNamesList.get(columnNamesList.size() - 1), attr.getForeignKeyClassId());
             primitiveColumnTypesList.add(nameAttr.getMai().getJavaclassname());
         } else {
-            sb.add(mc.getTableName() + "." + attr.getFieldName());
+            if (fieldRestriction != null) {
+                sb.add("case when " + fieldRestriction + " then " + mc.getTableName() + "." + attr.getFieldName()
+                            + " else null end");
+            } else {
+                sb.add(mc.getTableName() + "." + attr.getFieldName());
+            }
             columnNamesList.add(attr.getName());
             sqlColumnNamesList.add(mc.getTableName() + "." + attr.getFieldName());
             columnPropertyNamesList.add(attr.getName() + ".name");

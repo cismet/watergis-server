@@ -52,5 +52,46 @@ public class FgBaProfCidsLayer extends Default1505ConsideredCidsLayer {
             CATALOGUE_NAME_MAP,
             true,
             " left join dlm25w.k_ww_gr dlm25wPk_ww_gr1 on (dlm25w.fg_ba.ww_gr = dlm25wPk_ww_gr1.id)");
+        init();
+    }
+
+    //~ Methods ----------------------------------------------------------------
+
+    @Override
+    protected void init(final MetaClass mc) {
+        // init the class in the init() method, when the user is set
+    }
+
+    /**
+     * DOCUMENT ME!
+     */
+    private void init() {
+        super.init(mc);
+    }
+
+    @Override
+    protected String getFieldRestriction(final String column) {
+        if (column.equals("dlm25w.fg_ba_prof.zust_kl")
+                    || column.equals("dlm25w.fg_ba_prof.bemerkung")
+                    || column.equals("dlm25w.fg_ba_prof.br")
+                    || column.equals("dlm25w.fg_ba_prof.ho_e")
+                    || column.equals("dlm25w.fg_ba_prof.ho_a")
+                    || column.equals("dlm25w.fg_ba_prof.gefaelle")
+                    || column.equals("dlm25w.fg_ba_prof.bv_re")
+                    || column.equals("dlm25w.fg_ba_prof.bh_re")
+                    || column.equals("dlm25w.fg_ba_prof.bl_re")
+                    || column.equals("dlm25w.fg_ba_prof.bv_li")
+                    || column.equals("dlm25w.fg_ba_prof.bh_li")
+                    || column.equals("dlm25w.fg_ba_prof.bl_li")
+                    || column.equals("dlm25w.fg_ba_prof.mw")) {
+            if ((user == null) || user.getUserGroup().getName().startsWith("lung")
+                        || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
+                return null;
+            } else {
+                return "dlm25wPk_ww_gr1.owner = '" + user.getUserGroup().getName() + "'";
+            }
+        }
+
+        return null;
     }
 }
