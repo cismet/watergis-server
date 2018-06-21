@@ -13,6 +13,7 @@
 package de.cismet.watergisserver.cidslayer;
 
 import Sirius.server.middleware.types.MetaClass;
+import Sirius.server.newuser.User;
 
 import java.util.HashMap;
 
@@ -37,9 +38,10 @@ public class KSbCidsLayer extends WatergisDefaultCidsLayer {
     /**
      * Creates a new KSbCidsLayer object.
      *
-     * @param  mc  DOCUMENT ME!
+     * @param  mc    DOCUMENT ME!
+     * @param  user  DOCUMENT ME!
      */
-    public KSbCidsLayer(final MetaClass mc) {
-        super(mc, CATALOGUE_NAME_MAP);
+    public KSbCidsLayer(final MetaClass mc, final User user) {
+        super(mc, CATALOGUE_NAME_MAP, user);
     }
 }

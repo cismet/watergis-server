@@ -34,10 +34,6 @@ public class QpGafPpCidsLayer extends WatergisDefaultCidsLayer {
         CATALOGUE_NAME_MAP.put("kz", "kz");
     }
 
-    //~ Instance fields --------------------------------------------------------
-
-    private final User user;
-
     //~ Constructors -----------------------------------------------------------
 
     /**
@@ -51,8 +47,8 @@ public class QpGafPpCidsLayer extends WatergisDefaultCidsLayer {
             mc,
             false,
             false,
-            CATALOGUE_NAME_MAP);
-        this.user = user;
+            CATALOGUE_NAME_MAP,
+            user);
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -61,6 +57,20 @@ public class QpGafPpCidsLayer extends WatergisDefaultCidsLayer {
 // protected String addLeftJoin(StringBuilder joins, String table, String onClauseLeftSide, String onClauseRightSide) {
 //        return super.addLeftJoin(joins, table, onClauseLeftSide, onClauseRightSide); //To change body of generated methods, choose Tools | Templates.
 //    }
+
+    @Override
+    protected String getFieldRestriction(final String column) {
+        if (column.equals("dlm25w.qp.bemerkung")) {
+            if ((user == null) || user.getUserGroup().getName().startsWith("lung")
+                        || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
+                return null;
+            } else {
+                return "upl_name = '" + user.getName() + "'";
+            }
+        }
+
+        return null;
+    }
 
     @Override
     public String getRestriction() {

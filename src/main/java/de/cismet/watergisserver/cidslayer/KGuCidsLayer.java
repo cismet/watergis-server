@@ -13,6 +13,7 @@
 package de.cismet.watergisserver.cidslayer;
 
 import Sirius.server.middleware.types.MetaClass;
+import Sirius.server.newuser.User;
 
 /**
  * DOCUMENT ME!
@@ -27,9 +28,10 @@ public class KGuCidsLayer extends WatergisDefaultCidsLayer {
     /**
      * Creates a new KProfilCidsLayer object.
      *
-     * @param  mc  DOCUMENT ME!
+     * @param  mc    DOCUMENT ME!
+     * @param  user  DOCUMENT ME!
      */
-    public KGuCidsLayer(final MetaClass mc) {
-        super(mc);
+    public KGuCidsLayer(final MetaClass mc, final User user) {
+        super(mc, user);
     }
 }

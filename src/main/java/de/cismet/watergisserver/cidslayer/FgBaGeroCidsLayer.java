@@ -46,5 +46,46 @@ public class FgBaGeroCidsLayer extends Default1505ConsideredCidsLayer {
      */
     public FgBaGeroCidsLayer(final MetaClass mc, final User user) {
         super(mc, user, false, true, CATALOGUE_NAME_MAP);
+        init();
+    }
+
+    //~ Methods ----------------------------------------------------------------
+
+    @Override
+    protected void init(final MetaClass mc) {
+        // init the class in the init() method, when the user is set
+    }
+
+    /**
+     * DOCUMENT ME!
+     */
+    private void init() {
+        super.init(mc);
+    }
+
+    @Override
+    protected String getFieldRestriction(final String column) {
+        if (column.equals("dlm25w.fg_ba_gero.zust_kl")
+                    || column.equals("dlm25w.fg_ba_gero.bemerkung")
+                    || column.equals("dlm25w.fg_ba_gero.br_so")
+                    || column.equals("dlm25w.fg_ba_gero.ho_e")
+                    || column.equals("dlm25w.fg_ba_gero.ho_a")
+                    || column.equals("dlm25w.fg_ba_gero.gefaelle")
+                    || column.equals("dlm25w.fg_ba_gero.bv_re")
+                    || column.equals("dlm25w.fg_ba_gero.bh_re")
+                    || column.equals("dlm25w.fg_ba_gero.bl_re")
+                    || column.equals("dlm25w.fg_ba_gero.bv_li")
+                    || column.equals("dlm25w.fg_ba_gero.bh_li")
+                    || column.equals("dlm25w.fg_ba_gero.bl_li")
+                    || column.equals("dlm25w.fg_ba_gero.mw")) {
+            if ((user == null) || user.getUserGroup().getName().startsWith("lung")
+                        || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
+                return null;
+            } else {
+                return "dlm25wPk_ww_gr1.owner = '" + user.getUserGroup().getName() + "'";
+            }
+        }
+
+        return null;
     }
 }

@@ -14,6 +14,7 @@ package de.cismet.watergisserver.cidslayer;
 import Sirius.server.localserver.attribute.MemberAttributeInfo;
 import Sirius.server.localserver.attribute.ObjectAttribute;
 import Sirius.server.middleware.types.MetaClass;
+import Sirius.server.newuser.User;
 
 import java.util.List;
 
@@ -32,10 +33,11 @@ public class MnOwPegelCidsLayer extends WatergisDefaultCidsLayer {
     /**
      * Creates a new VwDvgStaluCidsLayer object.
      *
-     * @param  mc  DOCUMENT ME!
+     * @param  mc    DOCUMENT ME!
+     * @param  user  DOCUMENT ME!
      */
-    public MnOwPegelCidsLayer(final MetaClass mc) {
-        super(mc, true, true);
+    public MnOwPegelCidsLayer(final MetaClass mc, final User user) {
+        super(mc, true, true, user);
     }
 
     //~ Methods ----------------------------------------------------------------

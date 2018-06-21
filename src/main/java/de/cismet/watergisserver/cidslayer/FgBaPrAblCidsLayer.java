@@ -52,4 +52,16 @@ public class FgBaPrAblCidsLayer extends Default1505ConsideredCidsLayer {
             false,
             CATALOGUE_NAME_MAP);
     }
+
+    //~ Methods ----------------------------------------------------------------
+
+    @Override
+    public String getRestriction() {
+        if ((user == null) || user.getUserGroup().getName().startsWith("lung")
+                    || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
+            return null;
+        } else {
+            return "dlm25wPk_ww_gr1.owner = '" + user.getUserGroup().getName() + "'";
+        }
+    }
 }
