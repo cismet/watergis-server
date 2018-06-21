@@ -39,6 +39,6 @@ public class FgLaWkCidsLayer extends WatergisDefaultCidsLayer { // Default1505Co
 //            null,
 //            false,
 //            " left join dlm25w.k_ww_gr dlm25wPk_ww_gr1 on (dlm25w.fg_la_wk.ww_gr = dlm25wPk_ww_gr1.id)");
-        super(mc);
+        super(mc, user);
     }
 }

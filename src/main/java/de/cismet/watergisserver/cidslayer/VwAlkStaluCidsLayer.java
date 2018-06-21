@@ -12,6 +12,7 @@
 package de.cismet.watergisserver.cidslayer;
 
 import Sirius.server.middleware.types.MetaClass;
+import Sirius.server.newuser.User;
 
 /**
  * DOCUMENT ME!
@@ -26,9 +27,10 @@ public class VwAlkStaluCidsLayer extends WatergisDefaultCidsLayer {
     /**
      * Creates a new VwDvgStaluCidsLayer object.
      *
-     * @param  mc  DOCUMENT ME!
+     * @param  mc    DOCUMENT ME!
+     * @param  user  DOCUMENT ME!
      */
-    public VwAlkStaluCidsLayer(final MetaClass mc) {
-        super(mc);
+    public VwAlkStaluCidsLayer(final MetaClass mc, final User user) {
+        super(mc, user);
     }
 }

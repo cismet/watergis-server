@@ -12,6 +12,7 @@
 package de.cismet.watergisserver.cidslayer;
 
 import Sirius.server.middleware.types.MetaClass;
+import Sirius.server.newuser.User;
 
 import java.util.HashMap;
 
@@ -41,9 +42,28 @@ public class GuWiweCidsLayer extends WatergisDefaultCidsLayer {
     /**
      * Creates a new VwDvgStaluCidsLayer object.
      *
-     * @param  mc  DOCUMENT ME!
+     * @param  mc    DOCUMENT ME!
+     * @param  user  DOCUMENT ME!
      */
-    public GuWiweCidsLayer(final MetaClass mc) {
-        super(mc, CATALOGUE_NAME_MAP);
+    public GuWiweCidsLayer(final MetaClass mc, final User user) {
+        super(mc, CATALOGUE_NAME_MAP, user);
+    }
+
+    //~ Methods ----------------------------------------------------------------
+
+    @Override
+    protected String getFieldRestriction(final String column) {
+        if (column.equals("dlm25w.gu_wiwe.zust_kl")
+                    || column.equals("dlm25w.gu_wiwe.bemerkung")
+                    || column.equals("dlm25w.gu_wiwe.br")) {
+            if ((user == null) || user.getUserGroup().getName().startsWith("lung")
+                        || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
+                return null;
+            } else {
+                return "dlm25wPk_ww_gr1.owner = '" + user.getUserGroup().getName() + "'";
+            }
+        }
+
+        return null;
     }
 }

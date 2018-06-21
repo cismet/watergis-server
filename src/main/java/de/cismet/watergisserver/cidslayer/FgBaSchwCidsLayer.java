@@ -53,4 +53,52 @@ public class FgBaSchwCidsLayer extends Default1505ConsideredCidsLayer {
             true,
             " left join dlm25w.k_ww_gr dlm25wPk_ww_gr1 on (dlm25w.fg_ba.ww_gr = dlm25wPk_ww_gr1.id)");
     }
+
+    //~ Methods ----------------------------------------------------------------
+
+    @Override
+    protected boolean hasAttributeReadPermission(final String column, final User user) {
+        if (column.equals("dlm25w.fg_ba_schw.obj_nr_gu")
+                    || column.equals("dlm25w.fg_ba_schw.traeger")
+                    || column.equals("dlm25w.fg_ba_schw.traeger_gu")
+                    || column.equals("dlm25w.fg_ba_schw.ausbaujahr")) {
+            return ((user != null)
+                            && (user.getUserGroup().getName().contains("lu")
+                                || user.getUserGroup().getName().contains("wbv")
+                                || user.getUserGroup().getName().contains("uwb")
+                                || user.getUserGroup().getName().contains("wsa")
+                                || user.getUserGroup().getName().contains("stalu")));
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    protected String getFieldRestriction(final String column) {
+        if (column.equals("dlm25w.fg_ba_schw.zust_kl")
+                    || column.equals("dlm25w.fg_ba_schw.esw")
+                    || column.equals("dlm25w.fg_ba_schw.bemerkung")
+                    || column.equals("dlm25w.fg_ba_schw.br")
+                    || column.equals("dlm25w.fg_ba_schw.sz")
+                    || column.equals("dlm25w.fg_ba_schw.az")
+                    || column.equals("dlm25w.fg_ba_schw.ezg_fl")
+                    || column.equals("dlm25w.fg_ba_schw.v_fl")
+                    || column.equals("dlm25w.fg_ba_schw.pu_anz1")
+                    || column.equals("dlm25w.fg_ba_schw.pu_typ1")
+                    || column.equals("dlm25w.fg_ba_schw.pu_motl1")
+                    || column.equals("dlm25w.fg_ba_schw.pu_foel1")
+                    || column.equals("dlm25w.fg_ba_schw.pu_anz2")
+                    || column.equals("dlm25w.fg_ba_schw.pu_typ2")
+                    || column.equals("dlm25w.fg_ba_schw.pu_motl2")
+                    || column.equals("dlm25w.fg_ba_schw.pu_foel2")) {
+            if ((user == null) || user.getUserGroup().getName().startsWith("lung")
+                        || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
+                return null;
+            } else {
+                return "dlm25wPk_ww_gr1.owner = '" + user.getUserGroup().getName() + "'";
+            }
+        }
+
+        return null;
+    }
 }

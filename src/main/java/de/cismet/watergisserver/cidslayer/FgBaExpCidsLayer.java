@@ -32,10 +32,6 @@ public class FgBaExpCidsLayer extends WatergisDefaultCidsLayer {
         CATALOGUE_NAME_MAP.put("ww_gr", "ww_gr");
     }
 
-    //~ Instance fields --------------------------------------------------------
-
-    private User user;
-
     //~ Constructors -----------------------------------------------------------
 
     /**
@@ -45,8 +41,7 @@ public class FgBaExpCidsLayer extends WatergisDefaultCidsLayer {
      * @param  user  DOCUMENT ME!
      */
     public FgBaExpCidsLayer(final MetaClass mc, final User user) {
-        super(mc, false, false, CATALOGUE_NAME_MAP);
-        this.user = user;
+        super(mc, false, false, CATALOGUE_NAME_MAP, user);
     }
 
     //~ Methods ----------------------------------------------------------------

@@ -12,6 +12,7 @@
 package de.cismet.watergisserver.cidslayer;
 
 import Sirius.server.middleware.types.MetaClass;
+import Sirius.server.newuser.User;
 
 /**
  * DOCUMENT ME!
@@ -26,9 +27,10 @@ public class EzgMvWbvJahrCidsLayer extends WatergisDefaultCidsLayer {
     /**
      * Creates a new EzgMvWbvCidsLayer object.
      *
-     * @param  mc  DOCUMENT ME!
+     * @param  mc    DOCUMENT ME!
+     * @param  user  DOCUMENT ME!
      */
-    public EzgMvWbvJahrCidsLayer(final MetaClass mc) {
-        super(mc);
+    public EzgMvWbvJahrCidsLayer(final MetaClass mc, final User user) {
+        super(mc, user);
     }
 }

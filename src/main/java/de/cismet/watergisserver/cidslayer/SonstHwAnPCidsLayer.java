@@ -12,6 +12,7 @@
 package de.cismet.watergisserver.cidslayer;
 
 import Sirius.server.middleware.types.MetaClass;
+import Sirius.server.newuser.User;
 
 import java.util.HashMap;
 
@@ -36,9 +37,10 @@ public class SonstHwAnPCidsLayer extends WatergisDefaultCidsLayer {
     /**
      * Creates a new VwDvgStaluCidsLayer object.
      *
-     * @param  mc  DOCUMENT ME!
+     * @param  mc    DOCUMENT ME!
+     * @param  user  DOCUMENT ME!
      */
-    public SonstHwAnPCidsLayer(final MetaClass mc) {
-        super(mc, CATALOGUE_NAME_MAP);
+    public SonstHwAnPCidsLayer(final MetaClass mc, final User user) {
+        super(mc, CATALOGUE_NAME_MAP, user);
     }
 }

@@ -14,6 +14,7 @@ package de.cismet.watergisserver.cidslayer;
 import Sirius.server.localserver.attribute.MemberAttributeInfo;
 import Sirius.server.localserver.attribute.ObjectAttribute;
 import Sirius.server.middleware.types.MetaClass;
+import Sirius.server.newuser.User;
 
 import java.util.List;
 
@@ -30,10 +31,11 @@ public class VwAlkGmdCidsLayer extends WatergisDefaultCidsLayer {
     /**
      * Creates a new FgBakCidsLayer object.
      *
-     * @param  mc  DOCUMENT ME!
+     * @param  mc    DOCUMENT ME!
+     * @param  user  DOCUMENT ME!
      */
-    public VwAlkGmdCidsLayer(final MetaClass mc) {
-        super(mc);
+    public VwAlkGmdCidsLayer(final MetaClass mc, final User user) {
+        super(mc, user);
     }
 
     //~ Methods ----------------------------------------------------------------

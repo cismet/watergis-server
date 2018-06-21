@@ -22,10 +22,6 @@ import Sirius.server.newuser.User;
  */
 public class QpGafLCidsLayer extends WatergisDefaultCidsLayer {
 
-    //~ Instance fields --------------------------------------------------------
-
-    private final User user;
-
     //~ Constructors -----------------------------------------------------------
 
     /**
@@ -35,11 +31,24 @@ public class QpGafLCidsLayer extends WatergisDefaultCidsLayer {
      * @param  user  DOCUMENT ME!
      */
     public QpGafLCidsLayer(final MetaClass mc, final User user) {
-        super(mc);
-        this.user = user;
+        super(mc, user);
     }
 
     //~ Methods ----------------------------------------------------------------
+
+    @Override
+    protected String getFieldRestriction(final String column) {
+        if (column.equals("dlm25w.qp.bemerkung")) {
+            if ((user == null) || user.getUserGroup().getName().startsWith("lung")
+                        || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
+                return null;
+            } else {
+                return "upl_name = '" + user.getName() + "'";
+            }
+        }
+
+        return null;
+    }
 
     @Override
     public String getRestriction() {

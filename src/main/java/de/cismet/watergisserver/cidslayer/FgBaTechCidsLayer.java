@@ -34,10 +34,6 @@ public class FgBaTechCidsLayer extends WatergisDefaultCidsLayer {
         CATALOGUE_NAME_MAP.put("tech", "tech");
     }
 
-    //~ Instance fields --------------------------------------------------------
-
-    private User user;
-
     //~ Constructors -----------------------------------------------------------
 
     /**
@@ -53,8 +49,8 @@ public class FgBaTechCidsLayer extends WatergisDefaultCidsLayer {
             false,
             CATALOGUE_NAME_MAP,
             true,
-            " left join dlm25w.k_ww_gr dlm25wPk_ww_gr1 on (dlm25w.fg_ba.ww_gr = dlm25wPk_ww_gr1.id)");
-        this.user = user;
+            " left join dlm25w.k_ww_gr dlm25wPk_ww_gr1 on (dlm25w.fg_ba.ww_gr = dlm25wPk_ww_gr1.id)",
+            user);
     }
 
     //~ Methods ----------------------------------------------------------------
