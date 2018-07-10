@@ -66,7 +66,8 @@ public class FgBaRlCidsLayer extends Default1505ConsideredCidsLayer {
                     || column.equals("dlm25w.fg_ba_rl.traeger_gu")
                     || column.equals("dlm25w.fg_ba_rl.ausbaujahr")) {
             return ((user != null)
-                            && (user.getUserGroup().getName().contains("lu")
+                            && (user.getUserGroup().getName().equals("Administratoren")
+                                || user.getUserGroup().getName().contains("lu")
                                 || user.getUserGroup().getName().contains("wbv")
                                 || user.getUserGroup().getName().contains("uwb")
                                 || user.getUserGroup().getName().contains("wsa")
