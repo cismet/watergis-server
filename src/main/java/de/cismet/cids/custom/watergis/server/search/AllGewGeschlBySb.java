@@ -40,7 +40,7 @@ public class AllGewGeschlBySb extends AbstractCidsServerSearch {
 
     public static final String DOMAIN_NAME = "DLM25W";
     private static final String QUERY =
-        "select id, owner, gu, wdm, gew_name, tf, dim, art, ba_cd, ba_st_von, ba_st_bis, nr_re, nr_li, ls, prof, ma, objNr, tr, ausbaujahr, wbbl, code, zustKl, br, brOben, hoehe, hEin, hAus, gefaelle, dhAus, dhEin, hAb, hAuf, aufstieg from dlm25w.select_sb_geschl(%1$s, %2$s)";
+        "select id, owner, gu, wdm, gew_name, tf, dim, art, ba_cd, ba_st_von, ba_st_bis, nr_re, nr_li, ls, prof, ma, objNr, tr, ausbaujahr, wbbl, code, zustKl, br, brOben, hoehe, hEin, hAus, gefaelle, dhAus, dhEin, hAb, hAuf, aufstieg, trGu, objNrGu from dlm25w.select_sb_geschl(%1$s, %2$s)";
 
     //~ Instance fields --------------------------------------------------------
 

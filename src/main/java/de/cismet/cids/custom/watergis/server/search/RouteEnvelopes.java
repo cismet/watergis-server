@@ -46,11 +46,19 @@ public class RouteEnvelopes extends AbstractCidsServerSearch {
                 + "join geom on (geom = geom.id) \n"
                 + "left join dlm25w.k_ww_gr dlm25wPk_ww_gr1 on (dlm25w.fg_ba.ww_gr = dlm25wPk_ww_gr1.id) \n"
                 + "%1$s"
-                + "ORDER BY ba_cd asc";
+                + "ORDER BY ba_cd COLLATE \"POSIX\" asc";
+
+    private static final String QUERY_MIN = "Select \n"
+                + "dlm25w.fg_ba.id \n"
+                + "from dlm25w.fg_ba \n"
+                + "join geom on (geom = geom.id) \n"
+                + "left join dlm25w.k_ww_gr dlm25wPk_ww_gr1 on (dlm25w.fg_ba.ww_gr = dlm25wPk_ww_gr1.id) \n"
+                + "%1$s";
 
     //~ Instance fields --------------------------------------------------------
 
     private final String whereCondition;
+    private boolean min = false;
 
     //~ Constructors -----------------------------------------------------------
 
@@ -60,6 +68,17 @@ public class RouteEnvelopes extends AbstractCidsServerSearch {
      * @param  whereCondition  owner DOCUMENT ME!
      */
     public RouteEnvelopes(final String whereCondition) {
+        this(whereCondition, false);
+    }
+
+    /**
+     * Creates a new WkkSearch object.
+     *
+     * @param  whereCondition  owner DOCUMENT ME!
+     * @param  min             DOCUMENT ME!
+     */
+    public RouteEnvelopes(final String whereCondition, final boolean min) {
+        this.min = min;
         if (whereCondition == null) {
             this.whereCondition = " ";
         } else {
@@ -75,7 +94,14 @@ public class RouteEnvelopes extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final String query = String.format(QUERY, whereCondition);
+                String query;
+
+                if (min) {
+                    query = String.format(QUERY_MIN, whereCondition);
+                } else {
+                    query = String.format(QUERY, whereCondition);
+                }
+
                 final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
                 return lists;
             } catch (RemoteException ex) {

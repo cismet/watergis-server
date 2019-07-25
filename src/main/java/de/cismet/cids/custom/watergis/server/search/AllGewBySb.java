@@ -40,7 +40,7 @@ public class AllGewBySb extends AbstractCidsServerSearch {
 
     public static final String DOMAIN_NAME = "DLM25W";
     private static final String QUERY =
-        "select id, art, ba_cd, ba_st_von, ba_st_bis, sb, sb_name, owner, gew_name, gu, wdm, ba_len from dlm25w.select_sb(%1$s, %2$s)";
+        "select id, art, ba_cd, ba_st_von, ba_st_bis, sb, sb_name, owner, gew_name, gu, wdm, ba_len, gu_name from dlm25w.select_sb(%1$s, %2$s)";
 
     //~ Instance fields --------------------------------------------------------
 

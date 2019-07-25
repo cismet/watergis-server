@@ -32,6 +32,9 @@ public class FgBaTechCidsLayer extends WatergisDefaultCidsLayer {
         CATALOGUE_NAME_MAP.put("ww_gr", "ww_gr");
         CATALOGUE_NAME_MAP.put("l_st", "l_st");
         CATALOGUE_NAME_MAP.put("tech", "tech");
+        CATALOGUE_NAME_MAP.put("na_gu", "na_gu");
+        CATALOGUE_NAME_MAP.put("mahd_gu", "mahd_gu");
+        CATALOGUE_NAME_MAP.put("gu_gu", "gu_gu");
     }
 
     //~ Constructors -----------------------------------------------------------

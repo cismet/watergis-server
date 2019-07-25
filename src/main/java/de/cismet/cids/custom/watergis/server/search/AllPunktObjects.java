@@ -57,7 +57,8 @@ public class AllPunktObjects extends AbstractCidsServerSearch {
 
         //~ Enum constants -----------------------------------------------------
 
-        wr_wbu_ben, wr_wbu_aus, mn_ow_pegel, fg_ba_scha, fg_ba_wehr, fg_ba_schw, fg_ba_anlp, fg_ba_kr, fg_ba_ea
+        wr_wbu_ben, wr_wbu_aus, mn_ow_pegel, fg_ba_scha, fg_ba_wehr, fg_ba_schw, fg_ba_anlp, fg_ba_kr, fg_ba_ea,
+        fg_ba_foto
     }
 
     //~ Instance fields --------------------------------------------------------
