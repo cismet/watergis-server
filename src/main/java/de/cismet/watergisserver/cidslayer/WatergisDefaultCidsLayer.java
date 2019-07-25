@@ -611,10 +611,13 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
                     columnPropertyNamesList.add(1, attr.getName() + ".geom.geo_field");
                     primitiveColumnTypesList.add(1, "Geometry");
                 }
-                sb.add("dlm25w.fg_lak.la_cd");
+//                sb.add("dlm25w.fg_lak.la_cd");
+                sb.add("dlm25w.k_gwk_lawa.la_cd");
                 columnNamesList.add("la_cd");
-                sqlColumnNamesList.add("dlm25w.fg_lak.la_cd");
-                columnPropertyNamesList.add(attr.getName() + ".von.route.la_cd");
+//                sqlColumnNamesList.add("dlm25w.fg_lak.la_cd");
+//                columnPropertyNamesList.add(attr.getName() + ".von.route.la_cd");
+                sqlColumnNamesList.add("dlm25w.k_gwk_lawa.la_cd");
+                columnPropertyNamesList.add(attr.getName() + ".von.route.la_cd.la_cd");
                 sb.add(" von.wert");
                 columnNamesList.add("lak_st_von");
                 sqlColumnNamesList.add("von.wert");
@@ -636,6 +639,9 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
                 joins.append(joinExtension)
                         .append(" join dlm25w.fg_lak_punkt bis on (bis.id = dlm25w.fg_lak_linie.bis)");
                 joins.append(joinExtension).append(" join dlm25w.fg_lak on (bis.route = dlm25w.fg_lak.id)");
+                joins.append(joinExtension)
+                        .append(" join dlm25w.k_gwk_lawa on (dlm25w.k_gwk_lawa.id")
+                        .append(" = dlm25w.fg_lak.la_cd)");
                 primitiveColumnTypesList.add("BigDecimal");
                 primitiveColumnTypesList.add("java.lang.Double");
                 primitiveColumnTypesList.add("java.lang.Double");

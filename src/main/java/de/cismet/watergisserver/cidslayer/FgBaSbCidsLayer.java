@@ -50,4 +50,20 @@ public class FgBaSbCidsLayer extends Default1505ConsideredCidsLayer {
             true,
             " left join dlm25w.k_ww_gr dlm25wPk_ww_gr1 on (dlm25w.fg_ba.ww_gr = dlm25wPk_ww_gr1.id)");
     }
+
+    //~ Methods ----------------------------------------------------------------
+
+    @Override
+    protected String getFieldRestriction(final String column) {
+        if (column.equals("dlm25w.fg_ba_sb.bemerkung")) {
+            if ((user == null) || user.getUserGroup().getName().startsWith("lung")
+                        || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
+                return null;
+            } else {
+                return "dlm25wPk_ww_gr1.owner = '" + user.getUserGroup().getName() + "'";
+            }
+        }
+
+        return null;
+    }
 }

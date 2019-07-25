@@ -125,7 +125,7 @@ public class FgBaProfTrigger extends AbstractDBAwareCidsTrigger {
                 s.execute("select dlm25w.import_fg_ba_gerogByBak(" + id.toString() + ")");
                 s.execute("select dlm25w.import_fg_ba_gerogaByBak(" + id.toString() + ")");
                 s.execute("select dlm25w.import_fg_ba_gerog_rsByBak(" + id.toString() + ")");
-                s.execute("select dlm25w.import_fg_ba_geroga_rsByBak(" + id.toString() + ")");
+//                s.execute("select dlm25w.import_fg_ba_geroga_rsByBak(" + id.toString() + ")");
                 log.error("time to update stations " + (System.currentTimeMillis() - start));
             } catch (Exception e) {
                 log.error("Error while executing fgBaProf trigger.", e);
@@ -134,6 +134,34 @@ public class FgBaProfTrigger extends AbstractDBAwareCidsTrigger {
                     getDbServer().getConnectionPool().releaseDbConnection(con);
                 }
             }
+
+            final Thread t = new Thread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            Connection con = null;
+
+                            try {
+                                con = getDbServer().getConnectionPool().getConnection(true);
+                                final Statement s = con.createStatement();
+                                s.execute(
+                                    "select dlm25w.import_fg_ba_geroga_rsByBak("
+                                            + cidsBean.getProperty("ba_st.von.route.bak_id")
+                                            + ")");
+                            } catch (Exception e) {
+                                log.error(
+                                    "Error while executing async fgBak trigger."
+                                            + String.valueOf(cidsBean.getProperty("ba_st.von.route.bak_id")),
+                                    e);
+                            } finally {
+                                if (con != null) {
+                                    getDbServer().getConnectionPool().releaseDbConnection(con);
+                                }
+                            }
+                        }
+                    });
+
+            t.start();
         }
     }
 }

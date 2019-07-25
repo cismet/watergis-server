@@ -14,6 +14,8 @@ package de.cismet.watergisserver.cidslayer;
 import Sirius.server.middleware.types.MetaClass;
 import Sirius.server.newuser.User;
 
+import java.util.HashMap;
+
 /**
  * DOCUMENT ME!
  *
@@ -21,6 +23,21 @@ import Sirius.server.newuser.User;
  * @version  $Revision$, $Date$
  */
 public class FgLakCidsLayer extends WatergisDefaultCidsLayer {
+
+    //~ Static fields/initializers ---------------------------------------------
+
+    private static final HashMap<String, String> CATALOGUE_NAME_MAP = new HashMap<String, String>();
+
+    static {
+        CATALOGUE_NAME_MAP.put("la_gn", "la_gn");
+        CATALOGUE_NAME_MAP.put("la_cd_k", "la_cd_k");
+        CATALOGUE_NAME_MAP.put("la_gn_t", "la_gn_t");
+        CATALOGUE_NAME_MAP.put("la_wrrl", "la_wrrl");
+        CATALOGUE_NAME_MAP.put("la_lage", "la_lage");
+        CATALOGUE_NAME_MAP.put("ezg_fl", "ezg_fl");
+        CATALOGUE_NAME_MAP.put("la_ordn", "la_ordn");
+        CATALOGUE_NAME_MAP.put("la_cd", "la_cd");
+    }
 
     //~ Constructors -----------------------------------------------------------
 
@@ -31,6 +48,6 @@ public class FgLakCidsLayer extends WatergisDefaultCidsLayer {
      * @param  user  DOCUMENT ME!
      */
     public FgLakCidsLayer(final MetaClass mc, final User user) {
-        super(mc, user);
+        super(mc, CATALOGUE_NAME_MAP, user);
     }
 }

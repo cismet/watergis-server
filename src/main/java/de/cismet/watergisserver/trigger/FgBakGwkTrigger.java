@@ -130,6 +130,7 @@ public class FgBakGwkTrigger extends AbstractDBAwareCidsTrigger {
                     s.execute("select dlm25w.replace_fg_la_by_fg_bak(" + id.toString() + ")");
                     // refresh la stat layer
                     s.execute("select dlm25w.add_fg_la_stat(" + id.toString() + ")");
+                    s.execute("select dlm25w.import_fg_ba_foto_pr_pfbyBakId(" + id.toString() + ")");
                     // refresh presentation layer
                     s.execute("select dlm25w.import_fg_lak_pr_pf_ByFgBak(" + id.toString() + ", '" + user.getName()
                                 + "')");
