@@ -117,7 +117,7 @@ public class FgLakAeTrigger extends AbstractDBAwareCidsTrigger {
             try {
                 final long start = System.currentTimeMillis();
                 final Object id = cidsBean.getProperty("lak_st.von.route.id");
-                final Object la_cd = cidsBean.getProperty("lak_st.von.route.la_cd");
+                final Object la_cd = cidsBean.getProperty("lak_st.von.route.la_cd.la_cd");
                 if (id != null) {
                     con = getDbServer().getConnectionPool().getConnection(true);
                     final Statement s = con.createStatement();
@@ -126,8 +126,9 @@ public class FgLakAeTrigger extends AbstractDBAwareCidsTrigger {
                     s.execute("select dlm25w.replace_fg_la(id) from dlm25w.fg_la where la_cd = " + la_cd.toString());
                     // refresh la stat layer
                     s.execute("select dlm25w.add_fg_la_stat_by_lak(" + id.toString() + ")");
-                    s.execute("select dlm25w.import_fg_la_pr_pf(id, '" + user.getName()
-                                + "') from dlm25w.fg_la where la_cd = " + la_cd.toString());
+                    s.execute("select dlm25w.import_fg_la_pr_pf(l.id, '" + user.getName()
+                                + "') from dlm25w.fg_la l join dlm25w.k_gwk_lawa k on (k.id = l.la_cd) where k.la_cd = "
+                                + la_cd.toString());
                     // refresh gmd s.execute("select dlm25w.import_fg_ba_gmdByFgBak(" + id.toString() + ", '" +
                     // user.getName() + "')"); s.execute("select dlm25w.import_fg_ba_gbByFgBak(" + id.toString() + ", '"
                     // + user.getName() + "')");
