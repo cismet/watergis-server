@@ -13,6 +13,7 @@
 package de.cismet.cids.custom.watergis.server.search;
 
 import Sirius.server.middleware.interfaces.domainserver.MetaService;
+import Sirius.server.middleware.types.MetaClass;
 
 import org.apache.log4j.Logger;
 
@@ -23,7 +24,12 @@ import java.util.Collection;
 
 import de.cismet.cids.custom.helper.SQLFormatter;
 
+import de.cismet.cids.server.cidslayer.CidsLayerInfo;
 import de.cismet.cids.server.search.AbstractCidsServerSearch;
+
+import de.cismet.cids.tools.CidsLayerUtil;
+
+import de.cismet.connectioncontext.ConnectionContext;
 
 /**
  * DOCUMENT ME!
@@ -47,6 +53,17 @@ public class AllLineObjects extends AbstractCidsServerSearch {
                 + "join dlm25w.fg_ba ba on (von.route = ba.id)\n"
                 + "join geom g on (g.id = l.geom)\n"
                 + "where (%2$s is null or von.route = any(%2$s))\n"
+                + "order by ba_cd, least(von.wert, bis.wert)";
+    private static final String QUERY_WITH_RESTRICTION =
+        "select ba.id, st_length(geo_field), ba.ba_cd, von.wert, bis.wert, von.route\n"
+                + "from dlm25w.%1$s m \n"
+                + "join dlm25w.fg_ba_linie l on (m.ba_st = l.id)\n"
+                + "join dlm25w.fg_ba_punkt von on (l.von = von.id)\n"
+                + "join dlm25w.fg_ba_punkt bis on (l.bis = bis.id)\n"
+                + "join dlm25w.fg_ba ba on (von.route = ba.id)\n"
+                + "join geom g on (g.id = l.geom)\n"
+                + " left join dlm25w.k_ww_gr dlm25wPk_ww_gr1 on (ba.ww_gr = dlm25wPk_ww_gr1.id)\n"
+                + "where (%2$s is null or von.route = any(%2$s)) and (%3$s) \n"
                 + "order by ba_cd, least(von.wert, bis.wert)";
 
     //~ Enums ------------------------------------------------------------------
@@ -90,11 +107,27 @@ public class AllLineObjects extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final ArrayList<ArrayList> lists = ms.performCustomSearch(String.format(
-                            QUERY,
-                            table.toString(),
-                            SQLFormatter.createSqlArrayString(gew)));
-                return lists;
+                final MetaClass metaClass = ms.getClassByTableName(
+                        getUser(),
+                        "dlm25w."
+                                + table.toString(),
+                        ConnectionContext.createDummy());
+                final CidsLayerInfo info = CidsLayerUtil.getCidsLayerInfo(metaClass, getUser());
+
+                if ((info != null) && (info.getRestriction() != null)) {
+                    final ArrayList<ArrayList> lists = ms.performCustomSearch(String.format(
+                                QUERY_WITH_RESTRICTION,
+                                table.toString(),
+                                SQLFormatter.createSqlArrayString(gew),
+                                info.getRestriction()));
+                    return lists;
+                } else {
+                    final ArrayList<ArrayList> lists = ms.performCustomSearch(String.format(
+                                QUERY,
+                                table.toString(),
+                                SQLFormatter.createSqlArrayString(gew)));
+                    return lists;
+                }
             } catch (RemoteException ex) {
                 LOG.error(ex.getMessage(), ex);
             }
