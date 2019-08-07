@@ -135,6 +135,7 @@ public class FgBakAeTrigger extends AbstractDBAwareCidsTrigger {
                 s.execute("select dlm25w.replace_fg_ba_by_fg_bak(" + id.toString() + ")");
                 // refresh stat layer
                 s.execute("select dlm25w.add_fg_ba_stat(" + id.toString() + ")");
+                s.execute("select dlm25w.import_fg_ba_foto_pr_pfbyBakId(" + id.toString() + ")");
                 s.execute("select dlm25w.import_fg_ba_pr_pfByBakId(" + id.toString() + ", '" + user.getName() + "')");
 
                 s.execute("select dlm25w.import_qp_gaf_pByFgBak(" + id.toString() + ", '" + user.getName() + "')");
@@ -148,7 +149,7 @@ public class FgBakAeTrigger extends AbstractDBAwareCidsTrigger {
                 s.execute("select dlm25w.import_fg_ba_gerogByBak(" + id.toString() + ")");
                 s.execute("select dlm25w.import_fg_ba_gerogaByBak(" + id.toString() + ")");
                 s.execute("select dlm25w.import_fg_ba_gerog_rsByBak(" + id.toString() + ")");
-                s.execute("select dlm25w.import_fg_ba_geroga_rsByBak(" + id.toString() + ")");
+//                s.execute("select dlm25w.import_fg_ba_geroga_rsByBak(" + id.toString() + ")");
 //                s.execute("select dlm25w.add_fg_ba_gerogByBak(" + id.toString() + ")");
 //                s.execute("select dlm25w.add_fg_ba_gerogaByBak(" + id.toString() + ", '" + user.getName() + "')");
 //                s.execute("select dlm25w.add_fg_ba_geroga_rsByBak(" + id.toString() + ", '" + user.getName() + "')");
@@ -160,6 +161,34 @@ public class FgBakAeTrigger extends AbstractDBAwareCidsTrigger {
                     getDbServer().getConnectionPool().releaseDbConnection(con);
                 }
             }
+
+            final Thread t = new Thread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            Connection con = null;
+
+                            try {
+                                con = getDbServer().getConnectionPool().getConnection(true);
+                                final Statement s = con.createStatement();
+                                s.execute(
+                                    "select dlm25w.import_fg_ba_geroga_rsByBak("
+                                            + cidsBean.getProperty("bak_st.von.route.id")
+                                            + ")");
+                            } catch (Exception e) {
+                                log.error(
+                                    "Error while executing async fgBak trigger."
+                                            + String.valueOf(cidsBean.getProperty("bak_st.von.route.id")),
+                                    e);
+                            } finally {
+                                if (con != null) {
+                                    getDbServer().getConnectionPool().releaseDbConnection(con);
+                                }
+                            }
+                        }
+                    });
+
+            t.start();
         }
     }
 }

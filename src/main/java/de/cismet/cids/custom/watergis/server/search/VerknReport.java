@@ -94,19 +94,22 @@ public class VerknReport extends AbstractCidsServerSearch {
 //                + "                order by  ST_line_locate_point(bg.geo_field, st_intersection(bg.geo_field, bg2.geo_field)) desc,\n"
 //                + "                (ST_line_locate_point(bg2.geo_field, st_intersection(bg.geo_field, bg2.geo_field)) * st_length(bg2.geo_field) < 0.5) desc,\n"
 //                + "                b2.ba_cd";
-        "select  case when st_distance(geo_field1, geo_field2) > 0.5 then null else ST_line_locate_point(geo_field1, intersectedGeom) * st_length(geo_field1) end,\n"
-                + "	case when ST_line_locate_point(geo_field2, intersectedGeom) * st_length(geo_field2) < 0.5 then ba_cd else ' ' end as einmuend,\n"
-                + "	case when ST_line_locate_point(geo_field2, intersectedGeom) * st_length(geo_field2) < 0.5 then ' ' else ba_cd end as entspr,\n"
-                + "	CASE WHEN ST_line_locate_point(geo_field1, intersectedGeom) = 1 or ST_line_locate_point(geo_field1, intersectedGeom) = 0 THEN null ELSE case when st_LineCrossingDirection(dlm25w.increase_line_length(geo_field2), geo_field1) = -1 then 're' else 'li' end END as rl\n"
+        "select  case when st_distance(ba.geo_field, geo_field2) > 0.5 then null else ST_line_locate_point(ba.geo_field, intersectedGeom) * st_length(ba.geo_field) end,\n"
+                + "	case when ST_line_locate_point(geo_field1, intersectedGeom) = 1 or ST_line_locate_point(geo_field2, intersectedGeom) * st_length(geo_field2) < 0.5 then ba_cd else ' ' end as einmuend,\n"
+                + "	case when ST_line_locate_point(geo_field1, intersectedGeom) <> 1 and ST_line_locate_point(geo_field2, intersectedGeom) * st_length(geo_field2) >= 0.5 then ba_cd else ' ' end as entspr,\n"
+                + "	CASE WHEN ST_line_locate_point(geo_field1, intersectedGeom) = 1 or ST_line_locate_point(geo_field1, intersectedGeom) = 0 THEN null ELSE case when dlm25w.crossOrTouchDirection(geo_field2, geo_field1) = -1 then 're' else 'li' end END as rl\n"
                 + "	, (\n"
                 + "	--Quelle und entspringend\n"
-                + "	(ST_line_locate_point(geo_field1, intersectedGeom) = 1 and ST_line_locate_point(geo_field2, intersectedGeom) * st_length(geo_field2) >= 0.5)\n"
-                + "       or \n"
+                + "--	(ST_line_locate_point(geo_field1, intersectedGeom) = 1 and ST_line_locate_point(geo_field2, intersectedGeom) * st_length(geo_field2) >= 0.5)\n"
+                + "--       or \n"
                 + "	--Senke und einmündend\n"
-                + "	(ST_line_locate_point(geo_field1, intersectedGeom) = 0 and ST_line_locate_point(geo_field2, intersectedGeom) * st_length(geo_field2) < 0.5)\n"
+                + "--	(ST_line_locate_point(geo_field1, intersectedGeom) = 0 and ST_line_locate_point(geo_field2, intersectedGeom) * st_length(geo_field2) < 0.5)\n"
                 + "	--kreuzendes Gewaesser\n"
-                + "	or (ST_line_locate_point(geo_field2, intersectedGeom) * st_length(geo_field2) > 0.5 \n"
+                + "--	or \n"
+                + "     (ST_line_locate_point(geo_field2, intersectedGeom) * st_length(geo_field2) > 0.5 \n"
                 + "	and ST_line_locate_point(geo_field2, intersectedGeom) * st_length(geo_field2) < st_length(geo_field2) - 0.5\n"
+                + "     and ST_line_locate_point(geo_field1, intersectedGeom) * st_length(geo_field1) > 0.5 \n"
+                + "     and ST_line_locate_point(geo_field1, intersectedGeom) * st_length(geo_field1) < st_length(geo_field1) - 0.5\n"
                 + "	 )\n"
                 + "       ) as ignore\n"
                 + "\n"
@@ -123,7 +126,8 @@ public class VerknReport extends AbstractCidsServerSearch {
                 + "             and (st_geometryType(st_intersection(bg.geo_field, bg2.geo_field)) = 'ST_Point' or st_geometryType(st_intersection(bg.geo_field, bg2.geo_field)) = 'ST_MultiPoint')\n"
                 + "       order by  ST_line_locate_point(bg.geo_field, unnest(dlm25w.multi_geometry_to_array( st_intersection(bg.geo_field, bg2.geo_field)))) desc,\n"
                 + "       (ST_line_locate_point(bg2.geo_field, unnest(dlm25w.multi_geometry_to_array( st_intersection(bg.geo_field, bg2.geo_field)))) * st_length(bg2.geo_field) < 0.5) desc,\n"
-                + "       b2.ba_cd) points";
+                + "       b2.ba_cd) points,\n"
+                + "       (select geo_field from dlm25w.fg_ba join geom on (geom = geom.id) where ba_cd = '%s') ba";
 
     //~ Instance fields --------------------------------------------------------
 
@@ -148,7 +152,7 @@ public class VerknReport extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final String query = String.format(QUERY, baCd);
+                final String query = String.format(QUERY, baCd, baCd);
                 final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
                 return lists;
             } catch (RemoteException ex) {

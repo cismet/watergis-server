@@ -56,7 +56,7 @@ public class SchuUeberReport extends AbstractCidsServerSearch {
     private static final String QUERYIds =
         "select ST_line_locate_point(bg.geo_field, st_startPoint(unnest(dlm25w.multi_geometry_to_array(st_intersection(g.geo_field, bg.geo_field)))))  * st_length(bg.geo_field) von,\n"
                 + "ST_line_locate_point(bg.geo_field, st_endPoint(unnest(dlm25w.multi_geometry_to_array(st_intersection(g.geo_field, bg.geo_field))))) * st_length(bg.geo_field) bis,\n"
-                + "b.ba_cd, b.id\n"
+                + "b.ba_cd, b.id, s.id\n"
                 + "from dlm25w.wr_sg_uesg s\n"
                 + "join (select g.* from dlm25w.wr_sg_uesg s join geom g on (s.geom = g.id) limit 5000000) g on (s.geom = g.id),\n"
                 + "dlm25w.fg_ba b\n"
