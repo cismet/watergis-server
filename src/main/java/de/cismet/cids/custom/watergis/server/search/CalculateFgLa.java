@@ -43,7 +43,7 @@ public class CalculateFgLa extends AbstractCidsServerSearch {
 
     public static final String DOMAIN_NAME = "DLM25W";
 //    private static final String QUERY = "select * from dlm25w.calc_la_value('%1$s', %2$s)";
-    private static final String QUERY = "select * from dlm25w.calc_la_value(?, ?)";
+    private static final String QUERY = "select la_cd, la_st from dlm25w.calc_la_value(?, ?)";
 
     //~ Instance fields --------------------------------------------------------
 

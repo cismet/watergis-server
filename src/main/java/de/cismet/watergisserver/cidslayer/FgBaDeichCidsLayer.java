@@ -100,7 +100,7 @@ public class FgBaDeichCidsLayer extends Default1505ConsideredCidsLayer {
                     || column.equals("dlm25w.fg_ba_deich.ho_mw_pn")
                     || column.equals("dlm25w.fg_ba_deich.bv_w")
                     || column.equals("dlm25w.fg_ba_deich.bv_b")) {
-            if ((user == null) || user.getUserGroup().getName().startsWith("lung")
+            if ((user == null)
                         || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
                 return null;
             } else {

@@ -56,7 +56,7 @@ public class GuWiweCidsLayer extends WatergisDefaultCidsLayer {
         if (column.equals("dlm25w.gu_wiwe.zust_kl")
                     || column.equals("dlm25w.gu_wiwe.bemerkung")
                     || column.equals("dlm25w.gu_wiwe.br")) {
-            if ((user == null) || user.getUserGroup().getName().startsWith("lung")
+            if ((user == null)
                         || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
                 return null;
             } else {

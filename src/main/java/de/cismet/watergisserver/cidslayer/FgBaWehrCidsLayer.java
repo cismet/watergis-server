@@ -94,7 +94,7 @@ public class FgBaWehrCidsLayer extends Default1505ConsideredCidsLayer {
                     || column.equals("dlm25w.fg_ba_wehr.ho_so")
                     || column.equals("dlm25w.fg_ba_wehr.sz")
                     || column.equals("dlm25w.fg_ba_wehr.az")) {
-            if ((user == null) || user.getUserGroup().getName().startsWith("lung")
+            if ((user == null)
                         || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
                 return null;
             } else {
