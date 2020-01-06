@@ -92,7 +92,7 @@ public class FgBaSchwCidsLayer extends Default1505ConsideredCidsLayer {
                     || column.equals("dlm25w.fg_ba_schw.pu_typ2")
                     || column.equals("dlm25w.fg_ba_schw.pu_motl2")
                     || column.equals("dlm25w.fg_ba_schw.pu_foel2")) {
-            if ((user == null) || user.getUserGroup().getName().startsWith("lung")
+            if ((user == null)
                         || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
                 return null;
             } else {

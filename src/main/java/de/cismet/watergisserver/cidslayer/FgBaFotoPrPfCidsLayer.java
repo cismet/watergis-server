@@ -30,6 +30,7 @@ public class FgBaFotoPrPfCidsLayer extends WatergisDefaultCidsLayer {
 
     static {
         CATALOGUE_NAME_MAP.put("ww_gr", "ww_gr");
+        CATALOGUE_NAME_MAP.put("la_cd", "la_cd");
         CATALOGUE_NAME_MAP.put("l_st", "l_st");
         CATALOGUE_NAME_MAP.put("l_rl", "l_rl");
         CATALOGUE_NAME_MAP.put("k_freigabe", "freigabe");
@@ -52,7 +53,7 @@ public class FgBaFotoPrPfCidsLayer extends WatergisDefaultCidsLayer {
     @Override
     protected String getFieldRestriction(final String column) {
         if (column.equals("dlm25w.foto_pr_pf.bemerkung")) {
-            if ((user == null) || user.getUserGroup().getName().startsWith("lung")
+            if ((user == null)
                         || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
                 return null;
             } else {

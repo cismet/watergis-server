@@ -59,7 +59,7 @@ public class FgBakAeCidsLayer extends Default1505ConsideredCidsLayer {
     @Override
     protected String getFieldRestriction(final String column) {
         if (column.equals("dlm25w.fg_bak_ae.bemerkung")) {
-            if ((user == null) || user.getUserGroup().getName().startsWith("lung")
+            if ((user == null)
                         || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
                 return null;
             } else {
