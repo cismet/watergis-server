@@ -59,7 +59,7 @@ public class FgBaKrCidsLayer extends Default1505ConsideredCidsLayer {
 
     @Override
     public String getRestriction() {
-        if ((user == null) || user.getUserGroup().getName().startsWith("lung")
+        if ((user == null)
                     || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
             return null;
         } else {

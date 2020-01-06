@@ -90,7 +90,7 @@ public class FgBaRlCidsLayer extends Default1505ConsideredCidsLayer {
                     || column.equals("dlm25w.fg_ba_rl.ho_d_e")
                     || column.equals("dlm25w.fg_ba_rl.ho_d_a")
                     || column.equals("dlm25w.fg_ba_rl.ho_d_m")) {
-            if ((user == null) || user.getUserGroup().getName().startsWith("lung")
+            if ((user == null)
                         || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
                 return null;
             } else {

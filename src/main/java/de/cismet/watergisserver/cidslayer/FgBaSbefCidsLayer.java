@@ -81,7 +81,7 @@ public class FgBaSbefCidsLayer extends Default1505ConsideredCidsLayer {
                     || column.equals("dlm25w.fg_ba_sbef.gefaelle")
                     || column.equals("dlm25w.fg_ba_sbef.ho_d_e")
                     || column.equals("dlm25w.fg_ba_sbef.ho_d_a")) {
-            if ((user == null) || user.getUserGroup().getName().startsWith("lung")
+            if ((user == null)
                         || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
                 return null;
             } else {

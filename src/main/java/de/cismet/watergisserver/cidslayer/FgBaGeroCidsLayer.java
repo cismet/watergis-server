@@ -78,7 +78,7 @@ public class FgBaGeroCidsLayer extends Default1505ConsideredCidsLayer {
                     || column.equals("dlm25w.fg_ba_gero.bh_li")
                     || column.equals("dlm25w.fg_ba_gero.bl_li")
                     || column.equals("dlm25w.fg_ba_gero.mw")) {
-            if ((user == null) || user.getUserGroup().getName().startsWith("lung")
+            if ((user == null)
                         || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
                 return null;
             } else {

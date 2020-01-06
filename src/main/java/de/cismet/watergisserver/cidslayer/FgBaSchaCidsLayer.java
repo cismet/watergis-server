@@ -84,7 +84,7 @@ public class FgBaSchaCidsLayer extends Default1505ConsideredCidsLayer {
                     || column.equals("dlm25w.fg_ba_scha.bemerkung")
                     || column.equals("dlm25w.fg_ba_scha.ho_so")
                     || column.equals("dlm25w.fg_ba_scha.ho_d_so_ok")) {
-            if ((user == null) || user.getUserGroup().getName().startsWith("lung")
+            if ((user == null)
                         || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
                 return null;
             } else {

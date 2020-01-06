@@ -52,8 +52,7 @@ public class FgBaFotoCidsLayer extends WatergisDefaultCidsLayer {
     @Override
     protected String getFieldRestriction(final String column) {
         if (column.equals("dlm25w.foto.bemerkung")) {
-            if ((user == null) || user.getUserGroup().getName().startsWith("lung")
-                        || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
+            if ((user == null) || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
                 return null;
             } else {
                 return "upl_name = '" + user.getName() + "'";

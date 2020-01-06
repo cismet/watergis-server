@@ -14,6 +14,8 @@ package de.cismet.watergisserver.cidslayer;
 import Sirius.server.middleware.types.MetaClass;
 import Sirius.server.newuser.User;
 
+import java.util.HashMap;
+
 /**
  * DOCUMENT ME!
  *
@@ -21,6 +23,14 @@ import Sirius.server.newuser.User;
  * @version  $Revision$, $Date$
  */
 public class KgWkCidsLayer extends WatergisDefaultCidsLayer {
+
+    //~ Static fields/initializers ---------------------------------------------
+
+    private static final HashMap<String, String> CATALOGUE_NAME_MAP = new HashMap<String, String>();
+
+    static {
+        CATALOGUE_NAME_MAP.put("wk_nr", "wk_nr");
+    }
 
     //~ Constructors -----------------------------------------------------------
 
@@ -31,6 +41,6 @@ public class KgWkCidsLayer extends WatergisDefaultCidsLayer {
      * @param  user  DOCUMENT ME!
      */
     public KgWkCidsLayer(final MetaClass mc, final User user) {
-        super(mc, user);
+        super(mc, CATALOGUE_NAME_MAP, user);
     }
 }
