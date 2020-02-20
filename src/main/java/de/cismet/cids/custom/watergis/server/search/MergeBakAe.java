@@ -12,16 +12,19 @@
  */
 package de.cismet.cids.custom.watergis.server.search;
 
+import Sirius.server.middleware.impls.domainserver.DomainServerImpl;
 import Sirius.server.middleware.interfaces.domainserver.MetaService;
+import Sirius.server.sql.PreparableStatement;
 
 import org.apache.log4j.Logger;
 
-import java.rmi.RemoteException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Types;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-import de.cismet.cids.server.search.AbstractCidsServerSearch;
 
 /**
  * DOCUMENT ME!
@@ -29,21 +32,18 @@ import de.cismet.cids.server.search.AbstractCidsServerSearch;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class MergeBakAe extends AbstractCidsServerSearch {
+public class MergeBakAe extends MergeSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
     private static final transient Logger LOG = Logger.getLogger(MergeBakAe.class);
 
-    private static final String QUERY_WITHOUT_OWNER = "select dlm25w.merge_fg_bak_ae(null);"; // NOI18N
-    private static final String QUERY = "select dlm25w.merge_fg_bak_ae('%1$s');";             // NOI18N
-    private static final String QUERY_BY_ID = "select dlm25w.merge_fg_bak_ae_by_id(%1$s);";   // NOI18N
+    private static final String QUERY_BY_ID = "select dlm25w.merge_fg_bak_ae_by_id(?);"; // NOI18N
     public static final String DOMAIN_NAME = "DLM25W";
 
     //~ Instance fields --------------------------------------------------------
 
-    private String owner = null;
     private Integer bakId = null;
 
     //~ Constructors -----------------------------------------------------------
@@ -54,7 +54,8 @@ public class MergeBakAe extends AbstractCidsServerSearch {
      * @param  owner  DOCUMENT ME!
      */
     public MergeBakAe(final String owner) {
-        this.owner = owner;
+        super(owner);
+        QUERY = "select dlm25w.merge_fg_bak_ae(?);";                  // NOI18N
     }
 
     /**
@@ -63,6 +64,7 @@ public class MergeBakAe extends AbstractCidsServerSearch {
      * @param  bakId  owner DOCUMENT ME!
      */
     public MergeBakAe(final Integer bakId) {
+        super(null);
         this.bakId = bakId;
     }
 
@@ -75,17 +77,17 @@ public class MergeBakAe extends AbstractCidsServerSearch {
         if (ms != null) {
             try {
                 if (bakId != null) {
-                    final String query = String.format(QUERY_BY_ID, bakId);
-                    final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
+                    final PreparableStatement ps = new PreparableStatement(
+                            QUERY_BY_ID,
+                            new int[] { Types.INTEGER });
+                    ps.setObjects(bakId);
+                    final ArrayList<ArrayList> lists = ms.performCustomSearch(ps);
 
                     return lists;
                 } else {
-                    final String query = ((owner == null) ? QUERY_WITHOUT_OWNER : String.format(QUERY, owner));
-                    final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
-
-                    return lists;
+                    return super.performServerSearch();
                 }
-            } catch (RemoteException ex) {
+            } catch (Exception ex) {
                 LOG.error(ex.getMessage(), ex);
             }
         } else {
