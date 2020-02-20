@@ -13,15 +13,16 @@
 package de.cismet.cids.custom.watergis.server.search;
 
 import Sirius.server.middleware.interfaces.domainserver.MetaService;
+import Sirius.server.sql.PreparableStatement;
 
 import org.apache.log4j.Logger;
 
 import java.rmi.RemoteException;
 
+import java.sql.Types;
+
 import java.util.ArrayList;
 import java.util.Collection;
-
-import de.cismet.cids.server.search.AbstractCidsServerSearch;
 
 /**
  * DOCUMENT ME!
@@ -29,20 +30,20 @@ import de.cismet.cids.server.search.AbstractCidsServerSearch;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class MoveFgBaAfterSplit extends AbstractCidsServerSearch {
+public class MoveFgBaAfterSplit extends WritableSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
     private static final transient Logger LOG = Logger.getLogger(MergeFgBakGwk.class);
 
-    private static final String QUERY = "select dlm25w.move_fg_ba_to_new_route_after_split(%1$s, %2$s);"; // NOI18N
+    private static final String QUERY = "select dlm25w.move_fg_ba_to_new_route_after_split(?, ?);"; // NOI18N
     public static final String DOMAIN_NAME = "DLM25W";
 
     //~ Instance fields --------------------------------------------------------
 
-    private int fgBakId;
-    private int newFgBaId;
+    private final int fgBakId;
+    private final int newFgBaId;
 
     //~ Constructors -----------------------------------------------------------
 
@@ -65,8 +66,12 @@ public class MoveFgBaAfterSplit extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final String query = String.format(QUERY, fgBakId, newFgBaId);
-                final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
+                final PreparableStatement ps = new PreparableStatement(
+                        QUERY,
+                        new int[] { Types.INTEGER, Types.INTEGER });
+                ps.setObjects(fgBakId, newFgBaId);
+                final ArrayList<ArrayList> lists = ms.performCustomSearch(ps);
+
                 return lists;
             } catch (RemoteException ex) {
                 LOG.error(ex.getMessage(), ex);

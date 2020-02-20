@@ -119,13 +119,15 @@ public class AllPunktObjects extends AbstractCidsServerSearch {
                         final ArrayList<ArrayList> lists = ms.performCustomSearch(String.format(
                                     QUERY_WITH_RESTRICTION_FOTO,
                                     table.toString(),
-                                    SQLFormatter.createSqlArrayString(gew)));
+                                    SQLFormatter.createSqlArrayString(gew),
+                                    info.getRestriction()));
                         return lists;
                     } else {
                         final ArrayList<ArrayList> lists = ms.performCustomSearch(String.format(
                                     QUERY_WITH_RESTRICTION,
                                     table.toString(),
-                                    SQLFormatter.createSqlArrayString(gew)));
+                                    SQLFormatter.createSqlArrayString(gew),
+                                    info.getRestriction()));
                         return lists;
                     }
                 } else {

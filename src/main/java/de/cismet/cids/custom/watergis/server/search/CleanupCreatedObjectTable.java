@@ -21,10 +21,9 @@ import java.rmi.RemoteException;
 
 import java.sql.Types;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
-import static de.cismet.cids.custom.watergis.server.search.MergeSearch.DOMAIN_NAME;
+import de.cismet.cids.server.search.AbstractCidsServerSearch;
 
 /**
  * DOCUMENT ME!
@@ -32,23 +31,32 @@ import static de.cismet.cids.custom.watergis.server.search.MergeSearch.DOMAIN_NA
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class MergeLawa extends MergeSearch {
+public class CleanupCreatedObjectTable extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
-    private static final transient Logger LOG = Logger.getLogger(MergeLawa.class);
+    private static final transient Logger LOG = Logger.getLogger(CleanupCreatedObjectTable.class);
+
+    private static final String QUERY = "select dlm25w.delete_inclomplete_object_list(?, ?)";
+    public static final String DOMAIN_NAME = "DLM25W";
+
+    //~ Instance fields --------------------------------------------------------
+
+    private final String user;
+    private final int classId;
 
     //~ Constructors -----------------------------------------------------------
 
     /**
      * Creates a new WkkSearch object.
      *
-     * @param  owner  DOCUMENT ME!
+     * @param  user     owner DOCUMENT ME!
+     * @param  classId  computerName DOCUMENT ME!
      */
-    public MergeLawa(final String owner) {
-        super(owner);
-        QUERY = "select dlm25w.merge_fg_lak_ae(?), dlm25w.merge_fg_bak_gwk(?);";                     // NOI18N
+    public CleanupCreatedObjectTable(final String user, final Integer classId) {
+        this.user = user;
+        this.classId = classId;
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -61,11 +69,9 @@ public class MergeLawa extends MergeSearch {
             try {
                 final PreparableStatement ps = new PreparableStatement(
                         QUERY,
-                        new int[] { Types.VARCHAR, Types.VARCHAR });
-                ps.setObjects(owner, owner);
-                final ArrayList<ArrayList> lists = ms.performCustomSearch(ps);
-
-                return lists;
+                        new int[] { Types.INTEGER, Types.VARCHAR });
+                ps.setObjects(classId, user);
+                ms.performCustomSearch(ps);
             } catch (RemoteException ex) {
                 LOG.error(ex.getMessage(), ex);
             }

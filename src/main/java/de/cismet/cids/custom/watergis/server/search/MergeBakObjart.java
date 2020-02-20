@@ -29,20 +29,7 @@ import de.cismet.cids.server.search.AbstractCidsServerSearch;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class MergeBakObjart extends AbstractCidsServerSearch {
-
-    //~ Static fields/initializers ---------------------------------------------
-
-    /** LOGGER. */
-    private static final transient Logger LOG = Logger.getLogger(MergeBakObjart.class);
-
-    private static final String QUERY_WITHOUT_OWNER = "select dlm25w.merge_fg_bak_objart(null);"; // NOI18N
-    private static final String QUERY = "select dlm25w.merge_fg_bak_objart('%1$s');";             // NOI18N
-    public static final String DOMAIN_NAME = "DLM25W";
-
-    //~ Instance fields --------------------------------------------------------
-
-    private String owner;
+public class MergeBakObjart extends MergeSearch {
 
     //~ Constructors -----------------------------------------------------------
 
@@ -52,27 +39,7 @@ public class MergeBakObjart extends AbstractCidsServerSearch {
      * @param  owner  DOCUMENT ME!
      */
     public MergeBakObjart(final String owner) {
-        this.owner = owner;
-    }
-
-    //~ Methods ----------------------------------------------------------------
-
-    @Override
-    public Collection performServerSearch() {
-        final MetaService ms = (MetaService)getActiveLocalServers().get(DOMAIN_NAME);
-
-        if (ms != null) {
-            try {
-                final String query = ((owner == null) ? QUERY_WITHOUT_OWNER : String.format(QUERY, owner));
-                final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
-                return lists;
-            } catch (RemoteException ex) {
-                LOG.error(ex.getMessage(), ex);
-            }
-        } else {
-            LOG.error("active local server not found"); // NOI18N
-        }
-
-        return null;
+        super(owner);
+        QUERY = "select dlm25w.merge_fg_bak_objart(?);";                  // NOI18N
     }
 }

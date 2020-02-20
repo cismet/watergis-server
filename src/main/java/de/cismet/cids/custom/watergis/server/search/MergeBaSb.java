@@ -12,37 +12,13 @@
  */
 package de.cismet.cids.custom.watergis.server.search;
 
-import Sirius.server.middleware.interfaces.domainserver.MetaService;
-
-import org.apache.log4j.Logger;
-
-import java.rmi.RemoteException;
-
-import java.util.ArrayList;
-import java.util.Collection;
-
-import de.cismet.cids.server.search.AbstractCidsServerSearch;
-
 /**
  * DOCUMENT ME!
  *
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class MergeBaSb extends AbstractCidsServerSearch {
-
-    //~ Static fields/initializers ---------------------------------------------
-
-    /** LOGGER. */
-    private static final transient Logger LOG = Logger.getLogger(MergeBaSb.class);
-
-    private static final String QUERY_WITHOUT_OWNER = "select dlm25w.merge_fg_bak_sb(null);"; // NOI18N
-    private static final String QUERY = "select dlm25w.merge_fg_bak_sb('%1$s');";             // NOI18N
-    public static final String DOMAIN_NAME = "DLM25W";
-
-    //~ Instance fields --------------------------------------------------------
-
-    private String owner;
+public class MergeBaSb extends MergeSearch {
 
     //~ Constructors -----------------------------------------------------------
 
@@ -52,27 +28,7 @@ public class MergeBaSb extends AbstractCidsServerSearch {
      * @param  owner  DOCUMENT ME!
      */
     public MergeBaSb(final String owner) {
-        this.owner = owner;
-    }
-
-    //~ Methods ----------------------------------------------------------------
-
-    @Override
-    public Collection performServerSearch() {
-        final MetaService ms = (MetaService)getActiveLocalServers().get(DOMAIN_NAME);
-
-        if (ms != null) {
-            try {
-                final String query = ((owner == null) ? QUERY_WITHOUT_OWNER : String.format(QUERY, owner));
-                final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
-                return lists;
-            } catch (RemoteException ex) {
-                LOG.error(ex.getMessage(), ex);
-            }
-        } else {
-            LOG.error("active local server not found"); // NOI18N
-        }
-
-        return null;
+        super(owner);
+        QUERY = "select dlm25w.merge_fg_bak_sb(?);";                  // NOI18N
     }
 }
