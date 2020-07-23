@@ -24,7 +24,8 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static de.cismet.cids.custom.watergis.server.search.MergeSearch.DOMAIN_NAME;
+import de.cismet.connectioncontext.ConnectionContext;
+import de.cismet.connectioncontext.ConnectionContextStore;
 
 /**
  * DOCUMENT ME!
@@ -32,12 +33,18 @@ import static de.cismet.cids.custom.watergis.server.search.MergeSearch.DOMAIN_NA
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class MergeLawa extends MergeSearch {
+public class MergeSearch extends WritableSearch implements ConnectionContextStore {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
-    private static final transient Logger LOG = Logger.getLogger(MergeLawa.class);
+    private static final transient Logger LOG = Logger.getLogger(MergeSearch.class);
+    public static final String DOMAIN_NAME = "DLM25W";
+
+    protected String QUERY;
+
+    protected String owner;
+    private ConnectionContext connectionContext = ConnectionContext.createDummy();
 
     //~ Constructors -----------------------------------------------------------
 
@@ -46,9 +53,8 @@ public class MergeLawa extends MergeSearch {
      *
      * @param  owner  DOCUMENT ME!
      */
-    public MergeLawa(final String owner) {
-        super(owner);
-        QUERY = "select dlm25w.merge_fg_lak_ae(?), dlm25w.merge_fg_bak_gwk(?);";                     // NOI18N
+    public MergeSearch(final String owner) {
+        this.owner = owner;
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -61,9 +67,9 @@ public class MergeLawa extends MergeSearch {
             try {
                 final PreparableStatement ps = new PreparableStatement(
                         QUERY,
-                        new int[] { Types.VARCHAR, Types.VARCHAR });
-                ps.setObjects(owner, owner);
-                final ArrayList<ArrayList> lists = ms.performCustomSearch(ps);
+                        new int[] { Types.VARCHAR });
+                ps.setObjects(owner);
+                final ArrayList<ArrayList> lists = ms.performCustomSearch(ps, connectionContext);
 
                 return lists;
             } catch (RemoteException ex) {
@@ -74,5 +80,15 @@ public class MergeLawa extends MergeSearch {
         }
 
         return null;
+    }
+
+    @Override
+    public void initWithConnectionContext(final ConnectionContext cc) {
+        this.connectionContext = connectionContext;
+    }
+
+    @Override
+    public ConnectionContext getConnectionContext() {
+        return this.connectionContext;
     }
 }

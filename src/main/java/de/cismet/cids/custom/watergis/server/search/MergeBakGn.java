@@ -12,16 +12,25 @@
  */
 package de.cismet.cids.custom.watergis.server.search;
 
+import Sirius.server.middleware.impls.domainserver.DomainServerImpl;
 import Sirius.server.middleware.interfaces.domainserver.MetaService;
+import Sirius.server.sql.PreparableStatement;
 
 import org.apache.log4j.Logger;
 
 import java.rmi.RemoteException;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Types;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
 import de.cismet.cids.server.search.AbstractCidsServerSearch;
+
+import static de.cismet.cids.custom.watergis.server.search.MergeSearch.DOMAIN_NAME;
 
 /**
  * DOCUMENT ME!
@@ -29,22 +38,12 @@ import de.cismet.cids.server.search.AbstractCidsServerSearch;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class MergeBakGn extends AbstractCidsServerSearch {
+public class MergeBakGn extends MergeSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
     private static final transient Logger LOG = Logger.getLogger(MergeBakGn.class);
-
-    private static final String QUERY_WITHOUT_OWNER =
-        "select dlm25w.merge_fg_bak_gn1(null), dlm25w.merge_fg_bak_gn2(null), dlm25w.merge_fg_bak_gn3(null);";       // NOI18N
-    private static final String QUERY =
-        "select dlm25w.merge_fg_bak_gn1('%1$s'), dlm25w.merge_fg_bak_gn2('%1$s'), dlm25w.merge_fg_bak_gn3('%1$s');"; // NOI18N
-    public static final String DOMAIN_NAME = "DLM25W";
-
-    //~ Instance fields --------------------------------------------------------
-
-    private String owner;
 
     //~ Constructors -----------------------------------------------------------
 
@@ -54,7 +53,8 @@ public class MergeBakGn extends AbstractCidsServerSearch {
      * @param  owner  DOCUMENT ME!
      */
     public MergeBakGn(final String owner) {
-        this.owner = owner;
+        super(owner);
+        QUERY = "select dlm25w.merge_fg_bak_gn1(?), dlm25w.merge_fg_bak_gn2(?), dlm25w.merge_fg_bak_gn3(?);";      // NOI18N
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -65,10 +65,14 @@ public class MergeBakGn extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final String query = ((owner == null) ? QUERY_WITHOUT_OWNER : String.format(QUERY, owner));
-                final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
+                final PreparableStatement ps = new PreparableStatement(
+                        QUERY,
+                        new int[] { Types.VARCHAR, Types.VARCHAR, Types.VARCHAR });
+                ps.setObjects(owner, owner, owner);
+                final ArrayList<ArrayList> lists = ms.performCustomSearch(ps);
+
                 return lists;
-            } catch (RemoteException ex) {
+            } catch (Exception ex) {
                 LOG.error(ex.getMessage(), ex);
             }
         } else {

@@ -12,18 +12,18 @@
  */
 package de.cismet.cids.custom.watergis.server.search;
 
+import Sirius.server.middleware.impls.domainserver.DomainServerImpl;
 import Sirius.server.middleware.interfaces.domainserver.MetaService;
 
 import org.apache.log4j.Logger;
 
-import java.rmi.RemoteException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-import de.cismet.cids.custom.helper.SQLFormatter;
-
-import de.cismet.cids.server.search.AbstractCidsServerSearch;
 
 /**
  * DOCUMENT ME!
@@ -31,20 +31,20 @@ import de.cismet.cids.server.search.AbstractCidsServerSearch;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class RecoverFgBakAfterSplit extends AbstractCidsServerSearch {
+public class RecoverFgBakAfterSplit extends WritableSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
     private static final transient Logger LOG = Logger.getLogger(MergeFgBakGwk.class);
 
-    private static final String QUERY = "select dlm25w.recover_fg_bak_after_split(%1$s, %2$s);"; // NOI18N
+    private static final String QUERY = "select dlm25w.recover_fg_bak_after_split(?,?);"; // NOI18N
     public static final String DOMAIN_NAME = "DLM25W";
 
     //~ Instance fields --------------------------------------------------------
 
-    private int fgBakId;
-    private int[] statIds;
+    private final int fgBakId;
+    private final int[] statIds;
 
     //~ Constructors -----------------------------------------------------------
 
@@ -67,10 +67,21 @@ public class RecoverFgBakAfterSplit extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final String query = String.format(QUERY, SQLFormatter.createSqlArrayString(statIds), fgBakId);
-                final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
+                final Object[] intArray = new Object[statIds.length];
+
+                for (int i = 0; i < statIds.length; ++i) {
+                    intArray[i] = statIds[i];
+                }
+
+                final Connection connection = DomainServerImpl.getServerInstance().getConnectionPool().getConnection();
+                final PreparedStatement merge = connection.prepareStatement(QUERY);
+                merge.setArray(1, connection.createArrayOf("integer", intArray));
+                merge.setInt(2, fgBakId);
+                final ResultSet rs = merge.executeQuery();
+
+                final ArrayList<ArrayList> lists = collectResults(rs);
                 return lists;
-            } catch (RemoteException ex) {
+            } catch (SQLException ex) {
                 LOG.error(ex.getMessage(), ex);
             }
         } else {
