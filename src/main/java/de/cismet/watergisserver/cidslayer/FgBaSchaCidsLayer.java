@@ -66,7 +66,8 @@ public class FgBaSchaCidsLayer extends Default1505ConsideredCidsLayer {
                     || column.equals("dlm25w.fg_ba_scha.traeger_gu")
                     || column.equals("dlm25w.fg_ba_scha.ausbaujahr")) {
             return ((user != null)
-                            && (user.getUserGroup().getName().equals("Administratoren")
+                            && (isFullGUAccessAllowed()
+                                || user.getUserGroup().getName().equals("Administratoren")
                                 || user.getUserGroup().getName().contains("lu")
                                 || user.getUserGroup().getName().contains("wbv")
                                 || user.getUserGroup().getName().contains("uwb")
@@ -84,8 +85,7 @@ public class FgBaSchaCidsLayer extends Default1505ConsideredCidsLayer {
                     || column.equals("dlm25w.fg_ba_scha.bemerkung")
                     || column.equals("dlm25w.fg_ba_scha.ho_so")
                     || column.equals("dlm25w.fg_ba_scha.ho_d_so_ok")) {
-            if ((user == null)
-                        || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
+            if (isFullGUAccessAllowed()) {
                 return null;
             } else {
                 return "dlm25wPk_ww_gr1.owner = '" + user.getUserGroup().getName() + "'";

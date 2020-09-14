@@ -29,6 +29,6 @@ public class MergeBaFoto extends MergeSearch {
      */
     public MergeBaFoto(final String owner) {
         super(owner);
-        QUERY = "select dlm25w.merge_fg_ba_foto(?);";                  // NOI18N
+        QUERY = "select dlm25w.merge_fg_ba_foto(?);"; // NOI18N
     }
 }

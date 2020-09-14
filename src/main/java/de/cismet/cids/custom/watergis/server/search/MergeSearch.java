@@ -41,6 +41,8 @@ public class MergeSearch extends WritableSearch implements ConnectionContextStor
     private static final transient Logger LOG = Logger.getLogger(MergeSearch.class);
     public static final String DOMAIN_NAME = "DLM25W";
 
+    //~ Instance fields --------------------------------------------------------
+
     protected String QUERY;
 
     protected String owner;

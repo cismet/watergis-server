@@ -73,7 +73,8 @@ public class FgBaWehrCidsLayer extends Default1505ConsideredCidsLayer {
                     || column.equals("dlm25w.fg_ba_wehr.traeger_gu")
                     || column.equals("dlm25w.fg_ba_wehr.ausbaujahr")) {
             return ((user != null)
-                            && (user.getUserGroup().getName().equals("Administratoren")
+                            && (isFullGUAccessAllowed()
+                                || user.getUserGroup().getName().equals("Administratoren")
                                 || user.getUserGroup().getName().contains("lu")
                                 || user.getUserGroup().getName().contains("wbv")
                                 || user.getUserGroup().getName().contains("uwb")
@@ -94,8 +95,7 @@ public class FgBaWehrCidsLayer extends Default1505ConsideredCidsLayer {
                     || column.equals("dlm25w.fg_ba_wehr.ho_so")
                     || column.equals("dlm25w.fg_ba_wehr.sz")
                     || column.equals("dlm25w.fg_ba_wehr.az")) {
-            if ((user == null)
-                        || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
+            if (isFullGUAccessAllowed()) {
                 return null;
             } else {
                 return "dlm25wPk_ww_gr1.owner = '" + user.getUserGroup().getName() + "'";

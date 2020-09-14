@@ -43,7 +43,7 @@ public class Buffer extends AbstractCidsServerSearch {
 
     //~ Instance fields --------------------------------------------------------
 
-    private final CompressedGeometry geo;
+    private final Geometry geo;
     private final double dist;
 
     //~ Constructors -----------------------------------------------------------
@@ -55,7 +55,8 @@ public class Buffer extends AbstractCidsServerSearch {
      * @param  dist  DOCUMENT ME!
      */
     public Buffer(final Geometry geo, final double dist) {
-        this.geo = new CompressedGeometry(geo);
+//        this.geo = new CompressedGeometry(geo);
+        this.geo = geo;
         this.dist = dist;
     }
 
@@ -69,7 +70,7 @@ public class Buffer extends AbstractCidsServerSearch {
             try {
                 final ArrayList<ArrayList> lists = ms.performCustomSearch(String.format(
                             QUERY,
-                            geo.getGeometry(),
+                            geo,
                             dist));
                 return lists;
             } catch (Exception ex) {

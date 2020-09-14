@@ -91,12 +91,13 @@ public class FgBaPrAbpTrigger extends AbstractDBAwareCidsTrigger {
      * @return  DOCUMENT ME!
      */
     private boolean isRelevantObject(final CidsBean cidsBean) {
-        return cidsBean.getClass().getName().equals(FG_BA_SCHA_CLASS_NAME)
-                    || cidsBean.getClass().getName().equals(FG_BA_WEHR_CLASS_NAME)
-                    || cidsBean.getClass().getName().equals(FG_BA_SCHW_CLASS_NAME)
-                    || cidsBean.getClass().getName().equals(FG_BA_KR_CLASS_NAME)
-                    || cidsBean.getClass().getName().equals(FG_BA_ANLP_CLASS_NAME)
-                    || cidsBean.getClass().getName().equals(FG_BA_EA_CLASS_NAME);
+//        return cidsBean.getClass().getName().equals(FG_BA_SCHA_CLASS_NAME)
+//                    || cidsBean.getClass().getName().equals(FG_BA_WEHR_CLASS_NAME)
+//                    || cidsBean.getClass().getName().equals(FG_BA_SCHW_CLASS_NAME)
+//                    || cidsBean.getClass().getName().equals(FG_BA_KR_CLASS_NAME)
+//                    || cidsBean.getClass().getName().equals(FG_BA_ANLP_CLASS_NAME)
+//                    || cidsBean.getClass().getName().equals(FG_BA_EA_CLASS_NAME);
+        return false;
     }
 
     @Override

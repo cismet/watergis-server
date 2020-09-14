@@ -55,7 +55,7 @@ public class MergeBakAe extends MergeSearch {
      */
     public MergeBakAe(final String owner) {
         super(owner);
-        QUERY = "select dlm25w.merge_fg_bak_ae(?);";                  // NOI18N
+        QUERY = "select dlm25w.merge_fg_bak_ae(?);"; // NOI18N
     }
 
     /**

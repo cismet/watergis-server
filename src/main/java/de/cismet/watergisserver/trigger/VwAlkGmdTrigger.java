@@ -120,7 +120,7 @@ public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
                 con = getDbServer().getConnectionPool().getConnection(true);
                 final Statement s = con.createStatement();
                 // refresh fg_ba_gmd layer
-                s.execute("select dlm25w.dlm25w.import_fg_ba_gmdbygmd(" + id.toString() + ")");
+                s.execute("select dlm25w.import_fg_ba_gmdbygmd(" + id.toString() + ")");
                 log.error("time to update stations " + (System.currentTimeMillis() - start));
             } catch (Exception e) {
                 log.error("Error while executing VwAlkGmd trigger.", e);

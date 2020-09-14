@@ -77,7 +77,8 @@ public class FgBaDeichCidsLayer extends Default1505ConsideredCidsLayer {
                     || column.equals("dlm25w.fg_ba_deich.traeger_gu")
                     || column.equals("dlm25w.fg_ba_deich.ausbaujahr")) {
             return ((user != null)
-                            && (user.getUserGroup().getName().equals("Administratoren")
+                            && (isFullGUAccessAllowed()
+                                || user.getUserGroup().getName().equals("Administratoren")
                                 || user.getUserGroup().getName().contains("lu")
                                 || user.getUserGroup().getName().contains("wbv")
                                 || user.getUserGroup().getName().contains("uwb")
@@ -100,8 +101,7 @@ public class FgBaDeichCidsLayer extends Default1505ConsideredCidsLayer {
                     || column.equals("dlm25w.fg_ba_deich.ho_mw_pn")
                     || column.equals("dlm25w.fg_ba_deich.bv_w")
                     || column.equals("dlm25w.fg_ba_deich.bv_b")) {
-            if ((user == null)
-                        || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
+            if (isFullGUAccessAllowed()) {
                 return null;
             } else {
                 return "dlm25wPk_ww_gr1.owner = '" + user.getUserGroup().getName() + "'";
