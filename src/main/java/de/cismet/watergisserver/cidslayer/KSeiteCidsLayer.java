@@ -10,7 +10,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.cismet.cids.custom.watergis.server.search;
+package de.cismet.watergisserver.cidslayer;
+
+import Sirius.server.middleware.types.MetaClass;
+import Sirius.server.newuser.User;
 
 /**
  * DOCUMENT ME!
@@ -18,17 +21,17 @@ package de.cismet.cids.custom.watergis.server.search;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class RemoveDuplicatedNodesFromFgBak extends MergeSearch {
+public class KSeiteCidsLayer extends WatergisDefaultCidsLayer {
 
     //~ Constructors -----------------------------------------------------------
 
     /**
-     * Creates a new WkkSearch object.
+     * Creates a new KLOiuCidsLayer object.
      *
-     * @param  owner  DOCUMENT ME!
+     * @param  mc    DOCUMENT ME!
+     * @param  user  DOCUMENT ME!
      */
-    public RemoveDuplicatedNodesFromFgBak(final String owner) {
-        super(owner);
-        QUERY = "select dlm25w.remove_duplicated_coords_in_fg_bak(?);"; // NOI18N
+    public KSeiteCidsLayer(final MetaClass mc, final User user) {
+        super(mc, user);
     }
 }

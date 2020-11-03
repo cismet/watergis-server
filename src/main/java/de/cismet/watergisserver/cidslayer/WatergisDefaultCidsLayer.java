@@ -25,12 +25,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JComponent;
-
 import de.cismet.cids.server.cidslayer.CidsLayerInfo;
 import de.cismet.cids.server.cidslayer.StationInfo;
 
-import de.cismet.connectioncontext.ConnectionContext;
 //import de.cismet.cismap.commons.gui.attributetable.DefaultAttributeTableRuleSet;
 
 /**
@@ -266,6 +263,16 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
                 joins.append(" join geom on (").append(attr.getFieldName()).append(" = geom.id)");
                 primitiveColumnTypesList.add("Geometry");
                 referencedClass.put(attr.getName(), attr.getForeignKeyClassId());
+            } else if ((attr.getJavaclassname() != null)
+                        && attr.getJavaclassname().equalsIgnoreCase("com.vividsolutions.jts.geom.Geometry")) {
+                sqlGeoField = attr.getName();
+                geoField = attr.getName();
+                sb.add("ST_AsEWKb(" + attr.getName() + ") as " + geoField);
+                columnNamesList.add(attr.getName());
+                sqlColumnNamesList.add(attr.getName());
+                columnPropertyNamesList.add(attr.getName());
+                primitiveColumnTypesList.add("Geometry");
+//                referencedClass.put(attr.getName(), attr.getForeignKeyClassId());
             } else if (attr.isForeignKey()
                         && getBeanClassName(allClasses, attr.getForeignKeyClassId()).toLowerCase().equals(
                             "fg_bak_punkt")) {
@@ -649,6 +656,138 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
                 stationTypes.put("lak_st_von", s);
                 s = new StationInfo(true, false, "dlm25w.fg_lak", lineId, "la_cd");
                 stationTypes.put("lak_st_bis", s);
+            } else if (attr.isForeignKey()
+                        && getBeanClassName(allClasses, attr.getForeignKeyClassId()).toLowerCase().equals(
+                            "fg_ba_duv_linie")) {
+                sqlGeoField = "geo_field";
+                if (!additionalGeom) {
+                    geoField = "geom";
+                    sb.add(1, "ST_AsEWKb(geom.geo_field) as " + geoField);
+                    columnNamesList.add(1, "geom");
+                    sqlColumnNamesList.add(1, "geom.geo_field");
+                    columnPropertyNamesList.add(1, attr.getName() + ".geom.geo_field");
+                    primitiveColumnTypesList.add(1, "Geometry");
+                }
+                sb.add("duv.fg_ba_duv.ba_cd");
+                columnNamesList.add("ba_cd");
+                sqlColumnNamesList.add("duv.fg_ba_duv.ba_cd");
+                columnPropertyNamesList.add(attr.getName() + ".von.route.ba_cd");
+                sb.add(" von.wert");
+                columnNamesList.add("ba_st_von");
+                sqlColumnNamesList.add("von.wert");
+                columnPropertyNamesList.add(attr.getName() + ".von.wert");
+                sb.add(" bis.wert");
+                columnNamesList.add("ba_st_bis");
+                sqlColumnNamesList.add("bis.wert");
+                columnPropertyNamesList.add(attr.getName() + ".bis.wert");
+                joins.append(joinExtension)
+                        .append(" join duv.fg_ba_duv_linie on (")
+                        .append(attr.getFieldName())
+                        .append(" = duv.fg_ba_duv_linie.id)");
+                if (!additionalGeom) {
+                    joins.append(" join geom on (geom = geom.id)");
+                    referencedClass.put(geoField, geomMc.getID());
+                }
+                joins.append(joinExtension)
+                        .append(" join duv.fg_ba_duv_punkt von on (von.id = duv.fg_ba_duv_linie.von)");
+                joins.append(joinExtension)
+                        .append(" join duv.fg_ba_duv_punkt bis on (bis.id = duv.fg_ba_duv_linie.bis)");
+                joins.append(joinExtension).append(" join duv.fg_ba_duv on (von.route = duv.fg_ba_duv.id)");
+                primitiveColumnTypesList.add("String");
+                primitiveColumnTypesList.add("java.lang.Double");
+                primitiveColumnTypesList.add("java.lang.Double");
+                StationInfo s = new StationInfo(true, true, "duv.fg_ba_duv", ++lineId, "ba_cd");
+                stationTypes.put("ba_st_von", s);
+                s = new StationInfo(true, false, "duv.fg_ba_duv", lineId, "ba_cd");
+                stationTypes.put("ba_st_bis", s);
+            } else if (attr.isForeignKey()
+                        && getBeanClassName(allClasses, attr.getForeignKeyClassId()).toLowerCase().equals(
+                            "sg_umring_linie")) {
+                sqlGeoField = "geo_field";
+                if (!additionalGeom) {
+                    geoField = "geom";
+                    sb.add(1, "ST_AsEWKb(geom.geo_field) as " + geoField);
+                    columnNamesList.add(1, "geom");
+                    sqlColumnNamesList.add(1, "geom.geo_field");
+                    columnPropertyNamesList.add(1, attr.getName() + ".geom.geo_field");
+                    primitiveColumnTypesList.add(1, "Geometry");
+                }
+                sb.add("duv.sg_umring.see_id");
+                columnNamesList.add("see_id");
+                sqlColumnNamesList.add("duv.sg_umring.see_id");
+                columnPropertyNamesList.add(attr.getName() + ".von.route.see_id");
+                sb.add(" von.wert");
+                columnNamesList.add("see_st_von");
+                sqlColumnNamesList.add("von.wert");
+                columnPropertyNamesList.add(attr.getName() + ".von.wert");
+                sb.add(" bis.wert");
+                columnNamesList.add("see_st_bis");
+                sqlColumnNamesList.add("bis.wert");
+                columnPropertyNamesList.add(attr.getName() + ".bis.wert");
+                joins.append(joinExtension)
+                        .append(" join duv.sg_umring_linie on (")
+                        .append(attr.getFieldName())
+                        .append(" = duv.sg_umring_linie.id)");
+                if (!additionalGeom) {
+                    joins.append(" join geom on (geom = geom.id)");
+                    referencedClass.put(geoField, geomMc.getID());
+                }
+                joins.append(joinExtension)
+                        .append(" join duv.sg_umring_punkt von on (von.id = duv.sg_umring_linie.von)");
+                joins.append(joinExtension)
+                        .append(" join duv.sg_umring_punkt bis on (bis.id = duv.sg_umring_linie.bis)");
+                joins.append(joinExtension).append(" join duv.sg_umring on (von.route = duv.sg_umring.id)");
+                primitiveColumnTypesList.add("java.lang.Integer");
+                primitiveColumnTypesList.add("java.lang.Double");
+                primitiveColumnTypesList.add("java.lang.Double");
+                StationInfo s = new StationInfo(true, true, "duv.sg_umring", ++lineId, "see_id");
+                stationTypes.put("ba_st_von", s);
+                s = new StationInfo(true, false, "duv.sg_umring", lineId, "see_id");
+                stationTypes.put("ba_st_bis", s);
+            } else if (attr.isForeignKey()
+                        && getBeanClassName(allClasses, attr.getForeignKeyClassId()).toLowerCase().equals(
+                            "fg_ba_duv_ges_linie")) {
+                sqlGeoField = "geo_field";
+                if (!additionalGeom) {
+                    geoField = "geom";
+                    sb.add(1, "ST_AsEWKb(geom.geo_field) as " + geoField);
+                    columnNamesList.add(1, "geom");
+                    sqlColumnNamesList.add(1, "geom.geo_field");
+                    columnPropertyNamesList.add(1, attr.getName() + ".geom.geo_field");
+                    primitiveColumnTypesList.add(1, "Geometry");
+                }
+                sb.add("duv.fg_ba_duv_ges.ba_cd");
+                columnNamesList.add("ba_cd");
+                sqlColumnNamesList.add("duv.fg_ba_duv_ges.ba_cd");
+                columnPropertyNamesList.add(attr.getName() + ".von.route.ba_cd");
+                sb.add(" von.wert");
+                columnNamesList.add("ba_st_von");
+                sqlColumnNamesList.add("von.wert");
+                columnPropertyNamesList.add(attr.getName() + ".von.wert");
+                sb.add(" bis.wert");
+                columnNamesList.add("ba_st_bis");
+                sqlColumnNamesList.add("bis.wert");
+                columnPropertyNamesList.add(attr.getName() + ".bis.wert");
+                joins.append(joinExtension)
+                        .append(" join duv.fg_ba_duv_ges_linie on (")
+                        .append(attr.getFieldName())
+                        .append(" = duv.fg_ba_duv_ges_linie.id)");
+                if (!additionalGeom) {
+                    joins.append(" join geom on (geom = geom.id)");
+                    referencedClass.put(geoField, geomMc.getID());
+                }
+                joins.append(joinExtension)
+                        .append(" join duv.fg_ba_duv_ges_punkt von on (von.id = duv.fg_ba_duv_ges_linie.von)");
+                joins.append(joinExtension)
+                        .append(" join duv.fg_ba_duv_ges_punkt bis on (bis.id = duv.fg_ba_duv_ges_linie.bis)");
+                joins.append(joinExtension).append(" join duv.fg_ba_duv_ges on (von.route = duv.fg_ba_duv_ges.id)");
+                primitiveColumnTypesList.add("String");
+                primitiveColumnTypesList.add("java.lang.Double");
+                primitiveColumnTypesList.add("java.lang.Double");
+                StationInfo s = new StationInfo(true, true, "duv.fg_ba_duv_ges", ++lineId, "ba_cd");
+                stationTypes.put("ba_st_von", s);
+                s = new StationInfo(true, false, "duv.fg_ba_duv_ges", lineId, "ba_cd");
+                stationTypes.put("ba_st_bis", s);
             } else if (attr.isForeignKey()) {
                 if (inheritedWwGr
                             && getBeanClassName(allClasses, attr.getForeignKeyClassId()).toLowerCase().endsWith(
@@ -1043,5 +1182,15 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
     @Override
     public String getRestriction() {
         return null;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return  DOCUMENT ME!
+     */
+    protected boolean isFullGUAccessAllowed() {
+        return (user == null) || user.getUserGroup().getName().equalsIgnoreCase("administratoren")
+                    || user.getUserGroup().getName().equalsIgnoreCase("gaeste_read_gu");
     }
 }
