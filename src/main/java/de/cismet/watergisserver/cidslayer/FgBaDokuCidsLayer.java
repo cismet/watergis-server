@@ -58,7 +58,8 @@ public class FgBaDokuCidsLayer extends WatergisDefaultCidsLayer {
     @Override
     public String getRestriction() {
         if ((user == null)
-                    || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
+                    || user.getUserGroup().getName().equalsIgnoreCase("administratoren")
+                    || user.getUserGroup().getName().equalsIgnoreCase("gaeste_read_gu")) {
             return null;
         } else {
             return "dlm25wPk_ww_gr1.owner = '" + user.getUserGroup().getName() + "'";

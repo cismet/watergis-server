@@ -40,6 +40,6 @@ public class MergeBaWehr extends MergeSearch {
      */
     public MergeBaWehr(final String owner) {
         super(owner);
-        QUERY = "select dlm25w.merge_fg_ba_wehr(?);";                  // NOI18N
+        QUERY = "select dlm25w.merge_fg_ba_wehr(?);"; // NOI18N
     }
 }

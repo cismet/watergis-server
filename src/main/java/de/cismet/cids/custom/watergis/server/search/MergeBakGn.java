@@ -54,7 +54,7 @@ public class MergeBakGn extends MergeSearch {
      */
     public MergeBakGn(final String owner) {
         super(owner);
-        QUERY = "select dlm25w.merge_fg_bak_gn1(?), dlm25w.merge_fg_bak_gn2(?), dlm25w.merge_fg_bak_gn3(?);";      // NOI18N
+        QUERY = "select dlm25w.merge_fg_bak_gn1(?), dlm25w.merge_fg_bak_gn2(?), dlm25w.merge_fg_bak_gn3(?);"; // NOI18N
     }
 
     //~ Methods ----------------------------------------------------------------

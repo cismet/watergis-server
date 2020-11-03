@@ -29,6 +29,6 @@ public class RemoveDuplicatedNodesFromFgBak extends MergeSearch {
      */
     public RemoveDuplicatedNodesFromFgBak(final String owner) {
         super(owner);
-        QUERY = "select dlm25w.remove_duplicated_coords_in_fg_bak(?);";                  // NOI18N
+        QUERY = "select dlm25w.remove_duplicated_coords_in_fg_bak(?);"; // NOI18N
     }
 }

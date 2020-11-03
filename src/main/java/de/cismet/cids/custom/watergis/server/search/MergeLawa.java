@@ -48,7 +48,7 @@ public class MergeLawa extends MergeSearch {
      */
     public MergeLawa(final String owner) {
         super(owner);
-        QUERY = "select dlm25w.merge_fg_lak_ae(?), dlm25w.merge_fg_bak_gwk(?);";                     // NOI18N
+        QUERY = "select dlm25w.merge_fg_lak_ae(?), dlm25w.merge_fg_bak_gwk(?);"; // NOI18N
     }
 
     //~ Methods ----------------------------------------------------------------

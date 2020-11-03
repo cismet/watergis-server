@@ -257,8 +257,16 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                 updater.addUpdate("select dlm25w.import_fg_ba_geroByBak(" + id.toString() + ")");
                 updater.execute();
                 updater.addUpdate("select dlm25w.import_fg_ba_gerogByBak(" + id.toString() + ")");
+                updater.addUpdate("select dlm25w.import_abstand_3ByBak(" + id.toString() + ")");
+                updater.addUpdate("select dlm25w.import_abstand_5ByBak(" + id.toString() + ")");
+                updater.addUpdate("select dlm25w.import_abstand_10ByBak(" + id.toString() + ")");
+                updater.addUpdate("select dlm25w.import_abstand_20ByBak(" + id.toString() + ")");
+                updater.addUpdate("select dlm25w.import_abstand_30ByBak(" + id.toString() + ")");
                 updater.execute();
                 updater.addUpdate("select dlm25w.import_fg_ba_gerogaByBak(" + id.toString() + ")");
+                updater.addUpdate("select dlm25w.import_feldbloeckeByBak(" + id.toString() + ")");
+                updater.addUpdate("select dlm25w.import_randstreifenByBak(" + id.toString() + ")");
+                updater.addUpdate("select dlm25w.import_sperrflaecheByBak(" + id.toString() + ")");
                 updater.execute();
 
                 if (beforeInsert != null) {
