@@ -17,6 +17,7 @@ import com.vividsolutions.jts.io.WKBReader;
 import org.openide.util.lookup.ServiceProvider;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 import de.cismet.cids.dynamics.CidsBean;
@@ -24,7 +25,6 @@ import de.cismet.cids.dynamics.CidsBean;
 import de.cismet.cids.trigger.AbstractDBAwareCidsTrigger;
 import de.cismet.cids.trigger.CidsTrigger;
 import de.cismet.cids.trigger.CidsTriggerKey;
-import java.sql.ResultSet;
 
 /**
  * DOCUMENT ME!

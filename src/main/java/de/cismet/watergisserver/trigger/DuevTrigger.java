@@ -9,7 +9,6 @@ package de.cismet.watergisserver.trigger;
 
 import Sirius.server.newuser.User;
 
-
 import org.openide.util.lookup.ServiceProvider;
 
 import java.sql.Connection;
