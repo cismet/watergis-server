@@ -40,6 +40,6 @@ public class MergeBakObjart extends MergeSearch {
      */
     public MergeBakObjart(final String owner) {
         super(owner);
-        QUERY = "select dlm25w.merge_fg_bak_objart(?);";                  // NOI18N
+        QUERY = "select dlm25w.merge_fg_bak_objart(?);"; // NOI18N
     }
 }

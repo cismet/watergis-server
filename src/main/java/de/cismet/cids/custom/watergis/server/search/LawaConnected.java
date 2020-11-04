@@ -56,7 +56,7 @@ public class LawaConnected extends AbstractCidsServerSearch {
                 + "geo_field, \n"
                 + "least(von.wert, bis.wert) / st_length(geo_field), \n"
                 + "case when (greatest(bis.wert, von.wert) / st_length(geo_field)) <= 1.0 then (greatest(bis.wert, von.wert) / st_length(geo_field)) else 1.0 end\n"
-                + ") )), 0.1)) <> 'ST_LineString'\n"
+                + ") )), 0.01)) <> 'ST_LineString'\n"
                 + "order by la_cd) a";
 
     //~ Instance fields --------------------------------------------------------

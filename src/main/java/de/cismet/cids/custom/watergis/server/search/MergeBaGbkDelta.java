@@ -29,6 +29,6 @@ public class MergeBaGbkDelta extends MergeSearch {
      */
     public MergeBaGbkDelta(final String owner) {
         super(owner);
-        QUERY = "select dlm25w.merge_fg_ba_gbk_delta(?);";                  // NOI18N
+        QUERY = "select dlm25w.merge_fg_ba_gbk_delta(?);"; // NOI18N
     }
 }

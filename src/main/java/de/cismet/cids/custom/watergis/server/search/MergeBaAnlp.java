@@ -29,6 +29,6 @@ public class MergeBaAnlp extends MergeSearch {
      */
     public MergeBaAnlp(final String owner) {
         super(owner);
-        QUERY = "select dlm25w.merge_fg_ba_anlp(?);";                  // NOI18N
+        QUERY = "select dlm25w.merge_fg_ba_anlp(?);"; // NOI18N
     }
 }

@@ -49,11 +49,15 @@ public class RemoveUnnusedRoute extends AbstractCidsServerSearch {
     public static final int FG_BAK = 3;
     public static final int FG_LAK = 4;
     public static final int SU = 5;
+    public static final int FG_BA_DUV = 6;
+    public static final int SG_UMRING = 7;
     private static final String QUERY_FGBA = "select dlm25w.remove_unused_fgbapoints(?)";
     private static final String QUERY_FGLA = "select dlm25w.remove_unused_fglapoints(?)";
     private static final String QUERY_FGBAK = "select dlm25w.remove_unused_fgbakpoints(?)";
     private static final String QUERY_FGLAK = "select dlm25w.remove_unused_fglakpoints(?)";
     private static final String QUERY_SU = "select dlm25w.remove_unused_supoints(?)";
+    private static final String QUERY_FGBADUV = "select duv.remove_unused_fgbaduvpoints(?)";
+    private static final String QUERY_SGUMRING = "select duv.remove_unused_sgumringpoints(?)";
 
     //~ Instance fields --------------------------------------------------------
 
@@ -102,6 +106,14 @@ public class RemoveUnnusedRoute extends AbstractCidsServerSearch {
                     }
                     case SU: {
                         ps = new PreparableStatement(QUERY_SU, new int[] { Types.INTEGER });
+                        break;
+                    }
+                    case FG_BA_DUV: {
+                        ps = new PreparableStatement(QUERY_FGBADUV, new int[] { Types.INTEGER });
+                        break;
+                    }
+                    case SG_UMRING: {
+                        ps = new PreparableStatement(QUERY_SGUMRING, new int[] { Types.INTEGER });
                         break;
                     }
                     default: {

@@ -94,15 +94,16 @@ public class FgBaPrAblTrigger extends AbstractDBAwareCidsTrigger {
      * @return  DOCUMENT ME!
      */
     private boolean isRelevantObject(final CidsBean cidsBean) {
-        return cidsBean.getClass().getName().equals(FG_BA_SBEF_CLASS_NAME)
-                    || cidsBean.getClass().getName().equals(FG_BA_RL_CLASS_NAME)
-                    || cidsBean.getClass().getName().equals(FG_BA_D_CLASS_NAME)
-                    || cidsBean.getClass().getName().equals(FG_BA_DUE_CLASS_NAME)
-                    || cidsBean.getClass().getName().equals(FG_BA_UGHZ_CLASS_NAME)
-                    || cidsBean.getClass().getName().equals(FG_BA_ANLL_CLASS_NAME)
-                    || cidsBean.getClass().getName().equals(FG_BA_PROF_CLASS_NAME)
-                    || cidsBean.getClass().getName().equals(FG_BA_UBEF_CLASS_NAME)
-                    || cidsBean.getClass().getName().equals(FG_BA_BBEF_CLASS_NAME);
+//        return cidsBean.getClass().getName().equals(FG_BA_SBEF_CLASS_NAME)
+//                    || cidsBean.getClass().getName().equals(FG_BA_RL_CLASS_NAME)
+//                    || cidsBean.getClass().getName().equals(FG_BA_D_CLASS_NAME)
+//                    || cidsBean.getClass().getName().equals(FG_BA_DUE_CLASS_NAME)
+//                    || cidsBean.getClass().getName().equals(FG_BA_UGHZ_CLASS_NAME)
+//                    || cidsBean.getClass().getName().equals(FG_BA_ANLL_CLASS_NAME)
+//                    || cidsBean.getClass().getName().equals(FG_BA_PROF_CLASS_NAME)
+//                    || cidsBean.getClass().getName().equals(FG_BA_UBEF_CLASS_NAME)
+//                    || cidsBean.getClass().getName().equals(FG_BA_BBEF_CLASS_NAME);
+        return false;
     }
 
     @Override

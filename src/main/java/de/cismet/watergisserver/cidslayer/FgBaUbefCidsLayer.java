@@ -78,8 +78,7 @@ public class FgBaUbefCidsLayer extends Default1505ConsideredCidsLayer {
                     || column.equals("dlm25w.fg_ba_ubef.bemerkung")
                     || column.equals("dlm25w.fg_ba_ubef.br")
                     || column.equals("dlm25w.fg_ba_ubef.ho_d_o")) {
-            if ((user == null)
-                        || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
+            if (isFullGUAccessAllowed()) {
                 return null;
             } else {
                 return "dlm25wPk_ww_gr1.owner = '" + user.getUserGroup().getName() + "'";

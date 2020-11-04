@@ -29,6 +29,6 @@ public class MergeBaKr extends MergeSearch {
      */
     public MergeBaKr(final String owner) {
         super(owner);
-        QUERY = "select dlm25w.merge_fg_ba_kr(?);";                  // NOI18N
+        QUERY = "select dlm25w.merge_fg_ba_kr(?);"; // NOI18N
     }
 }
