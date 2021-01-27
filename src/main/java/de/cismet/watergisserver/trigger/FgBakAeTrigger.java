@@ -135,6 +135,7 @@ public class FgBakAeTrigger extends AbstractDBAwareCidsTrigger {
                 s.execute("select dlm25w.replace_fg_ba_by_fg_bak(" + id.toString() + ")");
                 // refresh stat layer
                 s.execute("select dlm25w.add_fg_ba_stat(" + id.toString() + ")");
+                s.execute("select dlm25w.add_fg_ba_stat_10(" + id.toString() + ")");
                 s.execute("select dlm25w.import_fg_ba_foto_pr_pfbyBakId(" + id.toString() + ")");
                 s.execute("select dlm25w.import_fg_ba_pr_pfByBakId(" + id.toString() + ", '" + user.getName() + "')");
 
