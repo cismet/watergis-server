@@ -35,6 +35,8 @@ public class FgObjectTrigger extends AbstractDBAwareCidsTrigger {
     private static final transient org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(
             FgObjectTrigger.class);
 
+    public static final int ID_TO_AVOID_CHECK = -20;
+
     //~ Methods ----------------------------------------------------------------
 
     @Override
@@ -81,34 +83,36 @@ public class FgObjectTrigger extends AbstractDBAwareCidsTrigger {
     @Override
     public void afterCommittedInsert(final CidsBean cidsBean, final User user) {
         Connection con = null;
-        try {
-            final long start = System.currentTimeMillis();
-            con = getDbServer().getConnectionPool().getConnection(true);
+        if (cidsBean.getMetaObject().getID() != ID_TO_AVOID_CHECK) {
+            try {
+                final long start = System.currentTimeMillis();
+                con = getDbServer().getConnectionPool().getConnection(true);
 
-            final PreparedStatement psExists = con.prepareStatement(
-                    "select true from cs_class_attr where class_id = ? and attr_key = 'cidsLayer'");
-            psExists.setInt(1, cidsBean.getMetaObject().getClassID());
+                final PreparedStatement psExists = con.prepareStatement(
+                        "select true from cs_class_attr where class_id = ? and attr_key = 'cidsLayer'");
+                psExists.setInt(1, cidsBean.getMetaObject().getClassID());
 
-            final ResultSet set = psExists.executeQuery();
+                final ResultSet set = psExists.executeQuery();
 
-            if (set.next()) {
-                final PreparedStatement ps = con.prepareStatement(
-                        "insert into created_object(username, class_id, object_id, creation_time) values (?, ?, ?, now())");
-                ps.setString(1, user.getDomain() + "." + user.getName());
-                ps.setInt(2, cidsBean.getMetaObject().getClassID());
-                ps.setInt(3, cidsBean.getMetaObject().getID());
-                ps.execute();
-                ps.close();
-            }
+                if (set.next()) {
+                    final PreparedStatement ps = con.prepareStatement(
+                            "insert into created_object(username, class_id, object_id, creation_time) values (?, ?, ?, now())");
+                    ps.setString(1, user.getDomain() + "." + user.getName());
+                    ps.setInt(2, cidsBean.getMetaObject().getClassID());
+                    ps.setInt(3, cidsBean.getMetaObject().getID());
+                    ps.execute();
+                    ps.close();
+                }
 
-            set.close();
-            psExists.close();
-            log.error("time to update created objects table" + (System.currentTimeMillis() - start));
-        } catch (Exception e) {
-            log.error("Error while executing fg_object trigger.", e);
-        } finally {
-            if (con != null) {
-                getDbServer().getConnectionPool().releaseDbConnection(con);
+                set.close();
+                psExists.close();
+                log.error("time to update created objects table" + (System.currentTimeMillis() - start));
+            } catch (Exception e) {
+                log.error("Error while executing fg_object trigger.", e);
+            } finally {
+                if (con != null) {
+                    getDbServer().getConnectionPool().releaseDbConnection(con);
+                }
             }
         }
     }

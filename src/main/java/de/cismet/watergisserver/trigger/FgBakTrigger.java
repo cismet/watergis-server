@@ -229,6 +229,8 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                 // refresh stat layer
                 updater.addUpdate("select dlm25w.add_fg_ba_stat(" + id.toString() + ")");
                 updater.addUpdate("select dlm25w.add_fg_la_stat(" + id.toString() + ")");
+                updater.addUpdate("select dlm25w.add_fg_ba_stat_10(" + id.toString() + ")");
+                updater.addUpdate("select dlm25w.add_fg_la_stat_10(" + id.toString() + ")");
                 // refresh fotoPrPf
                 updater.addUpdate("select dlm25w.import_fg_ba_foto_pr_pfbyBakId(" + id.toString() + ")");
                 // refresh presentation layer

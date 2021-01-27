@@ -14,7 +14,6 @@ package de.cismet.cids.custom.watergis.server.search;
 
 import Sirius.server.middleware.impls.domainserver.DomainServerImpl;
 import Sirius.server.middleware.interfaces.domainserver.MetaService;
-import Sirius.server.sql.DBConnection;
 
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -28,9 +27,6 @@ import java.sql.Statement;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-
-import de.cismet.cids.custom.helper.SQLFormatter;
 
 import de.cismet.cids.server.search.AbstractCidsServerSearch;
 
@@ -55,6 +51,10 @@ public class PreparedRandstreifenGeoms extends AbstractCidsServerSearch {
         "select geo_field from dlm25w.fg_ba_gerog join geom on (geom = geom.id) where typ in ('so', 'b_li', 'b_re', 'bn_li', 'bn_re', 'bt_li', 'bt_re')  and st_intersects(geo_field, '%1s')";
     private static final String FG_QUERY_WITH_ID =
         "select geo_field from dlm25w.fg_ba_gerog join geom on (geom = geom.id) where typ in ('so', 'b_li', 'b_re', 'bn_li', 'bn_re', 'bt_li', 'bt_re')  and st_intersects(geo_field, '%1s') and ba_cd in (%2s)";
+    private static final String FG_CLOSED_QUERY =
+        "select st_buffer(geom, %1s) as geo_field from dlm25w.select_fgba_closed(null, null)";
+    private static final String FG_CLOSED_QUERY_WITH_ID =
+        "select st_buffer(geom, %1s) as geo_field from dlm25w.select_fgba_closed(%2s, null)";
     private static final String FG_BR_QUERY =
         "select st_buffer(geom, %1s) as geo_field from dlm25w.select_fgba_open_without_prof(null, null, '%1s') where art = 'o'";
     private static final String FG_BR_QUERY_WITH_ID =
@@ -90,7 +90,9 @@ public class PreparedRandstreifenGeoms extends AbstractCidsServerSearch {
     private final Geometry bbox;
     private final boolean fg;
     private final boolean fgBr;
+    private final boolean geschlFg;
     private final double br;
+    private final double geschlBr;
     private final boolean fgFl;
     private final boolean see;
     private final boolean seeKl;
@@ -106,32 +108,38 @@ public class PreparedRandstreifenGeoms extends AbstractCidsServerSearch {
      * @param  bbox      DOCUMENT ME!
      * @param  fg        DOCUMENT ME!
      * @param  fgBr      DOCUMENT ME!
+     * @param  geschlFg  DOCUMENT ME!
      * @param  fgFl      DOCUMENT ME!
      * @param  see       DOCUMENT ME!
      * @param  seeKl     DOCUMENT ME!
      * @param  ostsee    DOCUMENT ME!
      * @param  br        DOCUMENT ME!
+     * @param  geschlBr  DOCUMENT ME!
      * @param  baCd      DOCUMENT ME!
      * @param  fgBaIdBr  DOCUMENT ME!
      */
     public PreparedRandstreifenGeoms(final Geometry bbox,
             final boolean fg,
             final boolean fgBr,
+            final boolean geschlFg,
             final boolean fgFl,
             final boolean see,
             final boolean seeKl,
             final boolean ostsee,
             final double br,
+            final double geschlBr,
             final String[] baCd,
             final Integer[] fgBaIdBr) {
         this.bbox = bbox;
         this.fg = fg;
         this.fgBr = fgBr;
+        this.geschlFg = geschlFg;
         this.fgFl = fgFl;
         this.see = see;
         this.seeKl = seeKl;
         this.ostsee = ostsee;
         this.br = br;
+        this.geschlBr = geschlBr;
         this.baCd = baCd;
         this.fgBaIdBr = fgBaIdBr;
     }
@@ -144,9 +152,6 @@ public class PreparedRandstreifenGeoms extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-//                final ArrayList<ArrayList> lists = ms.performCustomSearch(
-//                        "select st_asBinary(geom) from test_randstreifen");
-//                return lists;
                 String tables = null;
 
                 if (fg) {
@@ -206,6 +211,19 @@ public class PreparedRandstreifenGeoms extends AbstractCidsServerSearch {
                     } else {
                         tables += " union "
                                     + String.format(((bbox == null) ? FG_FL_QUERY_WITHOUT_GEO : FG_FL_QUERY), bbox);
+                    }
+                }
+
+                if (geschlFg) {
+                    if (tables == null) {
+                        tables = String.format(((baCd == null) ? FG_CLOSED_QUERY : FG_CLOSED_QUERY_WITH_ID),
+                                geschlBr,
+                                toList(baCd));
+                    } else {
+                        tables += " union "
+                                    + String.format(((baCd == null) ? FG_CLOSED_QUERY : FG_CLOSED_QUERY_WITH_ID),
+                                        geschlBr,
+                                        toList(baCd));
                     }
                 }
 
@@ -275,6 +293,9 @@ public class PreparedRandstreifenGeoms extends AbstractCidsServerSearch {
      * @return  DOCUMENT ME!
      */
     private String toList(final String[] baCd) {
+        if (baCd == null) {
+            return "null";
+        }
         StringBuffer sb = null;
 
         for (final String tmp : baCd) {
