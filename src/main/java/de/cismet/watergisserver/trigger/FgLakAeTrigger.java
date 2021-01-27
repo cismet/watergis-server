@@ -126,6 +126,7 @@ public class FgLakAeTrigger extends AbstractDBAwareCidsTrigger {
                     s.execute("select dlm25w.replace_fg_la(id) from dlm25w.fg_la where la_cd = " + la_cd.toString());
                     // refresh la stat layer
                     s.execute("select dlm25w.add_fg_la_stat_by_lak(" + id.toString() + ")");
+                    s.execute("select dlm25w.add_fg_la_stat_10_by_lak(" + id.toString() + ")");
                     s.execute("select dlm25w.import_fg_la_pr_pf(l.id, '" + user.getName()
                                 + "') from dlm25w.fg_la l join dlm25w.k_gwk_lawa k on (k.id = l.la_cd) where k.la_cd = "
                                 + la_cd.toString());
