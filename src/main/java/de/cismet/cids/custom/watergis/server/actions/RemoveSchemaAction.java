@@ -38,7 +38,7 @@ public class RemoveSchemaAction implements ServerAction, MetaServiceStore {
     //~ Static fields/initializers ---------------------------------------------
 
     private static final Logger LOG = Logger.getLogger(RemoveSchemaAction.class);
-    private static final String REMOVE_SCHEMA = "DROP SCHEMA %1s";
+    private static final String REMOVE_SCHEMA = "DROP SCHEMA %1s cascade";
 
     public static final String TASK_NAME = "removeSchema";
 
@@ -79,17 +79,12 @@ public class RemoveSchemaAction implements ServerAction, MetaServiceStore {
 
         try {
             String schemaName = null;
-            final String dbUser = null;
 
             for (final ServerActionParameter param : params) {
                 if (RemoveSchemaAction.ParameterType.SCHEMA.toString().equals(
                                 param.getKey())) {
                     schemaName = (String)param.getValue();
                 }
-            }
-
-            if (ActionHelper.isInvalidUserName(dbUser)) {
-                return false;
             }
 
             if (ActionHelper.isInvalidSchemaName(schemaName)) {

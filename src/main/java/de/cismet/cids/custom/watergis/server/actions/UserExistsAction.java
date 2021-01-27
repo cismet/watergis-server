@@ -28,7 +28,7 @@ import de.cismet.cids.server.actions.ServerAction;
 import de.cismet.cids.server.actions.ServerActionParameter;
 
 /**
- * DOCUMENT ME!
+ * Checks, if the given user already exists in the db.
  *
  * @author   therter
  * @version  $Revision$, $Date$
@@ -92,7 +92,7 @@ public class UserExistsAction implements ServerAction, MetaServiceStore {
             }
 
             domainServer = (DomainServerImpl)metaService;
-            con = domainServer.getConnectionPool().getConnection(true);
+            con = domainServer.getConnectionPool().getConnection();
 
             final PreparedStatement psCreate = con.prepareStatement(USER_EXISTS);
             psCreate.setString(1, userName);
@@ -114,12 +114,8 @@ public class UserExistsAction implements ServerAction, MetaServiceStore {
 
             return userExists;
         } catch (Exception e) {
-            LOG.error("Error while checking, if the given schema already exists", e);
+            LOG.error("Error while checking, if the given user already exists", e);
             return userExists;
-        } finally {
-            if ((domainServer != null) && (con != null)) {
-                domainServer.getConnectionPool().releaseDbConnection(con);
-            }
         }
     }
 

@@ -41,12 +41,12 @@ public class ActionHelper {
     //~ Methods ----------------------------------------------------------------
 
     /**
-     * DOCUMENT ME!
+     * Quotes the given identifier.
      *
-     * @param   con         DOCUMENT ME!
-     * @param   identifier  DOCUMENT ME!
+     * @param   con         a db connection
+     * @param   identifier  an identifier
      *
-     * @return  DOCUMENT ME!
+     * @return  the quoted identifier
      *
      * @throws  Exception  DOCUMENT ME!
      */
@@ -76,34 +76,34 @@ public class ActionHelper {
     }
 
     /**
-     * DOCUMENT ME!
+     * Checks, if the given schema name can be used for external use.
      *
-     * @param   schemaName  DOCUMENT ME!
+     * @param   schemaName  the name to check
      *
-     * @return  DOCUMENT ME!
+     * @return  true, iff the given schema name can be used for external use
      */
     public static boolean isInvalidSchemaName(final String schemaName) {
         return arrayContainsString(INVALID_SCHEMAS, schemaName) || schemaName.toLowerCase().startsWith("pg_");
     }
 
     /**
-     * DOCUMENT ME!
+     * Checks, if the given user name can be used for external use.
      *
-     * @param   user  DOCUMENT ME!
+     * @param   user  the name to check
      *
-     * @return  DOCUMENT ME!
+     * @return  true, iff the given user name can be used for external use
      */
     public static boolean isInvalidUserName(final String user) {
         return arrayContainsString(INVALID_DB_USER, user) || user.toLowerCase().startsWith("pg_");
     }
 
     /**
-     * DOCUMENT ME!
+     * Checks, if the given array contains the given value.
      *
      * @param   array   DOCUMENT ME!
      * @param   string  DOCUMENT ME!
      *
-     * @return  DOCUMENT ME!
+     * @return  true, iff the given array contains the given value
      */
     private static boolean arrayContainsString(final String[] array, final String string) {
         for (final String entry : array) {
