@@ -20,7 +20,7 @@ import Sirius.server.newuser.User;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class HnCidsLayer extends WatergisDefaultCidsLayer {
+public class CwBodyGeomCidsLayer extends WatergisDefaultCidsLayer {
 
     //~ Constructors -----------------------------------------------------------
 
@@ -30,7 +30,7 @@ public class HnCidsLayer extends WatergisDefaultCidsLayer {
      * @param  mc    DOCUMENT ME!
      * @param  user  DOCUMENT ME!
      */
-    public HnCidsLayer(final MetaClass mc, final User user) {
+    public CwBodyGeomCidsLayer(final MetaClass mc, final User user) {
         super(mc, user);
     }
 }

@@ -21,7 +21,7 @@ import Sirius.server.newuser.User;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class KGmdCidsLayer extends WatergisDefaultCidsLayer {
+public class KKateSuch1CidsLayer extends WatergisDefaultCidsLayer {
 
     //~ Constructors -----------------------------------------------------------
 
@@ -31,7 +31,7 @@ public class KGmdCidsLayer extends WatergisDefaultCidsLayer {
      * @param  mc    DOCUMENT ME!
      * @param  user  DOCUMENT ME!
      */
-    public KGmdCidsLayer(final MetaClass mc, final User user) {
+    public KKateSuch1CidsLayer(final MetaClass mc, final User user) {
         super(mc, user);
     }
 }
