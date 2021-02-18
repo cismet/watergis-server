@@ -229,8 +229,6 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                 // refresh stat layer
                 updater.addUpdate("select dlm25w.add_fg_ba_stat(" + id.toString() + ")");
                 updater.addUpdate("select dlm25w.add_fg_la_stat(" + id.toString() + ")");
-                updater.addUpdate("select dlm25w.add_fg_ba_stat_10(" + id.toString() + ")");
-                updater.addUpdate("select dlm25w.add_fg_la_stat_10(" + id.toString() + ")");
                 // refresh fotoPrPf
                 updater.addUpdate("select dlm25w.import_fg_ba_foto_pr_pfbyBakId(" + id.toString() + ")");
                 // refresh presentation layer
@@ -259,16 +257,16 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                 updater.addUpdate("select dlm25w.import_fg_ba_geroByBak(" + id.toString() + ")");
                 updater.execute();
                 updater.addUpdate("select dlm25w.import_fg_ba_gerogByBak(" + id.toString() + ")");
-                updater.addUpdate("select dlm25w.import_abstand_3ByBak(" + id.toString() + ")");
-                updater.addUpdate("select dlm25w.import_abstand_5ByBak(" + id.toString() + ")");
-                updater.addUpdate("select dlm25w.import_abstand_10ByBak(" + id.toString() + ")");
-                updater.addUpdate("select dlm25w.import_abstand_20ByBak(" + id.toString() + ")");
-                updater.addUpdate("select dlm25w.import_abstand_30ByBak(" + id.toString() + ")");
+//                updater.addUpdate("select dlm25w.import_abstand_3ByBak(" + id.toString() + ")");
+//                updater.addUpdate("select dlm25w.import_abstand_5ByBak(" + id.toString() + ")");
+//                updater.addUpdate("select dlm25w.import_abstand_10ByBak(" + id.toString() + ")");
+//                updater.addUpdate("select dlm25w.import_abstand_20ByBak(" + id.toString() + ")");
+//                updater.addUpdate("select dlm25w.import_abstand_30ByBak(" + id.toString() + ")");
                 updater.execute();
                 updater.addUpdate("select dlm25w.import_fg_ba_gerogaByBak(" + id.toString() + ")");
-                updater.addUpdate("select dlm25w.import_feldbloeckeByBak(" + id.toString() + ")");
-                updater.addUpdate("select dlm25w.import_randstreifenByBak(" + id.toString() + ")");
-                updater.addUpdate("select dlm25w.import_sperrflaecheByBak(" + id.toString() + ")");
+//                updater.addUpdate("select dlm25w.import_feldbloeckeByBak(" + id.toString() + ")");
+//                updater.addUpdate("select dlm25w.import_randstreifenByBak(" + id.toString() + ")");
+//                updater.addUpdate("select dlm25w.import_sperrflaecheByBak(" + id.toString() + ")");
                 updater.execute();
 
                 if (beforeInsert != null) {
@@ -325,6 +323,14 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                                 s.execute(
                                     "select dlm25w.import_fg_ba_geroga_rsByBak("
                                             + cidsBean.getMetaObject().getID()
+                                            + ")");
+                                s.execute(
+                                    "select dlm25w.add_fg_ba_stat_10("
+                                            + String.valueOf(cidsBean.getMetaObject().getID())
+                                            + ")");
+                                s.execute(
+                                    "select dlm25w.add_fg_la_stat_10("
+                                            + String.valueOf(cidsBean.getMetaObject().getID())
                                             + ")");
                             } catch (Exception e) {
                                 log.error(
