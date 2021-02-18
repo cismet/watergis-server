@@ -125,14 +125,14 @@ public class FgBaProfTrigger extends AbstractDBAwareCidsTrigger {
                 s.execute("select dlm25w.import_fg_ba_gerogByBak(" + id.toString() + ")");
                 s.execute("select dlm25w.import_fg_ba_gerogaByBak(" + id.toString() + ")");
                 s.execute("select dlm25w.import_fg_ba_gerog_rsByBak(" + id.toString() + ")");
-                s.execute("select dlm25w.import_abstand_3ByBak(" + id.toString() + ")");
-                s.execute("select dlm25w.import_abstand_5ByBak(" + id.toString() + ")");
-                s.execute("select dlm25w.import_abstand_10ByBak(" + id.toString() + ")");
-                s.execute("select dlm25w.import_abstand_20ByBak(" + id.toString() + ")");
-                s.execute("select dlm25w.import_abstand_30ByBak(" + id.toString() + ")");
-                s.execute("select dlm25w.import_feldbloeckeByBak(" + id.toString() + ")");
-                s.execute("select dlm25w.import_randstreifenByBak(" + id.toString() + ")");
-                s.execute("select dlm25w.import_sperrflaecheByBak(" + id.toString() + ")");
+//                s.execute("select dlm25w.import_abstand_3ByBak(" + id.toString() + ")");
+//                s.execute("select dlm25w.import_abstand_5ByBak(" + id.toString() + ")");
+//                s.execute("select dlm25w.import_abstand_10ByBak(" + id.toString() + ")");
+//                s.execute("select dlm25w.import_abstand_20ByBak(" + id.toString() + ")");
+//                s.execute("select dlm25w.import_abstand_30ByBak(" + id.toString() + ")");
+//                s.execute("select dlm25w.import_feldbloeckeByBak(" + id.toString() + ")");
+//                s.execute("select dlm25w.import_randstreifenByBak(" + id.toString() + ")");
+//                s.execute("select dlm25w.import_sperrflaecheByBak(" + id.toString() + ")");
 //                s.execute("select dlm25w.import_fg_ba_geroga_rsByBak(" + id.toString() + ")");
                 log.error("time to update stations " + (System.currentTimeMillis() - start));
             } catch (Exception e) {
