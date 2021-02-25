@@ -41,6 +41,7 @@ public class TemplateRefresher {
 
     private ThreadPoolExecutor drainBasinExecuter = null;
     private ThreadPoolExecutor rwseggeomExecuter = null;
+    private ThreadPoolExecutor ezgKrlExecuter = null;
 
     //~ Constructors -----------------------------------------------------------
 
@@ -55,6 +56,12 @@ public class TemplateRefresher {
                 TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<Runnable>());
         rwseggeomExecuter = new ThreadPoolExecutor(
+                1,
+                1,
+                0L,
+                TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<Runnable>());
+        ezgKrlExecuter = new ThreadPoolExecutor(
                 1,
                 1,
                 0L,
@@ -89,7 +96,7 @@ public class TemplateRefresher {
                             try {
                                 con = dbPool.getConnection(true);
                                 final Statement statement = con.createStatement();
-                                statement.executeUpdate("select refreshDrainBasin()");
+                                statement.executeUpdate("select dlm25w.refreshDrainBasin()");
                                 statement.close();
                             } catch (SQLException ex) {
                                 LOG.error("Cannot refresh drainBasin", ex);
@@ -120,10 +127,41 @@ public class TemplateRefresher {
                             try {
                                 con = dbPool.getConnection(true);
                                 final Statement statement = con.createStatement();
-                                statement.executeUpdate("select refreshRwSegGeom()");
+                                statement.executeUpdate("select dlm25w.refreshRwSegGeom()");
                                 statement.close();
                             } catch (SQLException ex) {
-                                LOG.error("Cannot refresh drainBasin", ex);
+                                LOG.error("Cannot refresh RwSegGeom", ex);
+                            }
+                        } finally {
+                            if ((dbPool != null) && (con != null)) {
+                                dbPool.releaseDbConnection(con);
+                            }
+                        }
+                    }
+                });
+        }
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param  dbPool  DOCUMENT ME!
+     */
+    public void refreshEzgKrl(final DBConnectionPool dbPool) {
+        if (ezgKrlExecuter.getQueue().size() < 2) {
+            ezgKrlExecuter.submit(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        Connection con = null;
+                        try {
+                            try {
+                                con = dbPool.getConnection(true);
+                                final Statement statement = con.createStatement();
+                                statement.executeUpdate("select dlm25w.refreshSEzgKRl()");
+                                statement.close();
+                            } catch (SQLException ex) {
+                                LOG.error("Cannot refresh ezgKrl", ex);
                             }
                         } finally {
                             if ((dbPool != null) && (con != null)) {
