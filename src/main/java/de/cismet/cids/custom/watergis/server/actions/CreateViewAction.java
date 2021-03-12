@@ -125,7 +125,12 @@ public class CreateViewAction implements ServerAction, MetaServiceStore {
             final CidsLayerInfo layerInfo = CidsLayerUtil.getCidsLayerInfo(cl, user);
 
             final Statement st = con.createStatement();
-            st.executeUpdate(String.format(CREATE_VIEW, schemaName + "." + cl.getName(), layerInfo.getSelectString()));
+            st.executeUpdate(String.format(
+                    CREATE_VIEW,
+                    schemaName
+                            + "."
+                            + cl.getName(),
+                    layerInfo.getSelectString().replace("ST_AsEWKb", "")));
             st.executeUpdate(String.format(ADD_PERMISSION, schemaName + "." + cl.getName(), dbUser));
 
             return true;
