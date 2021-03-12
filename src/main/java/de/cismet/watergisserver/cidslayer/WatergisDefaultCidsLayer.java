@@ -430,11 +430,11 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
                 columnNamesList.add("ba_cd");
                 sqlColumnNamesList.add("dlm25w.fg_bak.ba_cd");
                 columnPropertyNamesList.add(attr.getName() + ".von.route.ba_cd");
-                sb.add(" von.wert");
+                sb.add(" von.wert as bak_st_von");
                 columnNamesList.add("bak_st_von");
                 sqlColumnNamesList.add("von.wert");
                 columnPropertyNamesList.add(attr.getName() + ".von.wert");
-                sb.add(" bis.wert");
+                sb.add(" bis.wert as bak_st_bis");
                 columnNamesList.add("bak_st_bis");
                 sqlColumnNamesList.add("bis.wert");
                 columnPropertyNamesList.add(attr.getName() + ".bis.wert");
@@ -474,11 +474,11 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
                 columnNamesList.add("ba_cd");
                 sqlColumnNamesList.add("dlm25w.fg_ba.ba_cd");
                 columnPropertyNamesList.add(attr.getName() + ".von.route.ba_cd");
-                sb.add(" von.wert");
+                sb.add(" von.wert as ba_st_von");
                 columnNamesList.add("ba_st_von");
                 sqlColumnNamesList.add("von.wert");
                 columnPropertyNamesList.add(attr.getName() + ".von.wert");
-                sb.add(" bis.wert");
+                sb.add(" bis.wert as ba_st_bis");
                 columnNamesList.add("ba_st_bis");
                 sqlColumnNamesList.add("bis.wert");
                 columnPropertyNamesList.add(attr.getName() + ".bis.wert");
@@ -516,11 +516,11 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
                 columnNamesList.add("su_cd");
                 sqlColumnNamesList.add("dlm25w.sg_su.su_cd");
                 columnPropertyNamesList.add(attr.getName() + "route.su_cd");
-                sb.add(" von.wert");
+                sb.add(" von.wert as su_st_von");
                 columnNamesList.add("su_st_von");
                 sqlColumnNamesList.add("von.wert");
                 columnPropertyNamesList.add(attr.getName() + ".von.wert");
-                sb.add(" bis.wert");
+                sb.add(" bis.wert as su_st_bis");
                 columnNamesList.add("su_st_bis");
                 sqlColumnNamesList.add("bis.wert");
                 columnPropertyNamesList.add(attr.getName() + ".bis.wert");
@@ -580,11 +580,11 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
                 columnNamesList.add("la_cd");
                 sqlColumnNamesList.add("dlm25w.fg_la.la_cd");
                 columnPropertyNamesList.add(attr.getName() + ".von.route.la_cd");
-                sb.add(" von.wert");
+                sb.add(" von.wert as la_st_von");
                 columnNamesList.add("la_st_von");
                 sqlColumnNamesList.add("von.wert");
                 columnPropertyNamesList.add(attr.getName() + ".von.wert");
-                sb.add(" bis.wert");
+                sb.add(" bis.wert as la_st_bis");
                 columnNamesList.add("la_st_bis");
                 sqlColumnNamesList.add("bis.wert");
                 columnPropertyNamesList.add(attr.getName() + ".bis.wert");
@@ -625,11 +625,11 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
 //                columnPropertyNamesList.add(attr.getName() + ".von.route.la_cd");
                 sqlColumnNamesList.add("dlm25w.k_gwk_lawa.la_cd");
                 columnPropertyNamesList.add(attr.getName() + ".von.route.la_cd.la_cd");
-                sb.add(" von.wert");
+                sb.add(" von.wert as lak_st_von");
                 columnNamesList.add("lak_st_von");
                 sqlColumnNamesList.add("von.wert");
                 columnPropertyNamesList.add(attr.getName() + ".von.wert");
-                sb.add(" bis.wert");
+                sb.add(" bis.wert as lak_st_bis");
                 columnNamesList.add("lak_st_bis");
                 sqlColumnNamesList.add("bis.wert");
                 columnPropertyNamesList.add(attr.getName() + ".bis.wert");
@@ -672,11 +672,11 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
                 columnNamesList.add("ba_cd");
                 sqlColumnNamesList.add("duv.fg_ba_duv.ba_cd");
                 columnPropertyNamesList.add(attr.getName() + ".von.route.ba_cd");
-                sb.add(" von.wert");
+                sb.add(" von.wert as ba_st_von");
                 columnNamesList.add("ba_st_von");
                 sqlColumnNamesList.add("von.wert");
                 columnPropertyNamesList.add(attr.getName() + ".von.wert");
-                sb.add(" bis.wert");
+                sb.add(" bis.wert as ba_st_bis");
                 columnNamesList.add("ba_st_bis");
                 sqlColumnNamesList.add("bis.wert");
                 columnPropertyNamesList.add(attr.getName() + ".bis.wert");
@@ -716,11 +716,11 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
                 columnNamesList.add("see_id");
                 sqlColumnNamesList.add("duv.sg_umring.see_id");
                 columnPropertyNamesList.add(attr.getName() + ".von.route.see_id");
-                sb.add(" von.wert");
+                sb.add(" von.wert as see_st_von");
                 columnNamesList.add("see_st_von");
                 sqlColumnNamesList.add("von.wert");
                 columnPropertyNamesList.add(attr.getName() + ".von.wert");
-                sb.add(" bis.wert");
+                sb.add(" bis.wert as see_st_bis");
                 columnNamesList.add("see_st_bis");
                 sqlColumnNamesList.add("bis.wert");
                 columnPropertyNamesList.add(attr.getName() + ".bis.wert");
@@ -760,11 +760,11 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
                 columnNamesList.add("ba_cd");
                 sqlColumnNamesList.add("duv.fg_ba_duv_ges.ba_cd");
                 columnPropertyNamesList.add(attr.getName() + ".von.route.ba_cd");
-                sb.add(" von.wert");
+                sb.add(" von.wert as ba_st_von");
                 columnNamesList.add("ba_st_von");
                 sqlColumnNamesList.add("von.wert");
                 columnPropertyNamesList.add(attr.getName() + ".von.wert");
-                sb.add(" bis.wert");
+                sb.add(" bis.wert as ba_st_bis");
                 columnNamesList.add("ba_st_bis");
                 sqlColumnNamesList.add("bis.wert");
                 columnPropertyNamesList.add(attr.getName() + ".bis.wert");
@@ -854,7 +854,7 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
 
                 if (fieldRestriction != null) {
                     sb.add("case when " + fieldRestriction + " then " + mc.getTableName() + "." + attr.getFieldName()
-                                + " else null end");
+                                + " else null end as" + attr.getName());
                 } else {
                     sb.add(mc.getTableName() + "." + attr.getFieldName());
                 }
@@ -985,9 +985,9 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
                     "id");
             if (fieldRestriction != null) {
                 sb.add("case when " + fieldRestriction + " then " + alias + "." + nameAttr.getMai().getFieldName()
-                            + " else null end");
+                            + " else null end as " + attr.getName());
             } else {
-                sb.add(alias + "." + nameAttr.getMai().getFieldName());
+                sb.add(alias + "." + nameAttr.getMai().getFieldName() + " as " + attr.getName());
             }
             columnNamesList.add(attr.getName());
             sqlColumnNamesList.add(alias + "." + nameAttr.getMai().getFieldName());
@@ -997,9 +997,9 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
         } else {
             if (fieldRestriction != null) {
                 sb.add("case when " + fieldRestriction + " then " + mc.getTableName() + "." + attr.getFieldName()
-                            + " else null end");
+                            + " else null end as " + attr.getName());
             } else {
-                sb.add(mc.getTableName() + "." + attr.getFieldName());
+                sb.add(mc.getTableName() + "." + attr.getFieldName() + " as " + attr.getName());
             }
             columnNamesList.add(attr.getName());
             sqlColumnNamesList.add(mc.getTableName() + "." + attr.getFieldName());
