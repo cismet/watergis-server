@@ -38,22 +38,26 @@ public class CheckForCreatedObjectTable extends AbstractCidsServerSearch {
     /** LOGGER. */
     private static final transient Logger LOG = Logger.getLogger(CheckForCreatedObjectTable.class);
 
-    private static final String QUERY = "select class_id, object_id from created_object where username = ?";
+    private static final String QUERY =
+        "select co.class_id, co.object_id from created_object co, lock_group lg join lock_lock_group llg on (lg.objects = llg.lock_group_reference) join lock l on (llg.lock = l.id) where l.object_id = co.object_id and l.class_id = co.class_id and username = ? and additional_info = ?";
     public static final String DOMAIN_NAME = "DLM25W";
 
     //~ Instance fields --------------------------------------------------------
 
     private final String user;
+    private final String cname;
 
     //~ Constructors -----------------------------------------------------------
 
     /**
      * Creates a new WkkSearch object.
      *
-     * @param  user  owner DOCUMENT ME!
+     * @param  user   owner DOCUMENT ME!
+     * @param  cname  DOCUMENT ME!
      */
-    public CheckForCreatedObjectTable(final String user) {
+    public CheckForCreatedObjectTable(final String user, final String cname) {
         this.user = user;
+        this.cname = cname;
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -66,8 +70,8 @@ public class CheckForCreatedObjectTable extends AbstractCidsServerSearch {
             try {
                 final PreparableStatement ps = new PreparableStatement(
                         QUERY,
-                        new int[] { Types.VARCHAR });
-                ps.setObjects(user);
+                        new int[] { Types.VARCHAR, Types.VARCHAR });
+                ps.setObjects(user, cname);
                 return ms.performCustomSearch(ps);
             } catch (RemoteException ex) {
                 LOG.error(ex.getMessage(), ex);
