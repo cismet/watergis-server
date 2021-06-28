@@ -45,20 +45,20 @@ public class AllPunktObjects extends AbstractCidsServerSearch {
     private static final transient Logger LOG = Logger.getLogger(AllPunktObjects.class);
 
     public static final String DOMAIN_NAME = "DLM25W";
-    private static final String QUERY = "select von.route, ba.ba_cd, von.wert\n"
+    private static final String QUERY = "select von.route, ba.ba_cd, von.wert, m.id\n"
                 + "from dlm25w.%1$s m \n"
                 + "join dlm25w.fg_ba_punkt von on (m.ba_st = von.id)\n"
                 + "join dlm25w.fg_ba ba on (von.route = ba.id)\n"
                 + "where (%2$s is null or von.route = any(%2$s))\n"
                 + "order by ba.ba_cd, von.wert";
-    private static final String QUERY_WITH_RESTRICTION = "select von.route, ba.ba_cd, von.wert\n"
+    private static final String QUERY_WITH_RESTRICTION = "select von.route, ba.ba_cd, von.wert, m.id\n"
                 + "from dlm25w.%1$s m \n"
                 + "join dlm25w.fg_ba_punkt von on (m.ba_st = von.id)\n"
                 + "join dlm25w.fg_ba ba on (von.route = ba.id)\n"
                 + " left join dlm25w.k_ww_gr dlm25wPk_ww_gr1 on (ba.ww_gr = dlm25wPk_ww_gr1.id)\n"
                 + "where (%2$s is null or von.route = any(%2$s)) and (%3$s)\n"
                 + "order by ba.ba_cd, von.wert";
-    private static final String QUERY_WITH_RESTRICTION_FOTO = "select von.route, ba.ba_cd, von.wert\n"
+    private static final String QUERY_WITH_RESTRICTION_FOTO = "select von.route, ba.ba_cd, von.wert, m.id\n"
                 + "from dlm25w.%1$s m \n"
                 + "join dlm25w.fg_ba_punkt von on (m.ba_st = von.id)\n"
                 + "join dlm25w.fg_ba ba on (von.route = ba.id)\n"
