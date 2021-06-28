@@ -123,6 +123,41 @@ public class CreateViewAction implements ServerAction, MetaServiceStore {
 
             final MetaClass cl = metaService.getClass(user, clazzId);
             final CidsLayerInfo layerInfo = CidsLayerUtil.getCidsLayerInfo(cl, user);
+            String whereExtension = "";
+
+            if (cl.getTableName().equalsIgnoreCase("dlm25w.sg_detail")) {
+                if (user.getUserGroup().getName().toLowerCase().startsWith("wbv")) {
+                    if (layerInfo.getSelectString().toLowerCase().contains("where")) {
+                        whereExtension =
+                            " AND (dlm25wPk_ww_gr1.ww_gr >= 4000 OR dlm25wPk_ww_gr1.ww_gr < 3000 OR dlm25wPk_ww_gr1.owner = '"
+                                    + user.getUserGroup().getName()
+                                    + "')";
+                    } else {
+                        whereExtension =
+                            " WHERE (dlm25wPk_ww_gr1.ww_gr >= 4000 OR dlm25wPk_ww_gr1.ww_gr < 3000 OR dlm25wPk_ww_gr1.owner = '"
+                                    + user.getUserGroup().getName()
+                                    + "')";
+                    }
+                }
+            } else {
+                if (layerInfo.getSelectString().contains("dlm25wPk_ww_gr1") && (user != null)
+                            && (user.getUserGroup() != null)
+                            && !user.getUserGroup().getName().toLowerCase().startsWith("admin")) {
+                    if (layerInfo.getSelectString().toLowerCase().contains("where")) {
+                        whereExtension = " AND (NOT EXISTS(select 1 FROM dlm25w.k_ww_gr WHERE owner = '"
+                                    + user.getUserGroup().getName()
+                                    + "') OR dlm25wPk_ww_gr1.owner = '"
+                                    + user.getUserGroup().getName()
+                                    + "')";
+                    } else {
+                        whereExtension = " WHERE (NOT EXISTS(select 1 FROM dlm25w.k_ww_gr WHERE owner = '"
+                                    + user.getUserGroup().getName()
+                                    + "') OR dlm25wPk_ww_gr1.owner = '"
+                                    + user.getUserGroup().getName()
+                                    + "')";
+                    }
+                }
+            }
 
             final Statement st = con.createStatement();
             st.executeUpdate(String.format(
@@ -130,7 +165,8 @@ public class CreateViewAction implements ServerAction, MetaServiceStore {
                     schemaName
                             + "."
                             + cl.getName(),
-                    layerInfo.getSelectString().replace("ST_AsEWKb", "")));
+                    layerInfo.getSelectString().replace("ST_AsEWKb", "")
+                            + whereExtension));
             st.executeUpdate(String.format(ADD_PERMISSION, schemaName + "." + cl.getName(), dbUser));
 
             return true;

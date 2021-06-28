@@ -103,9 +103,9 @@ public class VerknReport extends AbstractCidsServerSearch {
                 + "--	(ST_line_locate_point(geo_field1, intersectedGeom) = 1 and ST_line_locate_point(geo_field2, intersectedGeom) * st_length(geo_field2) >= 0.5)\n"
                 + "--       or \n"
                 + "	--Senke und einmündend\n"
-                + "--	(ST_line_locate_point(geo_field1, intersectedGeom) = 0 and ST_line_locate_point(geo_field2, intersectedGeom) * st_length(geo_field2) < 0.5)\n"
+                + "	(ST_line_locate_point(geo_field1, intersectedGeom)  * st_length(geo_field1) <= 0.1 and ST_line_locate_point(geo_field2, intersectedGeom) * st_length(geo_field2) < 0.5)\n"
                 + "	--kreuzendes Gewaesser\n"
-                + "--	or \n"
+                + "	or \n"
                 + "     (ST_line_locate_point(geo_field2, intersectedGeom) * st_length(geo_field2) > 0.5 \n"
                 + "	and ST_line_locate_point(geo_field2, intersectedGeom) * st_length(geo_field2) < st_length(geo_field2) - 0.5\n"
                 + "     and ST_line_locate_point(geo_field1, intersectedGeom) * st_length(geo_field1) > 0.5 \n"
@@ -118,7 +118,7 @@ public class VerknReport extends AbstractCidsServerSearch {
                 + "       from \n"
                 + "       dlm25w.fg_ba b\n"
                 + "       join dlm25w.fg_bak bak on (b.bak_id = bak.id)\n"
-                + "       join geom bg on (bg.id = bak.geom),\n"
+                + "       join (select id, dlm25w.increase_line_length(geo_field, 0.1) as geo_field from geom where id = (select geom from dlm25w.fg_bak where ba_cd = '%s')) bg on (bg.id = bak.geom),\n"
                 + "       dlm25w.fg_ba b2\n"
                 + "       join dlm25w.fg_bak bak2 on (b2.bak_id = bak2.id)\n"
                 + "       join (select id, dlm25w.increase_line_length(geo_field, 0.1) as geo_field from geom where id in (select geom from dlm25w.fg_bak)) bg2 on (bg2.id = bak2.geom)\n"
@@ -152,7 +152,7 @@ public class VerknReport extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final String query = String.format(QUERY, baCd, baCd);
+                final String query = String.format(QUERY, baCd, baCd, baCd);
                 final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
                 return lists;
             } catch (RemoteException ex) {
