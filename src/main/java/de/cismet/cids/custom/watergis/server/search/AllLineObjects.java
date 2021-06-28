@@ -45,7 +45,8 @@ public class AllLineObjects extends AbstractCidsServerSearch {
     private static final transient Logger LOG = Logger.getLogger(AllLineObjects.class);
 
     public static final String DOMAIN_NAME = "DLM25W";
-    private static final String QUERY = "select ba.id, st_length(geo_field), ba.ba_cd, von.wert, bis.wert, von.route\n"
+    private static final String QUERY =
+        "select ba.id, st_length(geo_field), ba.ba_cd, von.wert, bis.wert, von.route, %3$s\n"
                 + "from dlm25w.%1$s m \n"
                 + "join dlm25w.fg_ba_linie l on (m.ba_st = l.id)\n"
                 + "join dlm25w.fg_ba_punkt von on (l.von = von.id)\n"
@@ -55,7 +56,7 @@ public class AllLineObjects extends AbstractCidsServerSearch {
                 + "where (%2$s is null or von.route = any(%2$s))\n"
                 + "order by ba_cd, least(von.wert, bis.wert)";
     private static final String QUERY_WITH_RESTRICTION =
-        "select ba.id, st_length(geo_field), ba.ba_cd, von.wert, bis.wert, von.route\n"
+        "select ba.id, st_length(geo_field), ba.ba_cd, von.wert, bis.wert, von.route, %4$s\n"
                 + "from dlm25w.%1$s m \n"
                 + "join dlm25w.fg_ba_linie l on (m.ba_st = l.id)\n"
                 + "join dlm25w.fg_ba_punkt von on (l.von = von.id)\n"
@@ -113,19 +114,30 @@ public class AllLineObjects extends AbstractCidsServerSearch {
                                 + table.toString(),
                         ConnectionContext.createDummy());
                 final CidsLayerInfo info = CidsLayerUtil.getCidsLayerInfo(metaClass, getUser());
+                String idField = "m.id";
+
+                if (table.toString().equals("fg_ba_sb")) {
+                    idField = "sb";
+                } else if (table.toString().equals("fg_ba_gmd")) {
+                    idField = "nr_li";
+                } else if (table.toString().equals("fg_ba_gb")) {
+                    idField = "nr_li";
+                }
 
                 if ((info != null) && (info.getRestriction() != null)) {
                     final ArrayList<ArrayList> lists = ms.performCustomSearch(String.format(
                                 QUERY_WITH_RESTRICTION,
                                 table.toString(),
                                 SQLFormatter.createSqlArrayString(gew),
-                                info.getRestriction()));
+                                info.getRestriction(),
+                                idField));
                     return lists;
                 } else {
                     final ArrayList<ArrayList> lists = ms.performCustomSearch(String.format(
                                 QUERY,
                                 table.toString(),
-                                SQLFormatter.createSqlArrayString(gew)));
+                                SQLFormatter.createSqlArrayString(gew),
+                                idField));
                     return lists;
                 }
             } catch (RemoteException ex) {
