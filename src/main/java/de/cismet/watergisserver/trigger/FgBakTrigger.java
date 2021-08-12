@@ -332,6 +332,10 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                                     "select dlm25w.add_fg_la_stat_10("
                                             + String.valueOf(cidsBean.getMetaObject().getID())
                                             + ")");
+                                s.execute(
+                                    "select duv.recreate_fg_ba_duvByFg("
+                                            + String.valueOf(cidsBean.getMetaObject().getID())
+                                            + ")");
                             } catch (Exception e) {
                                 log.error(
                                     "Error while executing async fgBak trigger."
