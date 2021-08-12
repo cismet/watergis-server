@@ -18,6 +18,7 @@ import de.cismet.cids.dynamics.CidsBean;
 import de.cismet.cids.trigger.AbstractDBAwareCidsTrigger;
 import de.cismet.cids.trigger.CidsTrigger;
 import de.cismet.cids.trigger.CidsTriggerKey;
+import java.sql.Statement;
 
 /**
  * DOCUMENT ME!
@@ -119,9 +120,31 @@ public class DuevTrigger extends AbstractDBAwareCidsTrigger {
                 final Object id = cidsBean.getProperty("id");
 
                 if (id != null) {
-                    final DbUpdater updater = new DbUpdater(getDbServer().getConnectionPool());
-                    updater.addUpdate("select duv.recreate_duv('" + id + "')");
-                    updater.execute();
+                    final Thread t = new Thread(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    Connection con = null;
+
+                                    try {
+                                        con = getDbServer().getConnectionPool().getConnection(true);
+                                        final Statement s = con.createStatement();
+                                        s.execute("select duv.recreate_duv('" + id + "')");
+                                    } catch (Exception e) {
+                                        log.error(
+                                            "Error while executing async duew trigger."
+                                                    + String.valueOf(cidsBean.getMetaObject().getID()),
+                                            e);
+                                    } finally {
+                                        if (con != null) {
+                                            getDbServer().getConnectionPool().releaseDbConnection(con);
+                                        }
+                                    }
+                                }
+                            });
+
+                    t.start();
+                    
                     log.error("time to update duv " + (System.currentTimeMillis() - start));
                 }
             } catch (Exception e) {
