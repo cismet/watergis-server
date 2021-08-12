@@ -30,7 +30,7 @@ public class Dlm25wFgBaKrExtensionFactory extends ObjectExtensionFactory {
     @Override
     public void extend(final CidsBean bean) {
         try {
-            final CidsBean wwGrBean = (CidsBean)bean.getProperty("ba_st.von.route.ww_gr");
+            final CidsBean wwGrBean = (CidsBean)bean.getProperty("ba_st.route.ww_gr");
 
             bean.setProperty("ww_gr", wwGrBean);
         } catch (final Exception e) {
