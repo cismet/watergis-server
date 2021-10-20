@@ -20,6 +20,8 @@ import Sirius.server.newuser.User;
 
 import org.apache.log4j.Logger;
 
+import java.io.Serializable;
+
 import java.sql.Connection;
 import java.sql.Statement;
 
@@ -59,7 +61,7 @@ public class CreateViewAction implements ServerAction, MetaServiceStore {
 
         //~ Enum constants -----------------------------------------------------
 
-        CLASS, USER, SCHEMA, DB_USER
+        CLASS, USER, SCHEMA, DB_USER, ADDITIONAL_FIELDS
     }
 
     //~ Instance fields --------------------------------------------------------
@@ -88,6 +90,7 @@ public class CreateViewAction implements ServerAction, MetaServiceStore {
             User user = null;
             String schemaName = null;
             String dbUser = null;
+            AdditionalField[] additionalFields = null;
 
             for (final ServerActionParameter param : params) {
                 if (CreateViewAction.ParameterType.CLASS.toString().equals(
@@ -105,6 +108,10 @@ public class CreateViewAction implements ServerAction, MetaServiceStore {
                 if (CreateViewAction.ParameterType.DB_USER.toString().equals(
                                 param.getKey())) {
                     dbUser = (String)param.getValue();
+                }
+                if (CreateViewAction.ParameterType.ADDITIONAL_FIELDS.toString().equals(
+                                param.getKey())) {
+                    additionalFields = (AdditionalField[])param.getValue();
                 }
             }
 
@@ -160,12 +167,30 @@ public class CreateViewAction implements ServerAction, MetaServiceStore {
             }
 
             final Statement st = con.createStatement();
+            String selectStatement = layerInfo.getSelectString().replace("ST_AsEWKb", "");
+
+            if ((additionalFields != null) && selectStatement.toLowerCase().contains(" from ")) {
+                final String start = selectStatement.substring(0, selectStatement.toLowerCase().indexOf(" from "));
+                final String end = selectStatement.substring(selectStatement.toLowerCase().indexOf(" from "));
+
+                selectStatement = start;
+
+                for (final AdditionalField field : additionalFields) {
+                    selectStatement += ", "
+                                + field.getValue()
+                                + " as "
+                                + field.getName();
+                }
+
+                selectStatement += end;
+            }
+
             st.executeUpdate(String.format(
                     CREATE_VIEW,
                     schemaName
                             + "."
                             + cl.getName(),
-                    layerInfo.getSelectString().replace("ST_AsEWKb", "")
+                    selectStatement
                             + whereExtension));
             st.executeUpdate(String.format(ADD_PERMISSION, schemaName + "." + cl.getName(), dbUser));
 
@@ -183,5 +208,92 @@ public class CreateViewAction implements ServerAction, MetaServiceStore {
     @Override
     public String getTaskName() {
         return TASK_NAME;
+    }
+
+    //~ Inner Classes ----------------------------------------------------------
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @version  $Revision$, $Date$
+     */
+    public static class AdditionalField implements Serializable {
+
+        //~ Instance fields ----------------------------------------------------
+
+        private String name;
+        private Integer pos;
+        private String value;
+
+        //~ Constructors -------------------------------------------------------
+
+        /**
+         * Creates a new AdditionalField object.
+         *
+         * @param  name   DOCUMENT ME!
+         * @param  pos    DOCUMENT ME!
+         * @param  value  DOCUMENT ME!
+         */
+        public AdditionalField(final String name, final Integer pos, final String value) {
+            this.name = name;
+            this.pos = pos;
+            this.value = value;
+        }
+
+        //~ Methods ------------------------------------------------------------
+
+        /**
+         * DOCUMENT ME!
+         *
+         * @return  the name
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * DOCUMENT ME!
+         *
+         * @param  name  the name to set
+         */
+        public void setName(final String name) {
+            this.name = name;
+        }
+
+        /**
+         * DOCUMENT ME!
+         *
+         * @return  the pos
+         */
+        public Integer getPos() {
+            return pos;
+        }
+
+        /**
+         * DOCUMENT ME!
+         *
+         * @param  pos  the pos to set
+         */
+        public void setPos(final Integer pos) {
+            this.pos = pos;
+        }
+
+        /**
+         * DOCUMENT ME!
+         *
+         * @return  the value
+         */
+        public String getValue() {
+            return value;
+        }
+
+        /**
+         * DOCUMENT ME!
+         *
+         * @param  value  the value to set
+         */
+        public void setValue(final String value) {
+            this.value = value;
+        }
     }
 }
