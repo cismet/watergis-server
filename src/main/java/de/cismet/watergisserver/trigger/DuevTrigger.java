@@ -12,13 +12,13 @@ import Sirius.server.newuser.User;
 import org.openide.util.lookup.ServiceProvider;
 
 import java.sql.Connection;
+import java.sql.Statement;
 
 import de.cismet.cids.dynamics.CidsBean;
 
 import de.cismet.cids.trigger.AbstractDBAwareCidsTrigger;
 import de.cismet.cids.trigger.CidsTrigger;
 import de.cismet.cids.trigger.CidsTriggerKey;
-import java.sql.Statement;
 
 /**
  * DOCUMENT ME!
@@ -144,7 +144,7 @@ public class DuevTrigger extends AbstractDBAwareCidsTrigger {
                             });
 
                     t.start();
-                    
+
                     log.error("time to update duv " + (System.currentTimeMillis() - start));
                 }
             } catch (Exception e) {
