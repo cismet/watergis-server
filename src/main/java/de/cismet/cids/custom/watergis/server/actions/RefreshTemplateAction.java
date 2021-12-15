@@ -96,7 +96,7 @@ public class RefreshTemplateAction implements ServerAction, MetaServiceStore {
                     try {
                         con = domainServer.getConnectionPool().getConnection(true);
                         final Statement statement = con.createStatement();
-                        statement.executeUpdate("select dlm25w.refreshDrainBasin()");
+                        statement.execute("select dlm25w.refreshDrainBasin()");
                         statement.close();
                     } catch (SQLException ex) {
                         LOG.error("Cannot refresh drainBasin", ex);
@@ -112,7 +112,7 @@ public class RefreshTemplateAction implements ServerAction, MetaServiceStore {
                     try {
                         con = domainServer.getConnectionPool().getConnection(true);
                         final Statement statement = con.createStatement();
-                        statement.executeUpdate("select dlm25w.refreshRwSegGeom()");
+                        statement.execute("select dlm25w.refreshRwSegGeom()");
                         statement.close();
                     } catch (SQLException ex) {
                         LOG.error("Cannot refresh drainBasin", ex);
@@ -128,7 +128,7 @@ public class RefreshTemplateAction implements ServerAction, MetaServiceStore {
                     try {
                         con = domainServer.getConnectionPool().getConnection(true);
                         final Statement statement = con.createStatement();
-                        statement.executeUpdate("select dlm25w.refreshSEzgKRl()");
+                        statement.execute("select dlm25w.refreshSEzgKRl()");
                         statement.close();
                     } catch (SQLException ex) {
                         LOG.error("Cannot refresh drainBasin", ex);
