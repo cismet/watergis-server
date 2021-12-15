@@ -53,17 +53,24 @@ public class SeeReport extends AbstractCidsServerSearch {
                 + "where b.ba_cd = '%s' and st_intersects(g.geo_field, bg.geo_field)\n"
                 + "order by least(ST_line_locate_point(bg.geo_field, st_startPoint(st_intersection(g.geo_field, bg.geo_field)))  * st_length(bg.geo_field),\n"
                 + "ST_line_locate_point(bg.geo_field, st_endPoint(st_intersection(g.geo_field, bg.geo_field))) * st_length(bg.geo_field))";
+//    private static final String QUERYIds =
+//        "select ST_line_locate_point(bg.geo_field, st_startPoint(unnest(dlm25w.multi_geometry_to_array(st_intersection(g.geo_field, bg.geo_field)))))  * st_length(bg.geo_field) von,\n"
+//                + "ST_line_locate_point(bg.geo_field, st_endPoint(unnest(dlm25w.multi_geometry_to_array(st_intersection(g.geo_field, bg.geo_field))))) * st_length(bg.geo_field) bis,\n"
+//                + "b.ba_cd, b.id, s.id\n"
+//                + "from dlm25w.sg_detail s\n"
+//                + "join (select g.* from dlm25w.sg_detail s join geom g on (s.geom = g.id) limit 5000000) g on (s.geom = g.id),\n"
+//                + "dlm25w.fg_ba b\n"
+//                + "join geom bg on (bg.id = b.geom)\n"
+//                + "where b.id = any(%s) and st_intersects(g.geo_field, bg.geo_field)\n"
+//                + "order by least(ST_line_locate_point(bg.geo_field, st_startPoint(st_intersection(g.geo_field, bg.geo_field)))  * st_length(bg.geo_field),\n"
+//                + "ST_line_locate_point(bg.geo_field, st_endPoint(st_intersection(g.geo_field, bg.geo_field))) * st_length(bg.geo_field))";
     private static final String QUERYIds =
-        "select ST_line_locate_point(bg.geo_field, st_startPoint(unnest(dlm25w.multi_geometry_to_array(st_intersection(g.geo_field, bg.geo_field)))))  * st_length(bg.geo_field) von,\n"
-                + "ST_line_locate_point(bg.geo_field, st_endPoint(unnest(dlm25w.multi_geometry_to_array(st_intersection(g.geo_field, bg.geo_field))))) * st_length(bg.geo_field) bis,\n"
-                + "b.ba_cd, b.id, s.id\n"
-                + "from dlm25w.sg_detail s\n"
-                + "join (select g.* from dlm25w.sg_detail s join geom g on (s.geom = g.id) limit 5000000) g on (s.geom = g.id),\n"
-                + "dlm25w.fg_ba b\n"
-                + "join geom bg on (bg.id = b.geom)\n"
-                + "where b.id = any(%s) and st_intersects(g.geo_field, bg.geo_field)\n"
-                + "order by least(ST_line_locate_point(bg.geo_field, st_startPoint(st_intersection(g.geo_field, bg.geo_field)))  * st_length(bg.geo_field),\n"
-                + "ST_line_locate_point(bg.geo_field, st_endPoint(st_intersection(g.geo_field, bg.geo_field))) * st_length(bg.geo_field))";
+        "select least(von.wert, bis.wert) von, greatest(von.wert, bis.wert) bis, b.ba_cd, b.id, a.id as id\n"
+                + "from dlm25w.fg_ba_anll a join dlm25w.k_anll k on (a.anll = k.id ) join dlm25w.fg_ba_linie l on (a.ba_st = l.id)\n"
+                + "	join dlm25w.fg_ba_punkt von on (von.id = l.von) join dlm25w.fg_ba_punkt bis on (bis.id = l.bis)\n"
+                + "	join dlm25w.fg_ba b on (von.route = b.id) join geom bg on (bg.id = b.geom)\n"
+                + "where b.id = any(%s) and k.name ilike 'See' \n"
+                + "order by least(von.wert, bis.wert), greatest(von.wert, bis.wert)";
 
     //~ Instance fields --------------------------------------------------------
 
