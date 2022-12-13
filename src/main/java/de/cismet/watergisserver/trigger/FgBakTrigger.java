@@ -241,32 +241,14 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                             + "')");
                 updater.execute();
 
-                updater.addUpdate("select dlm25w.import_qp_gaf_pByFgBak(" + id.toString() + ", '" + user.getName()
-                            + "')");
-                updater.execute();
-                updater.addUpdate("select dlm25w.import_qp_gaf_lbyfgbak(" + id.toString() + ", '" + user.getName()
-                            + "')");
-                updater.execute();
-                updater.addUpdate("select dlm25w.import_qp_gaf_l_pr_pfByBak(" + id.toString() + ", '" + user.getName()
-                            + "')");
-
                 updater.addUpdate("select dlm25w.import_fg_ba_pr_ablByBak(" + id.toString() + ")");
                 updater.addUpdate("select dlm25w.import_fg_ba_pr_abpByBak(" + id.toString() + ")");
-//                updater.execute();
 
                 updater.addUpdate("select dlm25w.import_fg_ba_geroByBak(" + id.toString() + ")");
                 updater.execute();
                 updater.addUpdate("select dlm25w.import_fg_ba_gerogByBak(" + id.toString() + ")");
-//                updater.addUpdate("select dlm25w.import_abstand_3ByBak(" + id.toString() + ")");
-//                updater.addUpdate("select dlm25w.import_abstand_5ByBak(" + id.toString() + ")");
-//                updater.addUpdate("select dlm25w.import_abstand_10ByBak(" + id.toString() + ")");
-//                updater.addUpdate("select dlm25w.import_abstand_20ByBak(" + id.toString() + ")");
-//                updater.addUpdate("select dlm25w.import_abstand_30ByBak(" + id.toString() + ")");
                 updater.execute();
                 updater.addUpdate("select dlm25w.import_fg_ba_gerogaByBak(" + id.toString() + ")");
-//                updater.addUpdate("select dlm25w.import_feldbloeckeByBak(" + id.toString() + ")");
-//                updater.addUpdate("select dlm25w.import_randstreifenByBak(" + id.toString() + ")");
-//                updater.addUpdate("select dlm25w.import_sperrflaecheByBak(" + id.toString() + ")");
                 updater.execute();
 
                 if (beforeInsert != null) {
@@ -291,12 +273,10 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                 }
 
                 updater.addUpdate("select dlm25w.import_fg_ba_gerog_rsByBak(" + id.toString() + ")");
-//                updater.addUpdate("select dlm25w.import_fg_ba_geroga_rsByBak(" + id.toString() + ")");
 
                 if (beforeInsert != null) {
                     updater.addUpdate("select dlm25w.import_fg_ba_geroga_rs_tile(st_buffer('" + beforeInsert
                                 + "', 40), '" + user.getName() + "', Array[1,3,5,10,15,20,25,30]::double precision[])");
-//                    updater.execute();
                 }
 
                 updater.execute();
