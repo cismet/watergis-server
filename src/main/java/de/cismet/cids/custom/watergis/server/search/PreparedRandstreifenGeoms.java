@@ -45,20 +45,22 @@ public class PreparedRandstreifenGeoms extends AbstractCidsServerSearch {
 
     public static final String DOMAIN_NAME = "DLM25W";
     private static final String QUERY =
-        "Select st_asBinary(st_buffer(ST_Collect(ST_SnapToGrid(geo_field, 0.01)), 0.01))"
+        "Select st_asBinary(dlm25w.buffer_randstreifen(ST_Collect(ST_SnapToGrid(geo_field, 0.01)), 0.01))"
                 + " from (%1s) a";
     private static final String FG_QUERY =
         "select geo_field from dlm25w.fg_ba_gerog join geom on (geom = geom.id) where typ in ('so', 'b_li', 'b_re', 'bn_li', 'bn_re', 'bt_li', 'bt_re')  and st_intersects(geo_field, '%1s')";
     private static final String FG_QUERY_WITH_ID =
         "select geo_field from dlm25w.fg_ba_gerog join geom on (geom = geom.id) where typ in ('so', 'b_li', 'b_re', 'bn_li', 'bn_re', 'bt_li', 'bt_re')  and st_intersects(geo_field, '%1s') and ba_cd in (%2s)";
     private static final String FG_CLOSED_QUERY =
-        "select st_buffer(geom, %1s) as geo_field from dlm25w.select_fgba_closed(null, null)";
+        "select dlm25w.buffer_randstreifen(geom, %1s) as geo_field from dlm25w.select_fgba_closed(null, null)";
     private static final String FG_CLOSED_QUERY_WITH_ID =
-        "select st_buffer(geom, %1s) as geo_field from dlm25w.select_fgba_closed(%2s, null)";
+        "select dlm25w.buffer_randstreifen(geom, %1s) as geo_field from dlm25w.select_fgba_closed(%2s, null)";
+//    private static final String FG_CLOSED_QUERY_WITH_ID =
+//        "select dlm25w.buffer_randstreifen(geom, %1s) as geo_field from dlm25w.select_fgba_closed((select array_agg(id) from dlm25w.fg_ba where ba_cd = any(ARRAY[%2s])), null)";
     private static final String FG_BR_QUERY =
-        "select st_buffer(geom, %1s) as geo_field from dlm25w.select_fgba_open_without_prof(null, null, '%1s') where art = 'o'";
+        "select dlm25w.buffer_randstreifen(geom, %1s) as geo_field from dlm25w.select_fgba_open_without_prof(null, null, '%1s') where art = 'o'";
     private static final String FG_BR_QUERY_WITH_ID =
-        "select st_buffer(geom, %1s) as geo_field from dlm25w.select_fgba_open_without_prof(%2s, null, '%3s') where art = 'o'";
+        "select dlm25w.buffer_randstreifen(geom, %1s) as geo_field from dlm25w.select_fgba_open_without_prof(%2s, null, '%3s') where art = 'o'";
     private static final String FG_FL_QUERY =
         "select geo_field from dlm25w.fg_ba_fl join geom on (geom = geom.id) where st_intersects(geo_field, '%1s')";
     private static final String SEE_QUERY =
@@ -73,9 +75,9 @@ public class PreparedRandstreifenGeoms extends AbstractCidsServerSearch {
     private static final String FG_QUERY_WITHOUT_GEO_WITH_ID =
         "select geo_field from dlm25w.fg_ba_gerog join geom on (geom = geom.id) where typ in ('so', 'b_li', 'b_re', 'bn_li', 'bn_re', 'bt_li', 'bt_re') and ba_cd in (%1s)";
     private static final String FG_BR_QUERY_WITHOUT_GEO =
-        "select st_buffer(geom, %1s) as geo_field from dlm25w.select_fgba_open_without_prof(null, null) where art = 'o'";
+        "select dlm25w.buffer_randstreifen(geom, %1s) as geo_field from dlm25w.select_fgba_open_without_prof(null, null) where art = 'o'";
     private static final String FG_BR_QUERY_WITHOUT_GEO_WITH_ID =
-        "select st_buffer(geom, %1s) as geo_field from dlm25w.select_fgba_open_without_prof(%2s, null) where art = 'o'";
+        "select dlm25w.buffer_randstreifen(geom, %1s) as geo_field from dlm25w.select_fgba_open_without_prof(%2s, null) where art = 'o'";
     private static final String FG_FL_QUERY_WITHOUT_GEO =
         "select geo_field from dlm25w.fg_ba_fl join geom on (geom = geom.id)";
     private static final String SEE_QUERY_WITHOUT_GEO =
@@ -218,12 +220,12 @@ public class PreparedRandstreifenGeoms extends AbstractCidsServerSearch {
                     if (tables == null) {
                         tables = String.format(((baCd == null) ? FG_CLOSED_QUERY : FG_CLOSED_QUERY_WITH_ID),
                                 geschlBr,
-                                toList(baCd));
+                                (toList(baCd).equals("null") ? "null" : ("ARRAY[" + toList(baCd) + "]")));
                     } else {
                         tables += " union "
                                     + String.format(((baCd == null) ? FG_CLOSED_QUERY : FG_CLOSED_QUERY_WITH_ID),
                                         geschlBr,
-                                        toList(baCd));
+                                        (toList(baCd).equals("null") ? "null" : ("ARRAY[" + toList(baCd) + "]")));
                     }
                 }
 

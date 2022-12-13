@@ -139,21 +139,13 @@ public class FgBakAeTrigger extends AbstractDBAwareCidsTrigger {
                 s.execute("select dlm25w.import_fg_ba_foto_pr_pfbyBakId(" + id.toString() + ")");
                 s.execute("select dlm25w.import_fg_ba_pr_pfByBakId(" + id.toString() + ", '" + user.getName() + "')");
 
-                s.execute("select dlm25w.import_qp_gaf_pByFgBak(" + id.toString() + ", '" + user.getName() + "')");
-                s.execute("select dlm25w.import_qp_gaf_l_pr_pfByBak(" + id.toString() + ", '" + user.getName()
-                            + "')");
                 s.execute("select dlm25w.import_fg_ba_gmdByFgBak(" + id.toString() + ", '" + user.getName() + "')");
                 s.execute("select dlm25w.import_fg_ba_gbByFgBak(" + id.toString() + ", '" + user.getName() + "')");
                 // update derived layer
-// s.execute("select dlm25w.update_derived_layer(" + id.toString() + ", '" + user.getName() + ")");
                 s.execute("select dlm25w.import_fg_ba_geroByBak(" + id.toString() + ")");
                 s.execute("select dlm25w.import_fg_ba_gerogByBak(" + id.toString() + ")");
                 s.execute("select dlm25w.import_fg_ba_gerogaByBak(" + id.toString() + ")");
                 s.execute("select dlm25w.import_fg_ba_gerog_rsByBak(" + id.toString() + ")");
-//                s.execute("select dlm25w.import_fg_ba_geroga_rsByBak(" + id.toString() + ")");
-//                s.execute("select dlm25w.add_fg_ba_gerogByBak(" + id.toString() + ")");
-//                s.execute("select dlm25w.add_fg_ba_gerogaByBak(" + id.toString() + ", '" + user.getName() + "')");
-//                s.execute("select dlm25w.add_fg_ba_geroga_rsByBak(" + id.toString() + ", '" + user.getName() + "')");
                 log.error("time to update stations " + (System.currentTimeMillis() - start));
             } catch (Exception e) {
                 log.error("Error while executing fg_bak_ae trigger.", e);
