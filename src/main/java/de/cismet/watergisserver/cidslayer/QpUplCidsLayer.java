@@ -47,4 +47,19 @@ public class QpUplCidsLayer extends WatergisDefaultCidsLayer {
     public QpUplCidsLayer(final MetaClass mc, final User user) {
         super(mc, false, false, CATALOGUE_NAME_MAP, user);
     }
+
+    //~ Methods ----------------------------------------------------------------
+
+    @Override
+    public String getRestriction() {
+        if ((user != null)
+                    && (user.getUserGroup().getName().equals("anonymous")
+                        || user.getUserGroup().getName().equals("gaeste"))) {
+            final String rest = "(dlm25wPk_freigabe1.freigabe is null or dlm25wPk_freigabe1.freigabe = 'frei')";
+
+            return rest;
+        } else {
+            return null;
+        }
+    }
 }

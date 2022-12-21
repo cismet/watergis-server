@@ -202,4 +202,17 @@ public class QpNplCidsLayer extends WatergisDefaultCidsLayer {
         joins.append(" left ")
                 .append(" join dlm25w.k_freigabe dlm25wPk_freigabe on (dlm25w.qp_upl.freigabe = dlm25wPk_freigabe.id)");
     }
+
+    @Override
+    public String getRestriction() {
+        if ((user != null)
+                    && (user.getUserGroup().getName().equals("anonymous")
+                        || user.getUserGroup().getName().equals("gaeste"))) {
+            final String rest = "(dlm25wPk_freigabe.freigabe is null or dlm25wPk_freigabe.freigabe = 'frei')";
+
+            return rest;
+        } else {
+            return null;
+        }
+    }
 }
