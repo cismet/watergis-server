@@ -49,7 +49,15 @@ public class LawaDirection extends AbstractCidsServerSearch {
                 + "join geom on (bak.geom = geom.id) \n"
                 + "where (gr.owner = %1$s or %1$s is null)"
                 + "group by gwk.la_cd\n"
-                + "having count(bak.id) > 1 and st_geometryType(st_lineMerge(st_union(geo_field))) = 'ST_LineString' and not dlm25w.contains_lines_in_same_direction(st_lineMerge(st_union(geo_field)), ST_Collect(geo_field))\n"
+                + "having count(bak.id) > 1 and st_geometryType(dlm25w.line_merge(array_append("
+                + " st_linesubstring(geo_field, least(von.wert, bis.wert) / st_length(geo_field), "
+                + " case when (greatest(bis.wert, von.wert) / st_length(geo_field)) <= 1.0 then "
+                + " (greatest(bis.wert, von.wert) / st_length(geo_field)) else 1.0 end)), 0.01)) = 'ST_LineString' \n"
+                + "and not dlm25w.contains_lines_in_same_direction(dlm25w.line_merge(array_append("
+                + " st_linesubstring(geo_field, least(von.wert, bis.wert) / st_length(geo_field), "
+                + " case when (greatest(bis.wert, von.wert) / st_length(geo_field)) <= 1.0 then (greatest(bis.wert, von.wert) / st_length(geo_field)) else 1.0 end)), 0.01), "
+                + " ST_Collect(st_linesubstring(geo_field, least(von.wert, bis.wert) / st_length(geo_field), "
+                + " case when (greatest(bis.wert, von.wert) / st_length(geo_field)) <= 1.0 then (greatest(bis.wert, von.wert) / st_length(geo_field)) else 1.0 end))) \n"
                 + "order by la_cd";
 
     //~ Instance fields --------------------------------------------------------
@@ -82,6 +90,7 @@ public class LawaDirection extends AbstractCidsServerSearch {
                                 + owner
                                 + "'";
                 }
+
                 final String query = String.format(DIRECTION_QUERY, owner);
                 final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
                 return lists;
