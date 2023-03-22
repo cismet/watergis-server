@@ -8,7 +8,7 @@
     <parent>
         <groupId>de.cismet.cids</groupId>
         <artifactId>cids-parent</artifactId>
-        <version>7.0</version>
+        <version>8.0</version>
     </parent>
     
     <groupId>de.cismet.watergis</groupId>
@@ -51,7 +51,7 @@
             <dependency>
                 <groupId>de.cismet</groupId>
                 <artifactId>cismet-ext-bom</artifactId>
-                <version>7.2.3</version>
+                <version>8.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -60,14 +60,14 @@
             <dependency>
                 <groupId>de.cismet.cids</groupId>
                 <artifactId>cids-server</artifactId>
-                <version>7.11.3</version>
+                <version>8.0.1</version>
                 <type>jar</type>
                 <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>de.cismet.commons</groupId>
                 <artifactId>cismet-commons</artifactId>
-                <version>7.4.1</version>
+                <version>8.0</version>
                 <type>jar</type>
                 <scope>compile</scope>
             </dependency>
