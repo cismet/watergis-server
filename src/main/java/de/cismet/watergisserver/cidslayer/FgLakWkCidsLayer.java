@@ -25,7 +25,7 @@ import java.util.List;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class FgBakWkCidsLayer extends WatergisDefaultCidsLayer {
+public class FgLakWkCidsLayer extends WatergisDefaultCidsLayer {
 
     //~ Static fields/initializers ---------------------------------------------
 
@@ -43,7 +43,7 @@ public class FgBakWkCidsLayer extends WatergisDefaultCidsLayer {
      * @param  mc    DOCUMENT ME!
      * @param  user  DOCUMENT ME!
      */
-    public FgBakWkCidsLayer(final MetaClass mc, final User user) {
+    public FgLakWkCidsLayer(final MetaClass mc, final User user) {
         super(mc, CATALOGUE_NAME_MAP, user);
     }
 
@@ -97,7 +97,7 @@ public class FgBakWkCidsLayer extends WatergisDefaultCidsLayer {
         columnPropertyNamesList.add(attr.getName());
         primitiveColumnTypesList.add(nameAttr.getMai().getJavaclassname());
 
-        joins.append(" left ").append(" join dlm25w.k_wk_fg on (dlm25w.fg_bak_wk.wk_nr = dlm25w.k_wk_fg.id)");
+        joins.append(" left ").append(" join dlm25w.k_wk_fg on (dlm25w.fg_lak_wk.wk_nr = dlm25w.k_wk_fg.id)");
         joins.append(" left ").append(" join dlm25w.k_bl on (dlm25w.k_wk_fg.wk_fedfue = dlm25w.k_bl.id)");
     }
 }
