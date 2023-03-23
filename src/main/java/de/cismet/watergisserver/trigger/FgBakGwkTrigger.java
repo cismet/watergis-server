@@ -14,6 +14,10 @@ import org.openide.util.lookup.ServiceProvider;
 import java.sql.Connection;
 import java.sql.Statement;
 
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 import de.cismet.cids.dynamics.CidsBean;
 
 import de.cismet.cids.trigger.AbstractDBAwareCidsTrigger;
@@ -31,10 +35,17 @@ public class FgBakGwkTrigger extends AbstractDBAwareCidsTrigger {
 
     //~ Static fields/initializers ---------------------------------------------
 
-    private static final transient org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(
+    private static final transient org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(
             FgBakGwkTrigger.class);
     private static final String FG_BAK_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.fg_bak_gwk";
     private static final String FG_BAK_GWK_TABLE_NAME = "dlm25w.fg_bak_gwk";
+
+    private static final ThreadPoolExecutor SINGLE_THREAD_EXECUTOR = new ThreadPoolExecutor(
+            1,
+            1,
+            0L,
+            TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<Runnable>());
 
     //~ Methods ----------------------------------------------------------------
 
@@ -144,14 +155,41 @@ public class FgBakGwkTrigger extends AbstractDBAwareCidsTrigger {
                     // refresh gmd
                     s.execute("select dlm25w.import_fg_ba_gmdByFgBak(" + id.toString() + ", '" + user.getName() + "')");
                     s.execute("select dlm25w.import_fg_ba_gbByFgBak(" + id.toString() + ", '" + user.getName() + "')");
-                    log.error("time to update stations " + (System.currentTimeMillis() - start));
+                    LOG.error("time to update stations " + (System.currentTimeMillis() - start));
                 }
             } catch (Exception e) {
-                log.error("Error while executing fgBak trigger.", e);
+                LOG.error("Error while executing fgBak trigger.", e);
             } finally {
                 if (con != null) {
                     getDbServer().getConnectionPool().releaseDbConnection(con);
                 }
+            }
+
+            if (SINGLE_THREAD_EXECUTOR.getPoolSize() < 2) {
+                final Runnable r = new Runnable() {
+
+                        @Override
+                        public void run() {
+                            Connection con = null;
+
+                            try {
+                                con = getDbServer().getConnectionPool().getConnection(true);
+                                final Statement s = con.createStatement();
+                                s.execute(
+                                    "select dlm25w.migrate_fg_bak_wk_to_fg_lak_2()");
+                            } catch (Exception e) {
+                                LOG.error(
+                                    "Error while executing async fg_lak_wk trigger.",
+                                    e);
+                            } finally {
+                                if (con != null) {
+                                    getDbServer().getConnectionPool().releaseDbConnection(con);
+                                }
+                            }
+                        }
+                    };
+
+                SINGLE_THREAD_EXECUTOR.execute(r);
             }
         }
     }

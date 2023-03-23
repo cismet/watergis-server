@@ -27,14 +27,14 @@ import de.cismet.cids.trigger.CidsTriggerKey;
  * @version  $Revision$, $Date$
  */
 @ServiceProvider(service = CidsTrigger.class)
-public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
+public class FgBakWkTrigger extends AbstractDBAwareCidsTrigger {
 
     //~ Static fields/initializers ---------------------------------------------
 
     private static final transient org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(
-            VwAlkGmdTrigger.class);
-    private static final String VW_ALK_GMD_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.vw_alk_gmd";
-    private static final String VW_ALK_GMD_TABLE_NAME = "dlm25w.vw_alk_gmd";
+            FgBakWkTrigger.class);
+    private static final String FG_BAK_WK_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.fg_bak_wk";
+    private static final String FG_BAK_WK_TABLE_NAME = "dlm25w.fg_bak_wk";
 
     //~ Methods ----------------------------------------------------------------
 
@@ -64,7 +64,7 @@ public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
 
     @Override
     public CidsTriggerKey getTriggerKey() {
-        return new CidsTriggerKey(CidsTriggerKey.ALL, VW_ALK_GMD_TABLE_NAME);
+        return new CidsTriggerKey(CidsTriggerKey.ALL, FG_BAK_WK_TABLE_NAME);
     }
 
     /**
@@ -86,8 +86,8 @@ public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
      *
      * @return  DOCUMENT ME!
      */
-    private boolean isFgBakObject(final CidsBean cidsBean) {
-        return (cidsBean.getClass().getName().equals(VW_ALK_GMD_CLASS_NAME));
+    private boolean isFgBakWkObject(final CidsBean cidsBean) {
+        return (cidsBean.getClass().getName().equals(FG_BAK_WK_CLASS_NAME));
     }
 
     @Override
@@ -112,19 +112,21 @@ public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
      * @param  user      DOCUMENT ME!
      */
     private void restat(final CidsBean cidsBean, final User user) {
-        if (isFgBakObject(cidsBean)) {
+        if (isFgBakWkObject(cidsBean)) {
             Connection con = null;
             try {
                 final long start = System.currentTimeMillis();
-                final Object id = cidsBean.getMetaObject().getID();
-                con = getDbServer().getConnectionPool().getConnection(true);
-                final Statement s = con.createStatement();
-                // refresh fg_ba_gmd layer
-                s.execute("select dlm25w.import_fg_ba_gmdbygmd(" + id.toString() + ")");
-                s.execute("select dlm25w.refill_vw_alk_gmd_wbv_xxx(" + id.toString() + ")");
-                LOG.error("time to update stations " + (System.currentTimeMillis() - start));
+                final Integer wkNr = (Integer)cidsBean.getProperty("wk_nr.id");
+
+                if (wkNr != null) {
+                    con = getDbServer().getConnectionPool().getConnection(true);
+                    final Statement s = con.createStatement();
+                    s.execute("select dlm25w.update_fg_lak_wk(" + String.valueOf(wkNr) + ")");
+                    s.execute("select dlm25w.update_k_wk_fg_wk_ordnung()");
+                    LOG.error("time to update stations " + (System.currentTimeMillis() - start));
+                }
             } catch (Exception e) {
-                LOG.error("Error while executing VwAlkGmd trigger.", e);
+                LOG.error("Error while executing fgBakWk trigger.", e);
             } finally {
                 if (con != null) {
                     getDbServer().getConnectionPool().releaseDbConnection(con);
