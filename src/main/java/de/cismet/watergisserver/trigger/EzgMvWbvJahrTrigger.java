@@ -14,6 +14,10 @@ import org.openide.util.lookup.ServiceProvider;
 import java.sql.Connection;
 import java.sql.Statement;
 
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 import de.cismet.cids.dynamics.CidsBean;
 
 import de.cismet.cids.trigger.AbstractDBAwareCidsTrigger;
@@ -27,14 +31,20 @@ import de.cismet.cids.trigger.CidsTriggerKey;
  * @version  $Revision$, $Date$
  */
 @ServiceProvider(service = CidsTrigger.class)
-public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
+public class EzgMvWbvJahrTrigger extends AbstractDBAwareCidsTrigger {
 
     //~ Static fields/initializers ---------------------------------------------
 
     private static final transient org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(
-            VwAlkGmdTrigger.class);
-    private static final String VW_ALK_GMD_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.vw_alk_gmd";
-    private static final String VW_ALK_GMD_TABLE_NAME = "dlm25w.vw_alk_gmd";
+            EzgMvWbvJahrTrigger.class);
+    private static final String EZG_MV_WBV_JAHR_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.ezg_mv_wbv_jahr";
+    private static final String EZG_MV_WBV_JAHR_TABLE_NAME = "dlm25w.ezg_mv_wbv_jahr";
+    private static final ThreadPoolExecutor SINGLE_THREAD_EXECUTOR = new ThreadPoolExecutor(
+            1,
+            1,
+            0L,
+            TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<Runnable>());
 
     //~ Methods ----------------------------------------------------------------
 
@@ -64,7 +74,7 @@ public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
 
     @Override
     public CidsTriggerKey getTriggerKey() {
-        return new CidsTriggerKey(CidsTriggerKey.ALL, VW_ALK_GMD_TABLE_NAME);
+        return new CidsTriggerKey(CidsTriggerKey.ALL, EZG_MV_WBV_JAHR_TABLE_NAME);
     }
 
     /**
@@ -86,8 +96,8 @@ public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
      *
      * @return  DOCUMENT ME!
      */
-    private boolean isFgBakObject(final CidsBean cidsBean) {
-        return (cidsBean.getClass().getName().equals(VW_ALK_GMD_CLASS_NAME));
+    private boolean isEzgMvWbvJahrObject(final CidsBean cidsBean) {
+        return (cidsBean.getClass().getName().equals(EZG_MV_WBV_JAHR_CLASS_NAME));
     }
 
     @Override
@@ -112,23 +122,32 @@ public class VwAlkGmdTrigger extends AbstractDBAwareCidsTrigger {
      * @param  user      DOCUMENT ME!
      */
     private void restat(final CidsBean cidsBean, final User user) {
-        if (isFgBakObject(cidsBean)) {
-            Connection con = null;
-            try {
-                final long start = System.currentTimeMillis();
-                final Object id = cidsBean.getMetaObject().getID();
-                con = getDbServer().getConnectionPool().getConnection(true);
-                final Statement s = con.createStatement();
-                // refresh fg_ba_gmd layer
-                s.execute("select dlm25w.import_fg_ba_gmdbygmd(" + id.toString() + ")");
-                s.execute("select dlm25w.refill_vw_alk_gmd_wbv_xxx(" + id.toString() + ")");
-                LOG.error("time to update stations " + (System.currentTimeMillis() - start));
-            } catch (Exception e) {
-                LOG.error("Error while executing VwAlkGmd trigger.", e);
-            } finally {
-                if (con != null) {
-                    getDbServer().getConnectionPool().releaseDbConnection(con);
-                }
+        if (isEzgMvWbvJahrObject(cidsBean)) {
+            if (SINGLE_THREAD_EXECUTOR.getPoolSize() < 2) {
+                final Runnable r = new Runnable() {
+
+                        @Override
+                        public void run() {
+                            Connection con = null;
+
+                            try {
+                                con = getDbServer().getConnectionPool().getConnection(true);
+                                final Statement s = con.createStatement();
+                                s.execute(
+                                    "select dlm25w.refill_vw_alk_gmd_wbv_xxx()");
+                            } catch (Exception e) {
+                                LOG.error(
+                                    "Error while executing async ezgMvWbvJahr trigger.",
+                                    e);
+                            } finally {
+                                if (con != null) {
+                                    getDbServer().getConnectionPool().releaseDbConnection(con);
+                                }
+                            }
+                        }
+                    };
+
+                SINGLE_THREAD_EXECUTOR.execute(r);
             }
         }
     }

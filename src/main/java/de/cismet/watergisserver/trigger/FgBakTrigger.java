@@ -20,6 +20,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 import de.cismet.cids.dynamics.CidsBean;
 
 import de.cismet.cids.trigger.AbstractDBAwareCidsTrigger;
@@ -37,11 +41,18 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
 
     //~ Static fields/initializers ---------------------------------------------
 
-    private static final transient org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(
+    private static final transient org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(
             FgBakTrigger.class);
     private static final String FG_BAK_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.fg_bak";
     private static final String FG_BAK_TABLE_NAME = "dlm25w.fg_bak";
     private static Geometry beforeInsert;
+
+    private static final ThreadPoolExecutor SINGLE_THREAD_EXECUTOR = new ThreadPoolExecutor(
+            1,
+            1,
+            0L,
+            TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<Runnable>());
 
     //~ Methods ----------------------------------------------------------------
 
@@ -92,7 +103,7 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                     }
                 }
             } catch (Exception e) {
-                log.error("Error while executing fgBak beforeUpdate trigger." + String.valueOf(id), e);
+                LOG.error("Error while executing fgBak beforeUpdate trigger." + String.valueOf(id), e);
             } finally {
                 if (con != null) {
                     getDbServer().getConnectionPool().releaseDbConnection(con);
@@ -282,54 +293,58 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                 updater.execute();
 
                 beforeInsert = null;
-                log.error("time to update stations " + (System.currentTimeMillis() - start));
+                LOG.error("time to update stations " + (System.currentTimeMillis() - start));
             } catch (Exception e) {
-                log.error("Error while executing fgBak trigger." + String.valueOf(id), e);
+                LOG.error("Error while executing fgBak trigger." + String.valueOf(id), e);
             } finally {
                 if (con != null) {
                     getDbServer().getConnectionPool().releaseDbConnection(con);
                 }
             }
 
-            final Thread t = new Thread(new Runnable() {
+            if (SINGLE_THREAD_EXECUTOR.getPoolSize() < 2) {
+                final Thread t = new Thread(new Runnable() {
 
-                        @Override
-                        public void run() {
-                            Connection con = null;
+                            @Override
+                            public void run() {
+                                Connection con = null;
 
-                            try {
-                                con = getDbServer().getConnectionPool().getConnection(true);
-                                final Statement s = con.createStatement();
-                                s.execute(
-                                    "select dlm25w.import_fg_ba_geroga_rsByBak("
-                                            + cidsBean.getMetaObject().getID()
-                                            + ")");
-                                s.execute(
-                                    "select dlm25w.add_fg_ba_stat_10("
-                                            + String.valueOf(cidsBean.getMetaObject().getID())
-                                            + ")");
-                                s.execute(
-                                    "select dlm25w.add_fg_la_stat_10("
-                                            + String.valueOf(cidsBean.getMetaObject().getID())
-                                            + ")");
-                                s.execute(
-                                    "select duv.recreate_fg_ba_duvByFg("
-                                            + String.valueOf(cidsBean.getMetaObject().getID())
-                                            + ")");
-                            } catch (Exception e) {
-                                log.error(
-                                    "Error while executing async fgBak trigger."
-                                            + String.valueOf(cidsBean.getMetaObject().getID()),
-                                    e);
-                            } finally {
-                                if (con != null) {
-                                    getDbServer().getConnectionPool().releaseDbConnection(con);
+                                try {
+                                    con = getDbServer().getConnectionPool().getConnection(true);
+                                    final Statement s = con.createStatement();
+                                    s.execute(
+                                        "select dlm25w.migrate_fg_bak_wk_to_fg_lak_2()");
+                                    s.execute(
+                                        "select dlm25w.import_fg_ba_geroga_rsByBak("
+                                                + cidsBean.getMetaObject().getID()
+                                                + ")");
+                                    s.execute(
+                                        "select dlm25w.add_fg_ba_stat_10("
+                                                + String.valueOf(cidsBean.getMetaObject().getID())
+                                                + ")");
+                                    s.execute(
+                                        "select dlm25w.add_fg_la_stat_10("
+                                                + String.valueOf(cidsBean.getMetaObject().getID())
+                                                + ")");
+                                    s.execute(
+                                        "select duv.recreate_fg_ba_duvByFg("
+                                                + String.valueOf(cidsBean.getMetaObject().getID())
+                                                + ")");
+                                } catch (Exception e) {
+                                    LOG.error(
+                                        "Error while executing async fgBak trigger."
+                                                + String.valueOf(cidsBean.getMetaObject().getID()),
+                                        e);
+                                } finally {
+                                    if (con != null) {
+                                        getDbServer().getConnectionPool().releaseDbConnection(con);
+                                    }
                                 }
                             }
-                        }
-                    });
+                        });
 
-            t.start();
+                SINGLE_THREAD_EXECUTOR.execute(t);
+            }
         }
     }
 }
