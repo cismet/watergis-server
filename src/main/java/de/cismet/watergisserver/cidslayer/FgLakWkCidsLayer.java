@@ -94,7 +94,7 @@ public class FgLakWkCidsLayer extends WatergisDefaultCidsLayer {
         sb.add("dlm25w.k_wk_fg.wk_ordnung");
         columnNamesList.add("wk_ordnung");
         sqlColumnNamesList.add("dlm25w.k_wk_fg.wk_ordnung");
-        columnPropertyNamesList.add(attr.getName());
+        columnPropertyNamesList.add(attr.getName() + ".wk_ordnung");
         primitiveColumnTypesList.add(nameAttr.getMai().getJavaclassname());
 
         joins.append(" left ").append(" join dlm25w.k_wk_fg on (dlm25w.fg_lak_wk.wk_nr = dlm25w.k_wk_fg.id)");
