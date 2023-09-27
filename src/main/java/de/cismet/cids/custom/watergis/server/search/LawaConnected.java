@@ -38,8 +38,8 @@ public class LawaConnected extends AbstractCidsServerSearch {
 
     public static final String DOMAIN_NAME = "DLM25W";
     private static final String CONNECTION_QUERY = "select (row_number() over ())::integer, a.*\n"
-                + "from (select unnest(array_append(\n"
-                + "  st_asBinary(st_line_substring(geo_field, least(von.wert, bis.wert) / st_length(geo_field), \n"
+                + "from (select unnest(array_agg(\n"
+                + "  st_asBinary(ST_LineSubstring(geo_field, least(von.wert, bis.wert) / st_length(geo_field), \n"
                 + "  case when (greatest(bis.wert, von.wert) / st_length(geo_field)) <= 1.0 then (greatest(bis.wert, von.wert) / st_length(geo_field)) else 1.0 end)\n"
                 + "))), k.la_cd\n"
                 + "from dlm25w.fg_bak_gwk gwk \n"
@@ -52,7 +52,7 @@ public class LawaConnected extends AbstractCidsServerSearch {
                 + "left join dlm25w.k_gwk_lawa  k on (gwk.la_cd = k.id)\n"
                 + "where (gr.owner = %1$s or %1$s is null)"
                 + "group by k.la_cd\n"
-                + "having st_geometrytype(dlm25w.line_merge((array_append(st_line_substring(\n"
+                + "having st_geometrytype(dlm25w.line_merge((array_agg(ST_LineSubstring(\n"
                 + "geo_field, \n"
                 + "least(von.wert, bis.wert) / st_length(geo_field), \n"
                 + "case when (greatest(bis.wert, von.wert) / st_length(geo_field)) <= 1.0 then (greatest(bis.wert, von.wert) / st_length(geo_field)) else 1.0 end\n"

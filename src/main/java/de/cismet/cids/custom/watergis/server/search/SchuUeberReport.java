@@ -43,27 +43,27 @@ public class SchuUeberReport extends AbstractCidsServerSearch {
     // the limit inside the sub select in the from clause prevents that the db use the geom index and improve the
     // performance
     private static final String QUERY =
-        "select ST_line_locate_point(bg.geo_field, st_startPoint(unnest(dlm25w.multi_geometry_to_array(st_intersection(g.geo_field, bg.geo_field)))))  * st_length(bg.geo_field) von,\n"
-                + "ST_line_locate_point(bg.geo_field, st_endPoint(unnest(dlm25w.multi_geometry_to_array(st_intersection(g.geo_field, bg.geo_field))))) * st_length(bg.geo_field) bis,\n"
+        "select ST_LineLocatePoint(bg.geo_field, st_startPoint(unnest(dlm25w.multi_geometry_to_array(st_intersection(g.geo_field, bg.geo_field)))))  * st_length(bg.geo_field) von,\n"
+                + "ST_LineLocatePoint(bg.geo_field, st_endPoint(unnest(dlm25w.multi_geometry_to_array(st_intersection(g.geo_field, bg.geo_field))))) * st_length(bg.geo_field) bis,\n"
                 + "uesg_name, wbbl, recht, s.id\n"
                 + "from dlm25w.wr_sg_uesg s\n"
                 + "join (select g.* from dlm25w.wr_sg_uesg s join geom g on (s.geom = g.id) limit 5000000) g on (s.geom = g.id),\n"
                 + "dlm25w.fg_ba b\n"
                 + "join geom bg on (bg.id = b.geom)\n"
                 + "where b.ba_cd = '%s' and ST_IsValid(g.geo_field) and st_intersects(g.geo_field, bg.geo_field)\n"
-                + "order by least(ST_line_locate_point(bg.geo_field, st_startPoint(st_intersection(g.geo_field, bg.geo_field)))  * st_length(bg.geo_field),\n"
-                + "ST_line_locate_point(bg.geo_field, st_endPoint(st_intersection(g.geo_field, bg.geo_field))) * st_length(bg.geo_field))";
+                + "order by least(ST_LineLocatePoint(bg.geo_field, st_startPoint(st_intersection(g.geo_field, bg.geo_field)))  * st_length(bg.geo_field),\n"
+                + "ST_LineLocatePoint(bg.geo_field, st_endPoint(st_intersection(g.geo_field, bg.geo_field))) * st_length(bg.geo_field))";
     private static final String QUERYIds =
-        "select ST_line_locate_point(bg.geo_field, st_startPoint(unnest(dlm25w.multi_geometry_to_array(st_intersection(g.geo_field, bg.geo_field)))))  * st_length(bg.geo_field) von,\n"
-                + "ST_line_locate_point(bg.geo_field, st_endPoint(unnest(dlm25w.multi_geometry_to_array(st_intersection(g.geo_field, bg.geo_field))))) * st_length(bg.geo_field) bis,\n"
+        "select ST_LineLocatePoint(bg.geo_field, st_startPoint(unnest(dlm25w.multi_geometry_to_array(st_intersection(g.geo_field, bg.geo_field)))))  * st_length(bg.geo_field) von,\n"
+                + "ST_LineLocatePoint(bg.geo_field, st_endPoint(unnest(dlm25w.multi_geometry_to_array(st_intersection(g.geo_field, bg.geo_field))))) * st_length(bg.geo_field) bis,\n"
                 + "b.ba_cd, b.id, s.id\n"
                 + "from dlm25w.wr_sg_uesg s\n"
                 + "join (select g.* from dlm25w.wr_sg_uesg s join geom g on (s.geom = g.id) limit 5000000) g on (s.geom = g.id),\n"
                 + "dlm25w.fg_ba b\n"
                 + "join geom bg on (bg.id = b.geom)\n"
                 + "where b.id = any(%s) and ST_IsValid(g.geo_field) and st_intersects(g.geo_field, bg.geo_field)\n"
-                + "order by least(ST_line_locate_point(bg.geo_field, st_startPoint(st_intersection(g.geo_field, bg.geo_field)))  * st_length(bg.geo_field),\n"
-                + "ST_line_locate_point(bg.geo_field, st_endPoint(st_intersection(g.geo_field, bg.geo_field))) * st_length(bg.geo_field))";
+                + "order by least(ST_LineLocatePoint(bg.geo_field, st_startPoint(st_intersection(g.geo_field, bg.geo_field)))  * st_length(bg.geo_field),\n"
+                + "ST_LineLocatePoint(bg.geo_field, st_endPoint(st_intersection(g.geo_field, bg.geo_field))) * st_length(bg.geo_field))";
 
     //~ Instance fields --------------------------------------------------------
 

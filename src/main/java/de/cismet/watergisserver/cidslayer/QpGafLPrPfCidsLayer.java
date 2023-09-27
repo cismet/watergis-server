@@ -59,7 +59,7 @@ public class QpGafLPrPfCidsLayer extends WatergisDefaultCidsLayer {
                         + "') or freigabe is null or freigabe = 'frei')";
 
             if ((user != null)
-                        && (user.getUserGroup().getName().contains("lu")
+                        && (user.getUserGroup().getName().contains("lm")
                             || user.getUserGroup().getName().contains("wbv")
                             || user.getUserGroup().getName().contains("uwb")
                             || user.getUserGroup().getName().contains("wsa")

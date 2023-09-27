@@ -72,7 +72,7 @@ public class QpCidsLayer extends WatergisDefaultCidsLayer {
                         + "') or dlm25wPk_freigabe1.freigabe is null or dlm25wPk_freigabe1.freigabe = 'frei')";
 
             if ((user != null)
-                        && (user.getUserGroup().getName().contains("lu")
+                        && (user.getUserGroup().getName().contains("lm")
                             || user.getUserGroup().getName().contains("wbv")
                             || user.getUserGroup().getName().contains("uwb")
                             || user.getUserGroup().getName().contains("wsa")
