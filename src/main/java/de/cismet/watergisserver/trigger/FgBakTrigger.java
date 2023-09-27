@@ -252,9 +252,6 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                             + "')");
                 updater.execute();
 
-                updater.addUpdate("select dlm25w.import_fg_ba_pr_ablByBak(" + id.toString() + ")");
-                updater.addUpdate("select dlm25w.import_fg_ba_pr_abpByBak(" + id.toString() + ")");
-
                 updater.addUpdate("select dlm25w.import_fg_ba_geroByBak(" + id.toString() + ")");
                 updater.execute();
                 updater.addUpdate("select dlm25w.import_fg_ba_gerogByBak(" + id.toString() + ")");

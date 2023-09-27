@@ -79,7 +79,7 @@ public class AllLineObjects extends AbstractCidsServerSearch {
         //~ Enum constants -----------------------------------------------------
 
         fg_ba_gb, fg_ba_gmd, fg_ba_prof, fg_ba_sbef, fg_ba_ubef, fg_ba_bbef, fg_ba_sb, fg_ba_rl, fg_ba_d, fg_ba_due,
-        fg_ba_anll, fg_ba_deich, fg_ba_ughz, fg_ba_leis, fg_ba_tech, fg_ba_doku, fg_ba_proj
+        fg_ba_anll, deich_ft, fg_ba_ughz, fg_ba_leis, fg_ba_tech, fg_ba_doku, fg_ba_proj
     }
 
     //~ Instance fields --------------------------------------------------------

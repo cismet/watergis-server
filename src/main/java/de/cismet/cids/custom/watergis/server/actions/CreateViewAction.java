@@ -167,7 +167,10 @@ public class CreateViewAction implements ServerAction, MetaServiceStore {
             }
 
             final Statement st = con.createStatement();
-            String selectStatement = layerInfo.getSelectString().replace("ST_AsEWKb", "");
+            String selectStatement = layerInfo.getSelectString()
+                        .replace("ST_AsEWKb(geom.geo_field)", "st_setSrid(geom.geo_field, 5650)");
+            selectStatement = selectStatement.replace("ST_AsEWKb(geom)", "st_setSrid(geom, 5650)");
+            selectStatement = selectStatement.replace("ST_AsEWKb", "");
 
             if ((additionalFields != null) && selectStatement.toLowerCase().contains(" from ")) {
                 final String start = selectStatement.substring(0, selectStatement.toLowerCase().indexOf(" from "));

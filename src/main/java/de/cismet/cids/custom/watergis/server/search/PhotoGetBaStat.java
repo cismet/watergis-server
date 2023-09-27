@@ -42,8 +42,8 @@ public class PhotoGetBaStat extends AbstractCidsServerSearch {
 
     public static final String DOMAIN_NAME = "DLM25W";
     private static final String QUERY =
-        "select ba.id, ba_cd, round((ST_line_locate_point(geo_field, '%1$s') * st_length(geo_field))::numeric, 2)::double precision as stat"
-                + ",st_asBinary(ST_line_interpolate_point(geo_field, round((ST_line_locate_point(geo_field, '%1$s') "
+        "select ba.id, ba_cd, round((ST_LineLocatePoint(geo_field, '%1$s') * st_length(geo_field))::numeric, 2)::double precision as stat"
+                + ",st_asBinary(ST_lineinterpolatepoint(geo_field, round((ST_LineLocatePoint(geo_field, '%1$s') "
                 + "* st_length(geo_field))::numeric, 2)::double precision  / st_length(geo_field) )) as point from\n"
                 + "(select ba.id, ba_cd, geo_field from dlm25w.fg_ba ba join geom on (geom = geom.id) \n"
                 + "where st_distance(geo_field, '%1$s') <= %2$s\n"
