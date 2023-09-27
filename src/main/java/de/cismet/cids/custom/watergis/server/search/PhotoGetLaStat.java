@@ -42,7 +42,7 @@ public class PhotoGetLaStat extends AbstractCidsServerSearch {
 
     public static final String DOMAIN_NAME = "DLM25W";
     private static final String QUERY =
-        "select null, la_cd, round((ST_line_locate_point(geo_field, '%1$s') * st_length(geo_field))::numeric, 2)::double precision as stat"
+        "select null, la_cd, round((ST_LineLocatePoint(geo_field, '%1$s') * st_length(geo_field))::numeric, 2)::double precision as stat"
                 + ",null as point from\n"
                 + "(select ba.id, k.la_cd, geo_field from dlm25w.fg_la ba join geom on (geom = geom.id) join dlm25w.k_gwk_lawa k on  (k.id = ba.la_cd) \n"
                 + "where st_distance(geo_field, '%1$s') <= 0.1\n"

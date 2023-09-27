@@ -83,7 +83,7 @@ public class QpGafPpCidsLayer extends WatergisDefaultCidsLayer {
                         + "') or (select f.freigabe from dlm25w.qp p join dlm25w.k_freigabe f on (p.freigabe = f.id) where p.qp_nr = dlm25w.qp_gaf_pp.qp_nr) is null or (select f.freigabe from dlm25w.qp p join dlm25w.k_freigabe f on (p.freigabe = f.id) where p.qp_nr = dlm25w.qp_gaf_pp.qp_nr) = 'frei')";
 
             if ((user != null)
-                        && (user.getUserGroup().getName().contains("lu")
+                        && (user.getUserGroup().getName().contains("lm")
                             || user.getUserGroup().getName().contains("wbv")
                             || user.getUserGroup().getName().contains("uwb")
                             || user.getUserGroup().getName().contains("wsa")
