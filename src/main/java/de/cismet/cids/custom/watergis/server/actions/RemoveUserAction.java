@@ -96,7 +96,7 @@ public class RemoveUserAction implements ServerAction, MetaServiceStore {
             }
 
             domainServer = (DomainServerImpl)metaService;
-            con = domainServer.getConnectionPool().getConnection(true);
+            con = domainServer.getConnectionPool().getLongTermConnection();
 
             final String quotedUser = ActionHelper.quoteIdentifier(con, dbUser);
             final Statement st = con.createStatement();

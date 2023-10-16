@@ -94,7 +94,7 @@ public class RefreshTemplateAction implements ServerAction, MetaServiceStore {
                 Connection con = null;
                 try {
                     try {
-                        con = domainServer.getConnectionPool().getConnection(true);
+                        con = domainServer.getConnectionPool().getLongTermConnection();
                         final Statement statement = con.createStatement();
                         statement.execute("select dlm25w.refreshDrainBasin()");
                         statement.close();
@@ -110,7 +110,7 @@ public class RefreshTemplateAction implements ServerAction, MetaServiceStore {
                 Connection con = null;
                 try {
                     try {
-                        con = domainServer.getConnectionPool().getConnection(true);
+                        con = domainServer.getConnectionPool().getLongTermConnection();
                         final Statement statement = con.createStatement();
                         statement.execute("select dlm25w.refreshRwSegGeom()");
                         statement.close();
@@ -126,7 +126,7 @@ public class RefreshTemplateAction implements ServerAction, MetaServiceStore {
                 Connection con = null;
                 try {
                     try {
-                        con = domainServer.getConnectionPool().getConnection(true);
+                        con = domainServer.getConnectionPool().getLongTermConnection();
                         final Statement statement = con.createStatement();
                         statement.execute("select dlm25w.refreshSEzgKRl()");
                         statement.close();

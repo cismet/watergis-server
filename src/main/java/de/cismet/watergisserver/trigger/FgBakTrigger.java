@@ -84,7 +84,7 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
 
             try {
                 if (id > 0) {
-                    con = getDbServer().getConnectionPool().getConnection(true);
+                    con = getDbServer().getConnectionPool().getLongTermConnection();
                     final Statement st = con.createStatement();
                     final ResultSet rs = st.executeQuery(
                             "select st_asBinary(geo_field) from dlm25w.fg_bak b join geom on (b.geom = geom.id) where b.id = "
@@ -173,7 +173,7 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                     final Geometry g = (Geometry)cidsBean.getProperty("geom.geo_field");
 
                     if (g != null) {
-                        con = getDbServer().getConnectionPool().getConnection(true);
+                        con = getDbServer().getConnectionPool().getLongTermConnection();
                         final Statement s = con.createStatement();
                         final ResultSet set = s.executeQuery("select dlm25w.isGeometryTranslated('" + beforeInsert
                                         + "', '" + g
@@ -187,7 +187,6 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                 // If the cidsBean is a new object, the meta object contains the new id while the cidsBean has still
                 // the id -1
                 id = cidsBean.getMetaObject().getID();
-//                final Statement s = getDbServer().getConnectionPool().getConnection(true).createStatement();
                 final DbUpdater updater = new DbUpdater(getDbServer().getConnectionPool());
                 // refresh the stations on fg_bak
                 if (fgBakJustMoved) {
@@ -252,45 +251,8 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                             + "')");
                 updater.execute();
 
-                updater.addUpdate("select dlm25w.import_fg_ba_geroByBak(" + id.toString() + ")");
-                updater.execute();
-                updater.addUpdate("select dlm25w.import_fg_ba_gerogByBak(" + id.toString() + ")");
-                updater.execute();
-                updater.addUpdate("select dlm25w.import_fg_ba_gerogaByBak(" + id.toString() + ")");
-                updater.execute();
-
-                if (beforeInsert != null) {
-                    final Geometry g = (Geometry)cidsBean.getProperty("geom.geo_field");
-
-                    if ((g != null) && beforeInsert.equalsExact(g)) {
-                        beforeInsert = null;
-                    } else if (g != null) {
-                        final Geometry oldWithoutNew = beforeInsert.buffer(0.1).difference(g.buffer(0.1));
-
-                        if (oldWithoutNew.isEmpty()) {
-                            beforeInsert = null;
-                        } else {
-                            beforeInsert = oldWithoutNew;
-                        }
-                    }
-                }
-                if (beforeInsert != null) {
-                    updater.addUpdate("select dlm25w.import_fg_ba_geroga_tile(st_buffer('" + beforeInsert
-                                + "', 20), '" + user.getName() + "')");
-                    updater.execute();
-                }
-
-                updater.addUpdate("select dlm25w.import_fg_ba_gerog_rsByBak(" + id.toString() + ")");
-
-                if (beforeInsert != null) {
-                    updater.addUpdate("select dlm25w.import_fg_ba_geroga_rs_tile(st_buffer('" + beforeInsert
-                                + "', 40), '" + user.getName() + "', Array[1,3,5,10,15,20,25,30]::double precision[])");
-                }
-
-                updater.execute();
-
-                beforeInsert = null;
-                LOG.error("time to update stations " + (System.currentTimeMillis() - start));
+                LOG.error("time to update stations for bak with id " + id + " :"
+                            + (System.currentTimeMillis() - start));
             } catch (Exception e) {
                 LOG.error("Error while executing fgBak trigger." + String.valueOf(id), e);
             } finally {
@@ -307,14 +269,25 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                                 Connection con = null;
 
                                 try {
-                                    con = getDbServer().getConnectionPool().getConnection(true);
+                                    final long start = System.currentTimeMillis();
+                                    con = getDbServer().getConnectionPool().getLongTermConnection();
                                     final Statement s = con.createStatement();
+
+                                    s.execute(
+                                        "select dlm25w.import_fg_ba_geroByBak("
+                                                + String.valueOf(cidsBean.getMetaObject().getID())
+                                                + ")");
+                                    s.execute(
+                                        "select dlm25w.import_fg_ba_gerogByBak("
+                                                + String.valueOf(cidsBean.getMetaObject().getID())
+                                                + ")");
+                                    s.execute(
+                                        "select dlm25w.import_fg_ba_gerog_rsByBak("
+                                                + String.valueOf(cidsBean.getMetaObject().getID())
+                                                + ")");
+
                                     s.execute(
                                         "select dlm25w.migrate_fg_bak_wk_to_fg_lak_2()");
-                                    s.execute(
-                                        "select dlm25w.import_fg_ba_geroga_rsByBak("
-                                                + cidsBean.getMetaObject().getID()
-                                                + ")");
                                     s.execute(
                                         "select dlm25w.add_fg_ba_stat_10("
                                                 + String.valueOf(cidsBean.getMetaObject().getID())
@@ -327,6 +300,12 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                                         "select duv.recreate_fg_ba_duvByFg("
                                                 + String.valueOf(cidsBean.getMetaObject().getID())
                                                 + ")");
+
+                                    LOG.error(
+                                        "time to update async for bak with id "
+                                                + String.valueOf(cidsBean.getMetaObject().getID())
+                                                + " :"
+                                                + (System.currentTimeMillis() - start));
                                 } catch (Exception e) {
                                     LOG.error(
                                         "Error while executing async fgBak trigger."
