@@ -107,7 +107,7 @@ public class AddProfileAction implements ServerAction, MetaServiceStore, UserAwa
             }
 
             domainServer = (DomainServerImpl)metaService;
-            con = domainServer.getConnectionPool().getConnection(true);
+            con = domainServer.getConnectionPool().getLongTermConnection();
 
             final Statement st = con.createStatement();
             final PreparedStatement pst = con.prepareStatement(INSERT_PKT);

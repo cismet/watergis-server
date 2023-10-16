@@ -92,7 +92,7 @@ public class RemoveSchemaAction implements ServerAction, MetaServiceStore {
             }
 
             domainServer = (DomainServerImpl)metaService;
-            con = domainServer.getConnectionPool().getConnection(true);
+            con = domainServer.getConnectionPool().getLongTermConnection();
 
             final String quotedSchema = ActionHelper.quoteIdentifier(con, schemaName);
 

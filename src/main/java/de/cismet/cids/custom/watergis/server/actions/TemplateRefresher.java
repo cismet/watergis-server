@@ -94,9 +94,9 @@ public class TemplateRefresher {
                         Connection con = null;
                         try {
                             try {
-                                con = dbPool.getConnection(true);
+                                con = dbPool.getLongTermConnection();
                                 final Statement statement = con.createStatement();
-                                statement.executeUpdate("select dlm25w.refreshDrainBasin()");
+                                statement.execute("select dlm25w.refreshDrainBasin()");
                                 statement.close();
                             } catch (SQLException ex) {
                                 LOG.error("Cannot refresh drainBasin", ex);
@@ -125,9 +125,9 @@ public class TemplateRefresher {
                         Connection con = null;
                         try {
                             try {
-                                con = dbPool.getConnection(true);
+                                con = dbPool.getLongTermConnection();
                                 final Statement statement = con.createStatement();
-                                statement.executeUpdate("select dlm25w.refreshRwSegGeom()");
+                                statement.execute("select dlm25w.refreshRwSegGeom()");
                                 statement.close();
                             } catch (SQLException ex) {
                                 LOG.error("Cannot refresh RwSegGeom", ex);
@@ -156,9 +156,9 @@ public class TemplateRefresher {
                         Connection con = null;
                         try {
                             try {
-                                con = dbPool.getConnection(true);
+                                con = dbPool.getLongTermConnection();
                                 final Statement statement = con.createStatement();
-                                statement.executeUpdate("select dlm25w.refreshSEzgKRl()");
+                                statement.execute("select dlm25w.refreshSEzgKRl()");
                                 statement.close();
                             } catch (SQLException ex) {
                                 LOG.error("Cannot refresh ezgKrl", ex);

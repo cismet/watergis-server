@@ -116,7 +116,7 @@ public class CreateViewAction implements ServerAction, MetaServiceStore {
             }
 
             domainServer = (DomainServerImpl)metaService;
-            con = domainServer.getConnectionPool().getConnection(true);
+            con = domainServer.getConnectionPool().getLongTermConnection();
             dbUser = ActionHelper.quoteIdentifier(con, dbUser);
             schemaName = ActionHelper.quoteIdentifier(con, schemaName);
 

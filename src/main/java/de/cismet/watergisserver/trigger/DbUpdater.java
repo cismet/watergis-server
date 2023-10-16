@@ -16,15 +16,12 @@ import Sirius.server.sql.DBConnectionPool;
 
 import org.apache.log4j.Logger;
 
-import org.openide.util.Exceptions;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -76,11 +73,7 @@ public class DbUpdater {
         final ExecutorService executor = CismetExecutors.newFixedThreadPool(updates.size());
 
         for (final String command : updates) {
-            try {
-                executor.execute(new DBExecutor(command, connectionPool.getConnection(true)));
-            } catch (SQLException ex) {
-                LOG.error("Cannot create connection for command: " + command, ex);
-            }
+            executor.execute(new DBExecutor(command));
         }
 
         executor.shutdown();
@@ -104,8 +97,7 @@ public class DbUpdater {
 
         //~ Instance fields ----------------------------------------------------
 
-        private String command;
-        private Connection con;
+        private final String command;
 
         //~ Constructors -------------------------------------------------------
 
@@ -113,24 +105,27 @@ public class DbUpdater {
          * Creates a new DBExecutor object.
          *
          * @param  command  DOCUMENT ME!
-         * @param  con      DOCUMENT ME!
          */
-        public DBExecutor(final String command, final Connection con) {
+        public DBExecutor(final String command) {
             this.command = command;
-            this.con = con;
         }
 
         //~ Methods ------------------------------------------------------------
 
         @Override
         public void run() {
+            Connection con = null;
+
             try {
+                con = connectionPool.getLongTermConnection();
                 final Statement s = con.createStatement();
                 s.execute(command);
             } catch (SQLException ex) {
                 LOG.error("Error while executing the following sql command: " + command, ex);
             } finally {
-                connectionPool.releaseDbConnection(con);
+                if (con != null) {
+                    connectionPool.releaseDbConnection(con);
+                }
             }
         }
     }

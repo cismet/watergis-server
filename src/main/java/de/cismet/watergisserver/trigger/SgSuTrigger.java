@@ -118,7 +118,7 @@ public class SgSuTrigger extends AbstractDBAwareCidsTrigger {
                 // If the cidsBean is a new object, the meta object contains the new id while the cidsBean has still
                 // the id -1
                 final Object id = cidsBean.getMetaObject().getID();
-                con = getDbServer().getConnectionPool().getConnection(true);
+                con = getDbServer().getConnectionPool().getLongTermConnection();
                 final Statement s = con.createStatement();
                 // refresh the stations on fg_bak
                 s.execute("select dlm25w.replace_sg_su(" + id.toString() + ")");
