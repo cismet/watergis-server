@@ -86,7 +86,7 @@ public class FgObjectTrigger extends AbstractDBAwareCidsTrigger {
         if (cidsBean.getMetaObject().getID() != ID_TO_AVOID_CHECK) {
             try {
                 final long start = System.currentTimeMillis();
-                con = getDbServer().getConnectionPool().getConnection(true);
+                con = getDbServer().getConnectionPool().getLongTermConnection();
 
                 final PreparedStatement psExists = con.prepareStatement(
                         "select true from cs_class_attr where class_id = ? and attr_key = 'cidsLayer'");

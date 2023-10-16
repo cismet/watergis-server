@@ -119,7 +119,7 @@ public class FgLakAeTrigger extends AbstractDBAwareCidsTrigger {
                 final Object id = cidsBean.getProperty("lak_st.von.route.id");
                 final Object la_cd = cidsBean.getProperty("lak_st.von.route.la_cd.la_cd");
                 if (id != null) {
-                    con = getDbServer().getConnectionPool().getConnection(true);
+                    con = getDbServer().getConnectionPool().getLongTermConnection();
                     final Statement s = con.createStatement();
                     // refresh fg_la
                     s.execute("select dlm25w.import_fg_la(" + la_cd.toString() + ", '" + user.getName() + "')");

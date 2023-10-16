@@ -93,7 +93,7 @@ public class SchemaExistsAction implements ServerAction, MetaServiceStore {
             }
 
             domainServer = (DomainServerImpl)metaService;
-            con = domainServer.getConnectionPool().getConnection(true);
+            con = domainServer.getConnectionPool().getLongTermConnection();
 
             final PreparedStatement psCreate = con.prepareStatement(SCHEMA_EXISTS);
             psCreate.setString(1, schemaName);

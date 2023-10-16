@@ -131,7 +131,7 @@ public class EzgDetailTrigger extends AbstractDBAwareCidsTrigger {
                             Connection con = null;
 
                             try {
-                                con = getDbServer().getConnectionPool().getConnection(true);
+                                con = getDbServer().getConnectionPool().getLongTermConnection();
                                 final Statement s = con.createStatement();
                                 s.execute("select dlm25w.import_ezg_mv_rbd()");
                                 s.execute("select dlm25w.import_ezg_mv_wa()");
