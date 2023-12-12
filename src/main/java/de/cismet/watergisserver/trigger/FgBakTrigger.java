@@ -287,7 +287,7 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                                                 + ")");
 
                                     s.execute(
-                                        "select dlm25w.migrate_fg_bak_wk_to_fg_lak_2()");
+                                        "select dlm25w.migrate_fg_bak_wk_to_fg_lak()");
                                     s.execute(
                                         "select dlm25w.add_fg_ba_stat_10("
                                                 + String.valueOf(cidsBean.getMetaObject().getID())
