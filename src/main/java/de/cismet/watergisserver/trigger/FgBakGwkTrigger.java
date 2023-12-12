@@ -176,7 +176,7 @@ public class FgBakGwkTrigger extends AbstractDBAwareCidsTrigger {
                                 con = getDbServer().getConnectionPool().getConnection(true);
                                 final Statement s = con.createStatement();
                                 s.execute(
-                                    "select dlm25w.migrate_fg_bak_wk_to_fg_lak_2()");
+                                    "select dlm25w.migrate_fg_bak_wk_to_fg_lak()");
                             } catch (Exception e) {
                                 LOG.error(
                                     "Error while executing async fg_lak_wk trigger.",

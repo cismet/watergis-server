@@ -14,6 +14,10 @@ import org.openide.util.lookup.ServiceProvider;
 import java.sql.Connection;
 import java.sql.Statement;
 
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 import de.cismet.cids.dynamics.CidsBean;
 
 import de.cismet.cids.trigger.AbstractDBAwareCidsTrigger;
@@ -35,6 +39,12 @@ public class FgBakWkTrigger extends AbstractDBAwareCidsTrigger {
             FgBakWkTrigger.class);
     private static final String FG_BAK_WK_CLASS_NAME = "de.cismet.cids.dynamics.dlm25w.fg_bak_wk";
     private static final String FG_BAK_WK_TABLE_NAME = "dlm25w.fg_bak_wk";
+    private static final ThreadPoolExecutor SINGLE_THREAD_EXECUTOR = new ThreadPoolExecutor(
+            1,
+            1,
+            0L,
+            TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<Runnable>());
 
     //~ Methods ----------------------------------------------------------------
 
@@ -131,6 +141,33 @@ public class FgBakWkTrigger extends AbstractDBAwareCidsTrigger {
                 if (con != null) {
                     getDbServer().getConnectionPool().releaseDbConnection(con);
                 }
+            }
+
+            if (SINGLE_THREAD_EXECUTOR.getPoolSize() < 2) {
+                final Runnable r = new Runnable() {
+
+                        @Override
+                        public void run() {
+                            Connection con = null;
+
+                            try {
+                                con = getDbServer().getConnectionPool().getConnection(true);
+                                final Statement s = con.createStatement();
+                                s.execute(
+                                    "select dlm25w.migrate_fg_bak_wk_to_fg_lak()");
+                            } catch (Exception e) {
+                                LOG.error(
+                                    "Error while executing async fg_lak_wk trigger.",
+                                    e);
+                            } finally {
+                                if (con != null) {
+                                    getDbServer().getConnectionPool().releaseDbConnection(con);
+                                }
+                            }
+                        }
+                    };
+
+                SINGLE_THREAD_EXECUTOR.execute(r);
             }
         }
     }
