@@ -274,6 +274,8 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                                     final Statement s = con.createStatement();
 
                                     s.execute(
+                                        "select dlm25w.update_haltethema()");
+                                    s.execute(
                                         "select dlm25w.import_fg_ba_geroByBak("
                                                 + String.valueOf(cidsBean.getMetaObject().getID())
                                                 + ")");
