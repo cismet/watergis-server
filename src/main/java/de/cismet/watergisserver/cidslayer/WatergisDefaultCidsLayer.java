@@ -54,7 +54,7 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
     protected boolean useDistinct = false;
     protected User user = null;
     protected String sqlGeoField;
-    private String geoField;
+    protected String geoField;
     private String selectionString;
     private String[] columnNames;
     private String[] sqlColumnNames;
