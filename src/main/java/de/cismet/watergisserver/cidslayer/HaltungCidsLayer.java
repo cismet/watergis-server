@@ -113,23 +113,47 @@ public class HaltungCidsLayer extends Default1505ConsideredCidsLayer {
         columnPropertyNamesList.add("haltung.ba_st.von.route.gu_cd");
         primitiveColumnTypesList.add("String");
 
-        sb.add("dlm25w.k_haltung.anfangsobjekt");
-        columnNamesList.add("anfangsobjekt");
-        sqlColumnNamesList.add("dlm25w.k_haltung.anfangsobjekt");
-        columnPropertyNamesList.add("haltung.anfangsobjekt");
+        sb.add("dlm25w.k_haltung.anf_obj");
+        columnNamesList.add("anf_obj");
+        sqlColumnNamesList.add("dlm25w.k_haltung.anf_obj");
+        columnPropertyNamesList.add("haltung.anf_obj");
         primitiveColumnTypesList.add("java.lang.Integer");
 
-        sb.add("dlm25w.k_haltung.endobjekt");
-        columnNamesList.add("endobjekt");
-        sqlColumnNamesList.add("dlm25w.k_haltung.endobjekt");
-        columnPropertyNamesList.add("haltung.endobjekt");
+        sb.add("dlm25w.k_haltung.end_obj");
+        columnNamesList.add("end_obj");
+        sqlColumnNamesList.add("dlm25w.k_haltung.end_obj");
+        columnPropertyNamesList.add("haltung.end_obj");
         primitiveColumnTypesList.add("java.lang.Integer");
 
-        sb.add("dlm25w.k_haltung.objekt_reihenfolge");
+        sb.add("dlm25w.k_haltung.obj_reihf");
         columnNamesList.add("objekt_reihenfolge");
-        sqlColumnNamesList.add("dlm25w.k_haltung.objekt_reihenfolge");
-        columnPropertyNamesList.add("haltung.objekt_reihenfolge");
+        sqlColumnNamesList.add("dlm25w.k_haltung.obj_reihf");
+        columnPropertyNamesList.add("haltung.obj_reihf");
         primitiveColumnTypesList.add("String");
+
+        sb.add("k_material_1.material as rl_mat");
+        columnNamesList.add("rl_mat");
+        sqlColumnNamesList.add("k_material_1.material");
+        columnPropertyNamesList.add("haltung.rl_mat.material");
+        primitiveColumnTypesList.add("String");
+
+        sb.add("k_material_2.material as d_mat");
+        columnNamesList.add("d_mat");
+        sqlColumnNamesList.add("k_material_2.material");
+        columnPropertyNamesList.add("haltung.d_mat.material");
+        primitiveColumnTypesList.add("String");
+
+        sb.add("dlm25w.k_haltung.rl_br_dm");
+        columnNamesList.add("rl_br_dm");
+        sqlColumnNamesList.add("dlm25w.k_haltung.rl_br_dm");
+        columnPropertyNamesList.add("haltung.rl_br_dm");
+        primitiveColumnTypesList.add("java.lang.Double");
+
+        sb.add("dlm25w.k_haltung.d_br_dm");
+        columnNamesList.add("d_br_dm");
+        sqlColumnNamesList.add("dlm25w.k_haltung.d_br_dm");
+        columnPropertyNamesList.add("haltung.d_br_dm");
+        primitiveColumnTypesList.add("java.lang.Double");
 
         joins.append(" join dlm25w.k_haltung on (haltung = dlm25w.k_haltung.id)");
         joins.append(" join dlm25w.fg_ba_linie on (dlm25w.k_haltung.ba_st = dlm25w.fg_ba_linie.id)");
@@ -139,5 +163,7 @@ public class HaltungCidsLayer extends Default1505ConsideredCidsLayer {
         joins.append(" join dlm25w.fg_ba_punkt bis on (bis.id = dlm25w.fg_ba_linie.bis)");
         joins.append(" join dlm25w.fg_ba on (von.route = dlm25w.fg_ba.id)");
         joins.append(" left join dlm25w.k_ww_gr dlm25wPk_ww_gr1 on (dlm25w.fg_ba.ww_gr = dlm25wPk_ww_gr1.id)");
+        joins.append(" left join dlm25w.k_material k_material_1 on (dlm25w.k_haltung.rl_mat = k_material_1.id)");
+        joins.append(" left join dlm25w.k_material k_material_2 on (dlm25w.k_haltung.d_mat = k_material_2.id)");
     }
 }
