@@ -239,6 +239,7 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                 // refresh stat layer
                 updater.addUpdate("select dlm25w.add_fg_ba_stat(" + id.toString() + ")");
                 updater.addUpdate("select dlm25w.add_fg_la_stat(" + id.toString() + ")");
+                updater.addUpdate("select dlm25w.add_fg_lak_stat(" + id.toString() + ")");
                 // refresh fotoPrPf
                 updater.addUpdate("select dlm25w.import_fg_ba_foto_pr_pfbyBakId(" + id.toString() + ")");
                 // refresh presentation layer
@@ -296,6 +297,10 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                                                 + ")");
                                     s.execute(
                                         "select dlm25w.add_fg_la_stat_10("
+                                                + String.valueOf(cidsBean.getMetaObject().getID())
+                                                + ")");
+                                    s.execute(
+                                        "select dlm25w.add_fg_lak_stat_10("
                                                 + String.valueOf(cidsBean.getMetaObject().getID())
                                                 + ")");
                                     s.execute(
