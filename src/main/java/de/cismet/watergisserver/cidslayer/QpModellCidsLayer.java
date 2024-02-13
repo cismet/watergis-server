@@ -59,39 +59,25 @@ public class QpModellCidsLayer extends WatergisDefaultCidsLayer {
     public QpModellCidsLayer(final MetaClass mc, final User user) {
         super(mc, false, false, CATALOGUE_NAME_MAP, user);
     }
+
+    //~ Methods ----------------------------------------------------------------
+
 //
-//    @Override
-//    protected String getFieldRestriction(final String column) {
-//        if (column.equals("dlm25w.qp.bemerkung")) {
-//            if (isFullGUAccessAllowed()) {
-//                return null;
-//            } else {
-//                return "upl_name = '" + user.getName() + "'";
-//            }
-//        }
+// @Override
+// protected String getFieldRestriction(final String column) {
+// if (column.equals("dlm25w.qp.bemerkung")) {
+// if (isFullGUAccessAllowed()) {
+// return null;
+// } else {
+// return "upl_name = '" + user.getName() + "'";
+// }
+// }
 //
-//        return null;
-//    }
+// return null;
+// }
 //
-//    @Override
-//    public String getRestriction() {
-//        if ((user != null) && user.getUserGroup().getName().equals("Administratoren")) {
-//            // the admin has no restrictions
-//            return null;
-//        } else {
-//            String rest = "((dlm25wPk_freigabe1.freigabe = 'uploader' and upl_name = '" + user.getName()
-//                        + "') or dlm25wPk_freigabe1.freigabe is null or dlm25wPk_freigabe1.freigabe = 'frei')";
-//
-//            if ((user != null)
-//                        && (user.getUserGroup().getName().contains("lu")
-//                            || user.getUserGroup().getName().contains("wbv")
-//                            || user.getUserGroup().getName().contains("uwb")
-//                            || user.getUserGroup().getName().contains("wsa")
-//                            || user.getUserGroup().getName().contains("stalu"))) {
-//                rest = "(" + rest + " or (dlm25wPk_freigabe1.freigabe = 'wawi'))";
-//            }
-//
-//            return rest;
-//        }
-//    }
+    @Override
+    public String getRestriction() {
+        return "coalesce(dlm25wPk_geschehen1.geschehen, '') <> 'x'";
+    }
 }

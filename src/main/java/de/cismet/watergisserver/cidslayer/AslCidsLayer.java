@@ -6,7 +6,8 @@
 *
 ****************************************************/
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package de.cismet.watergisserver.cidslayer;
@@ -22,46 +23,33 @@ import java.util.HashMap;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class FgBaPrAblCidsLayer extends Default1505ConsideredCidsLayer {
+public class AslCidsLayer extends WatergisDefaultCidsLayer {
 
     //~ Static fields/initializers ---------------------------------------------
 
     private static final HashMap<String, String> CATALOGUE_NAME_MAP = new HashMap<String, String>();
 
     static {
-        CATALOGUE_NAME_MAP.put("traeger", "traeger");
-        CATALOGUE_NAME_MAP.put("zust_kl", "zust_kl");
-        CATALOGUE_NAME_MAP.put("l_st", "l_st");
-        CATALOGUE_NAME_MAP.put("l_rl", "l_rl");
-        CATALOGUE_NAME_MAP.put("ww_gr", "ww_gr");
+        CATALOGUE_NAME_MAP.put("m_traeger", "traeger");
+        CATALOGUE_NAME_MAP.put("szenario", "szenario");
     }
 
     //~ Constructors -----------------------------------------------------------
 
     /**
-     * Creates a new VwDvgStaluCidsLayer object.
+     * Creates a new AslCidsLayer object.
      *
      * @param  mc    DOCUMENT ME!
      * @param  user  DOCUMENT ME!
      */
-    public FgBaPrAblCidsLayer(final MetaClass mc, final User user) {
-        super(
-            mc,
-            user,
-            false,
-            false,
-            CATALOGUE_NAME_MAP);
+    public AslCidsLayer(final MetaClass mc, final User user) {
+        super(mc, CATALOGUE_NAME_MAP, user);
     }
 
     //~ Methods ----------------------------------------------------------------
 
     @Override
     public String getRestriction() {
-        if ((user == null)
-                    || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
-            return null;
-        } else {
-            return "dlm25wPk_ww_gr1.owner = '" + user.getUserGroup().getName() + "'";
-        }
+        return "not coalesce(obsolet, false)";
     }
 }
