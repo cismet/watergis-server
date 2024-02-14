@@ -23,6 +23,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import de.cismet.cids.custom.helper.CrsHelper;
 import de.cismet.cids.custom.helper.SQLFormatter;
 
 import de.cismet.cids.server.search.AbstractCidsServerSearch;
@@ -41,11 +42,12 @@ public class GafPosition extends AbstractCidsServerSearch {
     private static final transient Logger LOG = Logger.getLogger(GafPosition.class);
 
     public static final String DOMAIN_NAME = "DLM25W";
-    private static final String QUERY = "select st_asbinary(st_intersection(geo_field, '%1$s'))\n"
+    private static final String QUERY = "select st_asbinary(st_intersection(geo_field, st_setSrid('%1$s'::geometry, "
+                + CrsHelper.SRID + ")))\n"
                 + "from\n"
                 + "dlm25w.fg_ba\n"
                 + "join geom on (geom = geom.id)\n"
-                + "where st_intersects(geo_field, '%1$s') limit %2$s";
+                + "where st_intersects(geo_field, st_setSrid('%1$s'::geometry, " + CrsHelper.SRID + ") limit %2$s";
 
     //~ Instance fields --------------------------------------------------------
 

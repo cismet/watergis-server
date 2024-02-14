@@ -28,6 +28,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import de.cismet.cids.custom.helper.CrsHelper;
+
 import de.cismet.cids.server.search.AbstractCidsServerSearch;
 
 /**
@@ -48,9 +50,13 @@ public class PreparedRandstreifenGeoms extends AbstractCidsServerSearch {
         "Select st_asBinary(dlm25w.buffer_randstreifen(ST_Collect(ST_SnapToGrid(geo_field, 0.01)), 0.01))"
                 + " from (%1s) a";
     private static final String FG_QUERY =
-        "select geo_field from dlm25w.fg_ba_gerog join geom on (geom = geom.id) where typ in ('so', 'b_li', 'b_re', 'bn_li', 'bn_re', 'bt_li', 'bt_re')  and st_intersects(geo_field, '%1s')";
+        "select geo_field from dlm25w.fg_ba_gerog join geom on (geom = geom.id) where typ in ('so', 'b_li', 'b_re', 'bn_li', 'bn_re', 'bt_li', 'bt_re')  and st_intersects(geo_field, st_setSrid('%1s'::geometry, "
+                + CrsHelper.SRID
+                + "))";
     private static final String FG_QUERY_WITH_ID =
-        "select geo_field from dlm25w.fg_ba_gerog join geom on (geom = geom.id) where typ in ('so', 'b_li', 'b_re', 'bn_li', 'bn_re', 'bt_li', 'bt_re')  and st_intersects(geo_field, '%1s') and ba_cd in (%2s)";
+        "select geo_field from dlm25w.fg_ba_gerog join geom on (geom = geom.id) where typ in ('so', 'b_li', 'b_re', 'bn_li', 'bn_re', 'bt_li', 'bt_re')  and st_intersects(geo_field, st_setSrid('%1s'::geometry, "
+                + CrsHelper.SRID
+                + ")) and ba_cd in (%2s)";
     private static final String FG_CLOSED_QUERY =
         "select dlm25w.buffer_randstreifen(geom, %1s) as geo_field from dlm25w.select_fgba_closed(null, null)";
     private static final String FG_CLOSED_QUERY_WITH_ID =
@@ -62,13 +68,21 @@ public class PreparedRandstreifenGeoms extends AbstractCidsServerSearch {
     private static final String FG_BR_QUERY_WITH_ID =
         "select dlm25w.buffer_randstreifen(geom, %1s) as geo_field from dlm25w.select_fgba_open_without_prof(%2s, null, '%3s') where art = 'o'";
     private static final String FG_FL_QUERY =
-        "select geo_field from dlm25w.fg_ba_fl join geom on (geom = geom.id) where st_intersects(geo_field, '%1s')";
+        "select geo_field from dlm25w.fg_ba_fl join geom on (geom = geom.id) where st_intersects(geo_field, st_setSrid('%1s'::geometry, "
+                + CrsHelper.SRID
+                + "))";
     private static final String SEE_QUERY =
-        "select geo_field from dlm25w.sg_see join geom on (geom = geom.id) where st_intersects(geo_field, '%1s')";
+        "select geo_field from dlm25w.sg_see join geom on (geom = geom.id) where st_intersects(geo_field, st_setSrid('%1s'::geometry, "
+                + CrsHelper.SRID
+                + "))";
     private static final String SEE_KL_QUERY =
-        "select geo_field from dlm25w.sg_see_kl join geom on (geom = geom.id) where st_intersects(geo_field, '%1s')";
+        "select geo_field from dlm25w.sg_see_kl join geom on (geom = geom.id) where st_intersects(geo_field, st_setSrid('%1s'::geometry, "
+                + CrsHelper.SRID
+                + "))";
     private static final String OSTSEE_QUERY =
-        "select dlm25w.withoutHoles(geo_field) as geo_field from dlm25w.ezg_mv_ostsee join geom on (geom = geom.id) where st_intersects(geo_field, '%1s')";
+        "select dlm25w.withoutHoles(geo_field) as geo_field from dlm25w.ezg_mv_ostsee join geom on (geom = geom.id) where st_intersects(geo_field, st_setSrid('%1s'::geometry, "
+                + CrsHelper.SRID
+                + "))";
 
     private static final String FG_QUERY_WITHOUT_GEO =
         "select geo_field from dlm25w.fg_ba_gerog join geom on (geom = geom.id) where typ in ('so', 'b_li', 'b_re', 'bn_li', 'bn_re', 'bt_li', 'bt_re')";
