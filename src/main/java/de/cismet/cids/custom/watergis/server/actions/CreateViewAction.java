@@ -146,25 +146,26 @@ public class CreateViewAction implements ServerAction, MetaServiceStore {
                                     + "')";
                     }
                 }
-            } else {
-                if (layerInfo.getSelectString().contains("dlm25wPk_ww_gr1") && (user != null)
-                            && (user.getUserGroup() != null)
-                            && !user.getUserGroup().getName().toLowerCase().startsWith("admin")) {
-                    if (layerInfo.getSelectString().toLowerCase().contains("where")) {
-                        whereExtension = " AND (NOT EXISTS(select 1 FROM dlm25w.k_ww_gr WHERE owner = '"
-                                    + user.getUserGroup().getName()
-                                    + "') OR dlm25wPk_ww_gr1.owner = '"
-                                    + user.getUserGroup().getName()
-                                    + "')";
-                    } else {
-                        whereExtension = " WHERE (NOT EXISTS(select 1 FROM dlm25w.k_ww_gr WHERE owner = '"
-                                    + user.getUserGroup().getName()
-                                    + "') OR dlm25wPk_ww_gr1.owner = '"
-                                    + user.getUserGroup().getName()
-                                    + "')";
-                    }
-                }
             }
+//            else {
+//                if (layerInfo.getSelectString().contains("dlm25wPk_ww_gr1") && (user != null)
+//                            && (user.getUserGroup() != null)
+//                            && !user.getUserGroup().getName().toLowerCase().startsWith("admin")) {
+//                    if (layerInfo.getSelectString().toLowerCase().contains("where")) {
+//                        whereExtension = " AND (NOT EXISTS(select 1 FROM dlm25w.k_ww_gr WHERE owner = '"
+//                                    + user.getUserGroup().getName()
+//                                    + "') OR dlm25wPk_ww_gr1.owner = '"
+//                                    + user.getUserGroup().getName()
+//                                    + "')";
+//                    } else {
+//                        whereExtension = " WHERE (NOT EXISTS(select 1 FROM dlm25w.k_ww_gr WHERE owner = '"
+//                                    + user.getUserGroup().getName()
+//                                    + "') OR dlm25wPk_ww_gr1.owner = '"
+//                                    + user.getUserGroup().getName()
+//                                    + "')";
+//                    }
+//                }
+//            }
 
             final Statement st = con.createStatement();
             String selectStatement = layerInfo.getSelectString()
