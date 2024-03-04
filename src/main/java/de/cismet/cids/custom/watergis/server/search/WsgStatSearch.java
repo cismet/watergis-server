@@ -43,10 +43,12 @@ public class WsgStatSearch extends AbstractCidsServerSearch implements Connectio
     public static final String DOMAIN_NAME = "DLM25W";
     private static final String QUERY_STAT = "select wsg_anz, wsg_fl from dlm25w.wr_sg_wsg_stat;";
     private static final String QUERY_FN = "select bodennutzu, st_area(geom) from dlm25w.wr_sg_wsg_fn;";
+    private static final String QUERY_FORST = "select bft, st_area(geom) from dlm25w.wr_sg_wsg_forst;";
 
     //~ Instance fields --------------------------------------------------------
 
     private ConnectionContext connectionContext = ConnectionContext.createDummy();
+    private boolean fn = true;
 
     //~ Constructors -----------------------------------------------------------
 
@@ -54,6 +56,15 @@ public class WsgStatSearch extends AbstractCidsServerSearch implements Connectio
      * Creates a new WkkSearch object.
      */
     public WsgStatSearch() {
+    }
+
+    /**
+     * Creates a new WsgStatSearch object.
+     *
+     * @param  fn  DOCUMENT ME!
+     */
+    public WsgStatSearch(final boolean fn) {
+        this.fn = fn;
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -76,24 +87,50 @@ public class WsgStatSearch extends AbstractCidsServerSearch implements Connectio
                     }
                 }
 
-                lists = ms.performCustomSearch(QUERY_FN);
-                Object af = null;
-                Object dgl = null;
+                if (fn) {
+                    lists = ms.performCustomSearch(QUERY_FN);
+                    Object af = null;
+                    Object dgl = null;
 
-                if ((lists != null) && (lists.size() > 0)) {
-                    for (final ArrayList tmp : lists) {
-                        if ((tmp != null) && (tmp.size() > 1)) {
-                            if ((tmp.get(0) != null) && tmp.get(0).equals("AF")) {
-                                af = tmp.get(1);
-                            } else if ((tmp.get(0) != null) && tmp.get(0).equals("DGL")) {
-                                dgl = tmp.get(1);
+                    if ((lists != null) && (lists.size() > 0)) {
+                        for (final ArrayList tmp : lists) {
+                            if ((tmp != null) && (tmp.size() > 1)) {
+                                if ((tmp.get(0) != null) && tmp.get(0).equals("AF")) {
+                                    af = tmp.get(1);
+                                } else if ((tmp.get(0) != null) && tmp.get(0).equals("DGL")) {
+                                    dgl = tmp.get(1);
+                                }
                             }
                         }
                     }
-                }
 
-                result.add(af);
-                result.add(dgl);
+                    result.add(af);
+                    result.add(dgl);
+                } else {
+                    lists = ms.performCustomSearch(QUERY_FORST);
+                    Object holzboden = 0.0;
+                    Object nichtHolzboden = 0.0;
+                    Object nichtEingerichtet = 0.0;
+
+                    if ((lists != null) && (lists.size() > 0)) {
+                        for (final ArrayList tmp : lists) {
+                            if ((tmp != null) && (tmp.size() > 1)) {
+                                if ((tmp.get(0) != null) && tmp.get(0).equals("Holzboden")) {
+                                    holzboden = ((Number)tmp.get(1)).doubleValue();
+                                } else if ((tmp.get(0) != null) && tmp.get(0).equals("Nichtholzboden")) {
+                                    nichtHolzboden = ((Number)tmp.get(1)).doubleValue();
+                                } else if ((tmp.get(0) != null)
+                                            && tmp.get(0).equals("nicht eingerichtete Fläche")) {
+                                    nichtEingerichtet = ((Number)tmp.get(1)).doubleValue();
+                                }
+                            }
+                        }
+                    }
+
+                    result.add(holzboden);
+                    result.add(nichtHolzboden);
+                    result.add(nichtEingerichtet);
+                }
 
                 return result;
             } catch (RemoteException ex) {
