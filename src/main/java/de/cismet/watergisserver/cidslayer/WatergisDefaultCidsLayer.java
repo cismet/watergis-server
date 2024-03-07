@@ -265,9 +265,9 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
                 referencedClass.put(attr.getName(), attr.getForeignKeyClassId());
             } else if ((attr.getJavaclassname() != null)
                         && attr.getJavaclassname().equalsIgnoreCase("com.vividsolutions.jts.geom.Geometry")) {
-                sqlGeoField = attr.getName();
+                sqlGeoField = mc.getTableName() + "." + attr.getName();
                 geoField = attr.getName();
-                sb.add("ST_AsEWKb(" + attr.getName() + ") as " + geoField);
+                sb.add("ST_AsEWKb(" + mc.getTableName() + "." + attr.getName() + ") as " + geoField);
                 columnNamesList.add(attr.getName());
                 sqlColumnNamesList.add(attr.getName());
                 columnPropertyNamesList.add(attr.getName());
