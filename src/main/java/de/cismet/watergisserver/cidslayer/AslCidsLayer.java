@@ -114,9 +114,9 @@ public class AslCidsLayer extends WatergisDefaultCidsLayer {
         columnPropertyNamesList.add("qp_modell.m_dim.dim");
         primitiveColumnTypesList.add("java.lang.String");
 
-        joins.append(" join dlm25w.qp_modell on (qp_id = dlm25w.qp_modell.id)");
-        joins.append(" join dlm25w.k_m_traeger on (dlm25w.qp_modell.m_traeger = dlm25w.k_m_traeger.id)");
-        joins.append(" join dlm25w.k_m_dim on (dlm25w.qp_modell.m_dim = dlm25w.k_m_dim.id)");
+        joins.append(" left join dlm25w.qp_modell on (qp_id = dlm25w.qp_modell.id)");
+        joins.append(" left join dlm25w.k_m_traeger on (dlm25w.qp_modell.m_traeger = dlm25w.k_m_traeger.id)");
+        joins.append(" left join dlm25w.k_m_dim on (dlm25w.qp_modell.m_dim = dlm25w.k_m_dim.id)");
     }
 
     @Override
