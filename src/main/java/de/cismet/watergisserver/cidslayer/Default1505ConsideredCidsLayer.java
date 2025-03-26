@@ -25,9 +25,10 @@ import java.util.Map;
  */
 public class Default1505ConsideredCidsLayer extends WatergisDefaultCidsLayer {
 
-    //~ Instance fields --------------------------------------------------------
+    //~ Static fields/initializers ---------------------------------------------
 
-    private boolean additionalJoin = false;
+    private static final String[] GREEN_WBV = { "01", "02", "04", "05", "08", "10", "11", "20", "28", "09" };
+    private static final String[] EXCEPTION_THEMES = { "dlm25w.fg_bak_gn1", "dlm25w.fg_bak_wk", "dlm25w.fg_ba_1_ord" };
 
     //~ Constructors -----------------------------------------------------------
 
@@ -105,7 +106,6 @@ public class Default1505ConsideredCidsLayer extends WatergisDefaultCidsLayer {
             final boolean inheritedWwGr,
             final String additionalJoins) {
         super(mc, showFgLa, additionalGeom, catalogueNameMap, inheritedWwGr, additionalJoins, user);
-        additionalJoin = true;
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -115,13 +115,32 @@ public class Default1505ConsideredCidsLayer extends WatergisDefaultCidsLayer {
         if ((user == null) || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
             return null;
         } else {
-//            if (additionalJoin) {
-            return "(dlm25wPk_ww_gr1.wdm <> 1505 or dlm25wPk_ww_gr1.owner = '" + user
-                        .getUserGroup().getName() + "')";
-//            } else {
-//                return "(dlm25w.k_ww_gr.wdm <> 1505 or dlm25w.k_ww_gr.owner = '" + user
-//                            .getUserGroup().getName() + "')";
-//            }
+            boolean isGreenWbv = false;
+
+            for (final String greenWbv : GREEN_WBV) {
+                if (user.getUserGroup().getName().startsWith("wbv_" + greenWbv)) {
+                    isGreenWbv = true;
+                }
+            }
+
+            boolean isExceptionTheme = false;
+
+            for (final String et : EXCEPTION_THEMES) {
+                if (mc.getTableName().equalsIgnoreCase(et)) {
+                    isExceptionTheme = true;
+                }
+            }
+
+            if (isExceptionTheme) {
+                return null;
+            }
+
+            if (user.getUserGroup().getName().startsWith("wbv_") && !isGreenWbv) {
+                return " (dlm25wPk_ww_gr1.owner = '" + user.getUserGroup().getName() + "')";
+            } else {
+                return "(dlm25wPk_ww_gr1.wdm <> 1505 or dlm25wPk_ww_gr1.owner = '" + user
+                            .getUserGroup().getName() + "')";
+            }
         }
     }
 }
