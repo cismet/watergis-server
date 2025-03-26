@@ -48,7 +48,7 @@ public class CreateUserAction implements ServerAction, MetaServiceStore {
                 + "  NOCREATEDB\n"
                 + "  NOCREATEROLE\n"
                 + "  NOREPLICATION  \n"
-                + "  PASSWORD ?;";
+                + "  PASSWORD '%2s';";
 
     public static final String TASK_NAME = "createUser";
 
@@ -111,10 +111,9 @@ public class CreateUserAction implements ServerAction, MetaServiceStore {
             con = domainServer.getConnectionPool().getLongTermConnection();
 
             final String quotedUser = ActionHelper.quoteIdentifier(con, dbUser);
-            final PreparedStatement ps = con.prepareStatement(String.format(CREATE_USER, quotedUser));
-            ps.setString(1, dbPassword);
-            ps.execute();
-            ps.close();
+            final Statement st = con.createStatement();
+            st.executeUpdate(String.format(CREATE_USER, quotedUser, dbPassword));
+            st.close();
 
             return true;
         } catch (Exception e) {

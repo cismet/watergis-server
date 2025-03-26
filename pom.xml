@@ -8,7 +8,7 @@
     <parent>
         <groupId>de.cismet.cids</groupId>
         <artifactId>cids-parent</artifactId>
-        <version>8.0</version>
+        <version>9.0</version>
     </parent>
     
     <groupId>de.cismet.watergis</groupId>
@@ -51,7 +51,7 @@
             <dependency>
                 <groupId>de.cismet</groupId>
                 <artifactId>cismet-ext-bom</artifactId>
-                <version>8.0</version>
+                <version>9.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -60,14 +60,14 @@
             <dependency>
                 <groupId>de.cismet.cids</groupId>
                 <artifactId>cids-server</artifactId>
-                <version>8.5.2</version>
+                <version>9.0</version>
                 <type>jar</type>
                 <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>de.cismet.commons</groupId>
                 <artifactId>cismet-commons</artifactId>
-                <version>8.0.1</version>
+                <version>9.0</version>
                 <type>jar</type>
                 <scope>compile</scope>
             </dependency>
@@ -95,8 +95,8 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-1.2-api</artifactId>
             <scope>compile</scope>
             <type>jar</type>
         </dependency>
@@ -104,8 +104,8 @@
      
         <!-- BEGIN: Runtime dependencies -->
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j2-impl</artifactId>
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>

@@ -71,14 +71,4 @@ public class FgBakCidsLayer extends Default1505ConsideredCidsLayer {
 
         return null;
     }
-
-    @Override
-    public String getRestriction() {
-        if ((user == null) || user.getUserGroup().getName().equalsIgnoreCase("administratoren")) {
-            return null;
-        } else {
-            return "(dlm25wPk_ww_gr1.wdm <> 1505 or dlm25wPk_ww_gr1.owner = '" + user
-                        .getUserGroup().getName() + "')";
-        }
-    }
 }
