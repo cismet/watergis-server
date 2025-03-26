@@ -147,6 +147,20 @@ public class CreateViewAction implements ServerAction, MetaServiceStore {
                     }
                 }
             }
+
+            final String restriction = layerInfo.getRestriction();
+
+            if (restriction != null) {
+                if (layerInfo.getSelectString().toLowerCase().contains("where") || !whereExtension.equals("")) {
+                    whereExtension += " AND ("
+                                + restriction
+                                + ")";
+                } else {
+                    whereExtension = " WHERE ("
+                                + restriction
+                                + ")";
+                }
+            }
 //            else {
 //                if (layerInfo.getSelectString().contains("dlm25wPk_ww_gr1") && (user != null)
 //                            && (user.getUserGroup() != null)
