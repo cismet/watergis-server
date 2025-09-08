@@ -47,6 +47,7 @@ public class CreateViewAction implements ServerAction, MetaServiceStore {
     private static final Logger LOG = Logger.getLogger(CreateViewAction.class);
     private static final String CREATE_VIEW = "CREATE VIEW %1s as %2s";
     private static final String ADD_PERMISSION = "GRANT SELECT ON TABLE %1s TO %2s;";
+    private static final String DROP_VIEW_IF_EXISTS = "DROP VIEW IF EXISTS %1s";
 
     public static final String TASK_NAME = "createView";
 
@@ -202,6 +203,11 @@ public class CreateViewAction implements ServerAction, MetaServiceStore {
 
                 selectStatement += end;
             }
+
+            st.executeUpdate(String.format(DROP_VIEW_IF_EXISTS,
+                    schemaName
+                            + "."
+                            + cl.getName()));
 
             st.executeUpdate(String.format(
                     CREATE_VIEW,

@@ -12,14 +12,11 @@
 package de.cismet.watergisserver.cidslayer;
 
 import Sirius.server.localserver.attribute.MemberAttributeInfo;
-import Sirius.server.localserver.attribute.ObjectAttribute;
 import Sirius.server.middleware.types.MetaClass;
 import Sirius.server.newuser.User;
 
 import java.util.HashMap;
 import java.util.List;
-
-import de.cismet.cids.server.cidslayer.StationInfo;
 
 /**
  * DOCUMENT ME!
@@ -75,36 +72,36 @@ public class HaltungCidsLayer extends Default1505ConsideredCidsLayer {
         final MetaClass geomMc = getGeomClass(allClasses);
 
         // ba_cd
-        sqlGeoField = "geo_field";
+        sqlGeoField = "k_haltung.geom";
         geoField = "geom";
-        sb.add(1, "ST_AsEWKb(geom.geo_field) as " + geoField);
+        sb.add(1, "ST_AsEWKb(k_haltung.geom) as " + geoField);
         columnNamesList.add(1, "geom");
-        sqlColumnNamesList.add(1, "geom.geo_field");
-        columnPropertyNamesList.add(1, attr.getName() + ".geom.geo_field");
+        sqlColumnNamesList.add(1, "k_haltung.geom");
+        columnPropertyNamesList.add(1, attr.getName() + ".geom");
         primitiveColumnTypesList.add(1, "Geometry");
 
         sb.add("dlm25wPk_ww_gr1.ww_gr");
         columnNamesList.add("ww_gr");
         sqlColumnNamesList.add("dlm25wPk_ww_gr1.ww_gr");
-        columnPropertyNamesList.add("haltung.ba_st.von.route.ww_gr.ww_gr");
+        columnPropertyNamesList.add("haltung.ww_gr.ww_gr");
         primitiveColumnTypesList.add("java.lang.Integer");
 
-        sb.add("dlm25w.fg_ba.ba_cd");
+        sb.add("dlm25w.k_haltung.ba_cd");
         columnNamesList.add("ba_cd");
-        sqlColumnNamesList.add("dlm25w.fg_ba.ba_cd");
-        columnPropertyNamesList.add(attr.getName() + ".von.route.ba_cd");
+        sqlColumnNamesList.add("dlm25w.k_haltung.ba_cd");
+        columnPropertyNamesList.add(attr.getName() + ".ba_cd");
         primitiveColumnTypesList.add("String");
 
-        sb.add(" von.wert as ba_st_von");
+        sb.add(" von as ba_st_von");
         columnNamesList.add("ba_st_von");
-        sqlColumnNamesList.add("von.wert");
-        columnPropertyNamesList.add(attr.getName() + ".von.wert");
+        sqlColumnNamesList.add("dlm25w.k_haltung.von");
+        columnPropertyNamesList.add(attr.getName() + ".von");
         primitiveColumnTypesList.add("java.lang.Double");
 
-        sb.add(" bis.wert as ba_st_bis");
+        sb.add(" bis as ba_st_bis");
         columnNamesList.add("ba_st_bis");
-        sqlColumnNamesList.add("bis.wert");
-        columnPropertyNamesList.add(attr.getName() + ".bis.wert");
+        sqlColumnNamesList.add("dlm25w.k_haltung.bis");
+        columnPropertyNamesList.add(attr.getName() + ".bis");
         primitiveColumnTypesList.add("java.lang.Double");
 
         sb.add("dlm25w.fg_ba.gu_cd");
@@ -156,12 +153,13 @@ public class HaltungCidsLayer extends Default1505ConsideredCidsLayer {
         primitiveColumnTypesList.add("java.lang.Double");
 
         joins.append(" join dlm25w.k_haltung on (haltung = dlm25w.k_haltung.id)");
-        joins.append(" join dlm25w.fg_ba_linie on (dlm25w.k_haltung.ba_st = dlm25w.fg_ba_linie.id)");
-        joins.append(" join geom on (geom = geom.id)");
+//        joins.append(" join dlm25w.fg_ba_linie on (dlm25w.k_haltung.ba_st = dlm25w.fg_ba_linie.id)");
+//        joins.append(" join geom on (geom = geom.id)");
         referencedClass.put(geoField, geomMc.getID());
-        joins.append(" join dlm25w.fg_ba_punkt von on (von.id = dlm25w.fg_ba_linie.von)");
-        joins.append(" join dlm25w.fg_ba_punkt bis on (bis.id = dlm25w.fg_ba_linie.bis)");
-        joins.append(" join dlm25w.fg_ba on (von.route = dlm25w.fg_ba.id)");
+//        joins.append(" join dlm25w.fg_ba_punkt von on (von.id = dlm25w.fg_ba_linie.von)");
+//        joins.append(" join dlm25w.fg_ba_punkt bis on (bis.id = dlm25w.fg_ba_linie.bis)");
+//        joins.append(" join geom on (dlm25w.k_haltung.geom = geom.id)");
+        joins.append(" join dlm25w.fg_ba on (dlm25w.k_haltung.ba_cd = dlm25w.fg_ba.ba_cd)");
         joins.append(" left join dlm25w.k_ww_gr dlm25wPk_ww_gr1 on (dlm25w.fg_ba.ww_gr = dlm25wPk_ww_gr1.id)");
         joins.append(" left join dlm25w.k_material k_material_1 on (dlm25w.k_haltung.mat_anf = k_material_1.id)");
         joins.append(" left join dlm25w.k_material k_material_2 on (dlm25w.k_haltung.mat_ende = k_material_2.id)");
