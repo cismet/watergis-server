@@ -112,7 +112,6 @@ public class DuevTrigger extends AbstractDBAwareCidsTrigger {
      */
     private void restat(final CidsBean cidsBean, final User user) {
         if (isDuevObject(cidsBean)) {
-            final Connection con = null;
             try {
                 final long start = System.currentTimeMillis();
                 // If the cidsBean is a new object, the meta object contains the new id while the cidsBean has still
@@ -132,7 +131,7 @@ public class DuevTrigger extends AbstractDBAwareCidsTrigger {
                                         s.execute("select duv.recreate_duv('" + id + "')");
                                     } catch (Exception e) {
                                         log.error(
-                                            "Error while executing async duew trigger."
+                                            "Error while executing async duv trigger."
                                                     + String.valueOf(cidsBean.getMetaObject().getID()),
                                             e);
                                     } finally {
@@ -149,10 +148,6 @@ public class DuevTrigger extends AbstractDBAwareCidsTrigger {
                 }
             } catch (Exception e) {
                 log.error("Error while executing lfk trigger.", e);
-            } finally {
-                if (con != null) {
-                    getDbServer().getConnectionPool().releaseDbConnection(con);
-                }
             }
         }
     }

@@ -24,6 +24,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import de.cismet.cids.custom.helper.DuvRefresher;
+
 import de.cismet.cids.dynamics.CidsBean;
 
 import de.cismet.cids.trigger.AbstractDBAwareCidsTrigger;
@@ -262,72 +264,69 @@ public class FgBakTrigger extends AbstractDBAwareCidsTrigger {
                 }
             }
 
-            if (SINGLE_THREAD_EXECUTOR.getPoolSize() < 2) {
-                final Thread t = new Thread(new Runnable() {
+            final Thread t = new Thread(new Runnable() {
 
-                            @Override
-                            public void run() {
-                                Connection con = null;
+                        @Override
+                        public void run() {
+                            Connection con = null;
 
-                                try {
-                                    final long start = System.currentTimeMillis();
-                                    con = getDbServer().getConnectionPool().getLongTermConnection();
-                                    final Statement s = con.createStatement();
+                            try {
+                                final long start = System.currentTimeMillis();
+                                con = getDbServer().getConnectionPool().getLongTermConnection();
+                                final Statement s = con.createStatement();
 
-                                    s.execute(
-                                        "select dlm25w.update_haltethema()");
-                                    s.execute(
-                                        "select dlm25w.import_fg_ba_geroByBak("
-                                                + String.valueOf(cidsBean.getMetaObject().getID())
-                                                + ")");
-                                    s.execute(
-                                        "select dlm25w.import_fg_ba_gerogByBak("
-                                                + String.valueOf(cidsBean.getMetaObject().getID())
-                                                + ")");
-                                    s.execute(
-                                        "select dlm25w.import_fg_ba_gerog_rsByBak("
-                                                + String.valueOf(cidsBean.getMetaObject().getID())
-                                                + ")");
+                                s.execute(
+                                    "select dlm25w.update_haltethema()");
+                                s.execute(
+                                    "select dlm25w.import_fg_ba_geroByBak("
+                                            + String.valueOf(cidsBean.getMetaObject().getID())
+                                            + ")");
+                                s.execute(
+                                    "select dlm25w.import_fg_ba_gerogByBak("
+                                            + String.valueOf(cidsBean.getMetaObject().getID())
+                                            + ")");
+                                s.execute(
+                                    "select dlm25w.import_fg_ba_gerog_rsByBak("
+                                            + String.valueOf(cidsBean.getMetaObject().getID())
+                                            + ")");
 
-                                    s.execute(
-                                        "select dlm25w.migrate_fg_bak_wk_to_fg_lak()");
-                                    s.execute(
-                                        "select dlm25w.add_fg_ba_stat_10("
-                                                + String.valueOf(cidsBean.getMetaObject().getID())
-                                                + ")");
-                                    s.execute(
-                                        "select dlm25w.add_fg_la_stat_10("
-                                                + String.valueOf(cidsBean.getMetaObject().getID())
-                                                + ")");
-                                    s.execute(
-                                        "select dlm25w.add_fg_lak_stat_10("
-                                                + String.valueOf(cidsBean.getMetaObject().getID())
-                                                + ")");
-                                    s.execute(
-                                        "select duv.recreate_fg_ba_duvByFg("
-                                                + String.valueOf(cidsBean.getMetaObject().getID())
-                                                + ")");
+                                s.execute(
+                                    "select dlm25w.migrate_fg_bak_wk_to_fg_lak()");
+                                s.execute(
+                                    "select dlm25w.add_fg_ba_stat_10("
+                                            + String.valueOf(cidsBean.getMetaObject().getID())
+                                            + ")");
+                                s.execute(
+                                    "select dlm25w.add_fg_la_stat_10("
+                                            + String.valueOf(cidsBean.getMetaObject().getID())
+                                            + ")");
+                                s.execute(
+                                    "select dlm25w.add_fg_lak_stat_10("
+                                            + String.valueOf(cidsBean.getMetaObject().getID())
+                                            + ")");
 
-                                    LOG.error(
-                                        "time to update async for bak with id "
-                                                + String.valueOf(cidsBean.getMetaObject().getID())
-                                                + " :"
-                                                + (System.currentTimeMillis() - start));
-                                } catch (Exception e) {
-                                    LOG.error(
-                                        "Error while executing async fgBak trigger."
-                                                + String.valueOf(cidsBean.getMetaObject().getID()),
-                                        e);
-                                } finally {
-                                    if (con != null) {
-                                        getDbServer().getConnectionPool().releaseDbConnection(con);
-                                    }
+                                DuvRefresher.getInstance(getDbServer().getConnectionPool())
+                                        .addFgToRefresh(cidsBean.getMetaObject().getID());
+
+                                LOG.error(
+                                    "time to update async for bak with id "
+                                            + String.valueOf(cidsBean.getMetaObject().getID())
+                                            + " :"
+                                            + (System.currentTimeMillis() - start));
+                            } catch (Exception e) {
+                                LOG.error(
+                                    "Error while executing async fgBak trigger."
+                                            + String.valueOf(cidsBean.getMetaObject().getID()),
+                                    e);
+                            } finally {
+                                if (con != null) {
+                                    getDbServer().getConnectionPool().releaseDbConnection(con);
                                 }
                             }
-                        });
+                        }
+                    });
 
-                SINGLE_THREAD_EXECUTOR.execute(t);
-            }
+            SINGLE_THREAD_EXECUTOR.execute(t);
         }
     }
 }
