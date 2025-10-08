@@ -13,6 +13,8 @@ import org.openide.util.lookup.ServiceProvider;
 
 import java.sql.Connection;
 
+import de.cismet.cids.custom.helper.DuvRefresher;
+
 import de.cismet.cids.dynamics.CidsBean;
 
 import de.cismet.cids.trigger.AbstractDBAwareCidsTrigger;
@@ -117,34 +119,9 @@ public class RlDDueTrigger extends AbstractDBAwareCidsTrigger {
      */
     private void restat(final CidsBean cidsBean, final User user) {
         if (isDuevObject(cidsBean)) {
-            final Thread t = new Thread("recreate duv") {
+            final Object id = cidsBean.getProperty("ba_st.von.route.id");
 
-                    @Override
-                    public void run() {
-                        final Connection con = null;
-                        try {
-                            final long start = System.currentTimeMillis();
-                            // If the cidsBean is a new object, the meta object contains the new id while the cidsBean
-                            // has still the id -1
-                            final Object id = cidsBean.getProperty("ba_st.von.route.id");
-
-                            if (id != null) {
-                                final DbUpdater updater = new DbUpdater(getDbServer().getConnectionPool());
-                                updater.addUpdate("select duv.recreate_fg_ba_duvByFg(" + id + ")");
-                                updater.execute();
-                                log.error("time to update duv by FG " + (System.currentTimeMillis() - start));
-                            }
-                        } catch (Exception e) {
-                            log.error("Error while executing rl/d/due trigger.", e);
-                        } finally {
-                            if (con != null) {
-                                getDbServer().getConnectionPool().releaseDbConnection(con);
-                            }
-                        }
-                    }
-                };
-
-            t.start();
+            DuvRefresher.getInstance(getDbServer().getConnectionPool()).addFgToRefresh((Integer)id);
         }
     }
 }

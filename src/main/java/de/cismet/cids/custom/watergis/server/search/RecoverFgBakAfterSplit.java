@@ -66,6 +66,8 @@ public class RecoverFgBakAfterSplit extends WritableSearch {
         final MetaService ms = (MetaService)getActiveLocalServers().get(DOMAIN_NAME);
 
         if (ms != null) {
+            Connection connection = null;
+
             try {
                 final Object[] intArray = new Object[statIds.length];
 
@@ -73,7 +75,7 @@ public class RecoverFgBakAfterSplit extends WritableSearch {
                     intArray[i] = statIds[i];
                 }
 
-                final Connection connection = DomainServerImpl.getServerInstance().getConnectionPool().getConnection();
+                connection = DomainServerImpl.getServerInstance().getConnectionPool().getLongTermConnection();
                 final PreparedStatement merge = connection.prepareStatement(QUERY);
                 merge.setArray(1, connection.createArrayOf("integer", intArray));
                 merge.setInt(2, fgBakId);
@@ -83,6 +85,10 @@ public class RecoverFgBakAfterSplit extends WritableSearch {
                 return lists;
             } catch (SQLException ex) {
                 LOG.error(ex.getMessage(), ex);
+            } finally {
+                if (connection != null) {
+                    DomainServerImpl.getServerInstance().getConnectionPool().releaseDbConnection(connection);
+                }
             }
         } else {
             LOG.error("active local server not found"); // NOI18N

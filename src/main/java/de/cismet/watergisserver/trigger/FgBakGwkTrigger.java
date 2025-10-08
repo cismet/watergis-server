@@ -46,6 +46,12 @@ public class FgBakGwkTrigger extends AbstractDBAwareCidsTrigger {
             0L,
             TimeUnit.MILLISECONDS,
             new LinkedBlockingQueue<Runnable>());
+    private static final ThreadPoolExecutor SINGLE_THREAD_EXECUTOR_GMD = new ThreadPoolExecutor(
+            1,
+            1,
+            0L,
+            TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<Runnable>());
 
     //~ Methods ----------------------------------------------------------------
 
@@ -154,9 +160,10 @@ public class FgBakGwkTrigger extends AbstractDBAwareCidsTrigger {
 //                    s.execute("select dlm25w.import_qp_gaf_lbyfgbak(" + id.toString() + ", '" + user.getName() + "')");
 //                    s.execute("select dlm25w.import_qp_gaf_l_pr_pfByBak(" + id.toString() + ", '" + user.getName()
 //                                + "')");
-                    // refresh gmd
-                    s.execute("select dlm25w.import_fg_ba_gmdByFgBak(" + id.toString() + ", '" + user.getName() + "')");
-                    s.execute("select dlm25w.import_fg_ba_gbByFgBak(" + id.toString() + ", '" + user.getName() + "')");
+                    // refresh gmd und gb. gmd and gb have nothing to do with lawa routes and should not be refreshed
+                    // here
+//                    s.execute("select dlm25w.import_fg_ba_gmdByFgBak(" + id.toString() + ", '" + user.getName() + "')");
+//                    s.execute("select dlm25w.import_fg_ba_gbByFgBak(" + id.toString() + ", '" + user.getName() + "')");
                     LOG.error("time to update stations " + (System.currentTimeMillis() - start));
                 }
             } catch (Exception e) {

@@ -273,19 +273,24 @@ public class PreparedRandstreifenGeoms extends AbstractCidsServerSearch {
                 final String query = String.format(QUERY, tables);
 
                 if (ms instanceof DomainServerImpl) {
+                    Connection con = null;
+                    final DomainServerImpl serv = (DomainServerImpl)ms;
+
                     try {
-                        final DomainServerImpl serv = (DomainServerImpl)ms;
-                        final Connection con = serv.getConnectionPool().getConnection(true);
+                        con = serv.getConnectionPool().getLongTermConnection();
                         final Statement s = con.createStatement();
                         final ResultSet rs = s.executeQuery(query);
                         final ArrayList<ArrayList> result = serv.collectResults(rs);
-                        serv.getConnectionPool().releaseDbConnection(con);
                         return result;
                     } catch (Exception e) {
                         final String msg = "Error during sql statement: "
                                     + query;
                         LOG.error(msg, e);
                         throw new RemoteException(msg, e);
+                    } finally {
+                        if (con != null) {
+                            serv.getConnectionPool().releaseDbConnection(con);
+                        }
                     }
                 } else {
                     final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
