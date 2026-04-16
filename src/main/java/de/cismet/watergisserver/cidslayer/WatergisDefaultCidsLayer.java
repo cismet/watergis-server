@@ -1197,6 +1197,7 @@ public class WatergisDefaultCidsLayer implements CidsLayerInfo, Serializable {
      */
     protected boolean isFullGUAccessAllowed() {
         return (user == null) || user.getUserGroup().getName().equalsIgnoreCase("administratoren")
+                    || user.getUserGroup().getName().equalsIgnoreCase("laiv")
                     || user.getUserGroup().getName().equalsIgnoreCase("gaeste_read_gu");
     }
 }

@@ -50,7 +50,8 @@ public class SgDetailCidsLayer extends WatergisDefaultCidsLayer {
     public String getRestriction() {
         if ((user == null)
                     || user.getUserGroup().getName().equalsIgnoreCase("administratoren")
-                    || user.getUserGroup().getName().equalsIgnoreCase("seenprogramm")) {
+                    || user.getUserGroup().getName().equalsIgnoreCase("seenprogramm")
+                    || user.getUserGroup().getName().equalsIgnoreCase("laiv")) {
             return null;
         } else {
             return "vl = 0 and kg = 0";
@@ -62,7 +63,8 @@ public class SgDetailCidsLayer extends WatergisDefaultCidsLayer {
         if (column.equals("dlm25w.sg_detail.vl") || column.equals("dlm25w.sg_detail.kg")) {
             return ((user == null)
                             || user.getUserGroup().getName().equalsIgnoreCase("administratoren")
-                            || user.getUserGroup().getName().equalsIgnoreCase("seenprogramm"));
+                            || user.getUserGroup().getName().equalsIgnoreCase("seenprogramm")
+                            || user.getUserGroup().getName().equalsIgnoreCase("laiv"));
         } else {
             return true;
         }
