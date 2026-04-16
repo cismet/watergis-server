@@ -40,7 +40,8 @@ public class SgSuUsgCidsLayer extends WatergisDefaultCidsLayer {
     public String getRestriction() {
         if ((user == null)
                     || user.getUserGroup().getName().equalsIgnoreCase("administratoren")
-                    || user.getUserGroup().getName().equalsIgnoreCase("seenprogramm")) {
+                    || user.getUserGroup().getName().equalsIgnoreCase("seenprogramm")
+                    || user.getUserGroup().getName().equalsIgnoreCase("laiv")) {
             return null;
         } else {
             return "usg_aktiv = 1";
@@ -52,7 +53,8 @@ public class SgSuUsgCidsLayer extends WatergisDefaultCidsLayer {
         if (column.equals("dlm25w.sg_su_usg.usg_aktiv")) {
             return ((user == null)
                             || user.getUserGroup().getName().equalsIgnoreCase("administratoren")
-                            || user.getUserGroup().getName().equalsIgnoreCase("seenprogramm"));
+                            || user.getUserGroup().getName().equalsIgnoreCase("seenprogramm")
+                            || user.getUserGroup().getName().equalsIgnoreCase("laiv"));
         } else {
             return true;
         }
